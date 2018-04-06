@@ -1,0 +1,27 @@
+language: generic
+
+dist: trusty
+sudo: false
+
+before_install:
+  - export PATH=/tmp/texlive/bin/x86_64-linux:$PATH
+  - make setup
+
+cache:
+  directories:
+    - /tmp/texlive
+    - $HOME/.texlive
+    - doc/preamble/twemoji
+
+script:
+  - make _build/release.zip
+
+deploy:
+  provider: releases
+  api_key:
+    secure: $GITHUB_TOKEN
+  file: _build/release.zip
+  skip_cleanup: true
+  on:
+    repo: wenkokke/cycle
+

@@ -1,0 +1,136 @@
+\documentclass[submission,copyright,creativecommons]{eptcs}
+\providecommand{\event}{Linearity and TLLA 2018} % Name of the event you are submitting to
+\usepackage{breakurl} % Not needed if you use pdflatex only.
+\usepackage{underscore} % Only needed if you use pdflatex.
+\usepackage{textcomp,textgreek,upgreek} % Minimal dependencies for bibTeX.
+\usepackage{amsthm}
+\newtheorem{definition}{Definition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}{Corollary}
+\input{preamble-typing}
+\renewcommand*{\hccp}{HTA\xspace}
+
+\title{Taking Linear Logic Apart}
+\author{%
+  Wen Kokke
+  \institute{University of Edinburgh\\ Edinburgh, Scotland}
+  \email{wen.kokke@ed.ac.uk}}
+\def\titlerunning{Taking Linear Logic Apart}
+\def\authorrunning{Wen Kokke}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\end{abstract}
+
+
+%% Classical Processes
+\begin{figure*}[!htb]
+  Structural Rules.
+  \begin{center} \cpInfAx     \cpInfCut      \end{center}
+
+  Logical Rules.
+  \begin{center} \cpInfTens   \cpInfParr     \end{center}
+  \begin{center} \cpInfOne    \cpInfBot      \end{center}
+  \begin{center} \cpInfPlus1  \cpInfPlus2    \end{center}
+  \begin{center} \cpInfWith                  \end{center}
+  \begin{center} \cpInfNil    \cpInfTop      \end{center}
+
+  \caption{Classical Processes (\cp)}
+  \label{fig:cp}
+\end{figure*}
+
+%% Hypersequent Classical Processes
+\begin{figure*}[!htb]
+  Structural Rules.
+  \begin{center} \hcpInfAx     \hcpInfCut    \end{center}
+  \begin{center} \hcpInfMix    \hcpInfHalt   \end{center}
+  
+  Logical Rules.
+  \begin{center} \hcpInfTens   \hcpInfParr   \end{center}
+  \begin{center} \hcpInfOne    \hcpInfBot    \end{center}
+  \begin{center} \hcpInfPlus1  \hcpInfPlus2  \end{center}
+  \begin{center} \hcpInfWith                 \end{center}
+  \begin{center} \hcpInfNil    \hcpInfTop    \end{center} 
+  
+  \caption{Hypersequent Classical Processes (\hcp)}
+  \label{fig:hcp}
+\end{figure*}
+
+\begin{theorem}\label{thm:cp2hcp-typing}
+  If $\seq[P]{\Gamma}$ in \cp, then $\seq[P]{\Gamma}$ in \hcp.
+\end{theorem}
+\begin{theorem}\label{thm:hcp2cp-typing}
+  If $\seq[P]{\Gamma}$ in \hcp, then $\seq[P]{\Gamma}$ in \cp.
+\end{theorem}
+\begin{definition}\label{def:hcp-bigtens}
+  \(\!%
+  \begin{array}{lcl}
+    \ty{\bigparr\emptycontext}
+    & = & \ty{\bot}
+    \\
+    \ty{\bigparr(\tmty{x_1}{A_1}, \dots, \tmty{x_n}{A_n})}
+    & = & \ty{A_1 \parr \dots \parr A_n}
+  \end{array}
+  \)
+\end{definition}
+\begin{lemma}\label{lem:hcp-bigparr}
+  If $\seq{\Gamma}$ in \hcp, then $\seq{\bigparr\Gamma}$ in \hcp.
+\end{lemma}
+\begin{definition}\label{def:hcp-bigtens}
+  \(\!%
+  \begin{array}{lcl}
+    \ty{\bigtens\emptyhypercontext}
+    & = & \ty{\one}
+    \\
+    \ty{\bigtens(\Gamma_1 \hsep \dots \hsep \Gamma_n)}
+    & = & \ty{\bigparr\Gamma_1 \tens \dots \tens \bigparr\Gamma_n}
+  \end{array}
+  \)
+\end{definition}
+\begin{theorem}\label{thm:hcp-bigtens}
+  If $\seq{\mathcal{G}}$ in \hcp, then $\seq{\bigtens\mathcal{G}}$ in \hcp.
+\end{theorem}
+\begin{corollary}[Conservative Extension]
+  If $\seq{\mathcal{G}}$ in \hcp, then $\seq{\bigtens\mathcal{G}}$ in \cp.
+\end{corollary}
+
+
+
+%% Hypersequent Classical Processes Taken Apart
+\begin{figure*}[!htb]
+  Structural Rules.
+  \begin{center} \hccpInfAx        \hccpInfCycle \end{center}
+  \begin{center} \hccpInfMix       \hccpInfHalt  \end{center}
+
+  Logical Rules.
+
+  \begin{center} \hccpInfBoundTens \hccpInfParr  \end{center}
+  \begin{center} \hccpInfOne       \hccpInfBot   \end{center}
+  \begin{center} \hccpInfPlus1     \hccpInfPlus2 \end{center}
+  \begin{center} \hccpInfWith                    \end{center}
+  \begin{center} \hccpInfNil       \hccpInfTop   \end{center}
+
+  \centering
+  (Where each logical rule has the side condition that $\tm{x} \not\in \ty{\mathcal{G}}$.)
+
+  \caption{Hypersequent Classical Processes \emph{Taken Apart} (\hccp)}
+  \label{fig:hccp}
+\end{figure*}
+
+\begin{theorem}\label{thm:hcp2hccp-typing}
+  If $\seq[P]{\mathcal{G}}$ in \hcp, then $\seq[P]{\mathcal{G}}$ in \hccp.
+\end{theorem}
+\begin{theorem}\label{thm:hccp2hcp-typing}
+  If $\seq{\mathcal{G}}$ in \hccp, then $\seq{\mathcal{G}}$ in \hcp.
+\end{theorem}
+
+
+\bibliographystyle{eptcs}
+\bibliography{main}
+\end{document}
+%%% Local Variables:
+%%% TeX-master: "main"
+%%% End:

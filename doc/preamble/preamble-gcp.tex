@@ -1,0 +1,43 @@
+%% Depends on: amsmath, stmaryrd, xspace, bussproofs, preamble-typing, preamble-pi, preamble-cp
+
+\providecommand{\gcp}{GCP\xspace}
+
+%% Global types and coherence cut
+\providecommand{\gtyAx}[3]{%
+  \ensuremath{\tm{{#1}\leftrightarrow{#3}}}}
+\providecommand{\gtyCut}[4]{%
+  \ensuremath{\tm{\piNew{#1^{\ty{#2}}:#3}{#4}}}}
+\providecommand{\gtyTensParr}[4]{%
+  \ensuremath{\tm{\cpRecv{\widetilde{#1}\to{#2}}{G}{H}}}}
+\providecommand{\gtyPlusWith}[4]{%
+  \ensuremath{\tm{\cpCase{{#1}\to\widetilde{#2}}{G}{H}}}}
+\providecommand{\gtyOneBot}[2]{%
+  \ensuremath{\tm{\widetilde{#1}\to{y}}}}
+\providecommand{\gtyNilTop}[2]{%
+  \ensuremath{\tm{\cpAbsurd{{x}\to{\widetilde{y}}}}}}
+
+%% Coherence judgements
+\providecommand{\gcpInfAx}{%
+  \begin{prooftree*}
+    \AXC{}
+    \NOM{Ax}
+    \UIC{$\coh[\gtyAx{x}{A}{y}]{\tmty{x}{A}, \tmty{y}{A^\bot}}$}
+  \end{prooftree*}}
+\providecommand{\gcpInfTensParr}{%
+  \begin{prooftree*}
+    \AXC{$\coh[G]{(\tmty{x_i}{A_i})_i, \tmty{y}{C}}$}
+    \AXC{$\coh[H]{\Gamma, (\tmty{x_i}{B_i})_i, \tmty{y}{D}}$}
+    \SYM{\tens\parr}
+    \BIC{$\coh[\gtyTensParr{x}{y}{G}{H}]{%
+        \Gamma, (\tmty{x_i}{A_i \tens B_i})_i, \tmty{y}{C \parr D}}$}
+  \end{prooftree*}}
+\providecommand{\gcpInfOneBot}{%
+  \begin{prooftree*}
+    \AXC{}
+    \SYM{\one\bot}
+    \UIC{$\coh[\gtyOneBot{x}{y}]{(\tmty{x_i}{\one})_i, \tmty{y}{\bot}}$}
+  \end{prooftree*}}
+
+%%% Local Variables:
+%%% TeX-master: "main"
+%%% End:
