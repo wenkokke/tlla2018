@@ -9,7 +9,6 @@
 \newtheorem{theorem}{Theorem}
 \newtheorem{corollary}{Corollary}
 \input{preamble-typing}
-\renewcommand*{\hccp}{HTA\xspace}
 
 \title{Taking Linear Logic Apart}
 \author{%
@@ -93,7 +92,7 @@
 \begin{theorem}\label{thm:hcp-bigtens}
   If $\seq{\mathcal{G}}$ in \hcp, then $\seq{\bigtens\mathcal{G}}$ in \hcp.
 \end{theorem}
-\begin{corollary}[Conservative Extension]
+\begin{corollary}\label{cor:hcp-bigtens}
   If $\seq{\mathcal{G}}$ in \hcp, then $\seq{\bigtens\mathcal{G}}$ in \cp.
 \end{corollary}
 
@@ -120,12 +119,18 @@
   \label{fig:hccp}
 \end{figure*}
 
-\begin{theorem}\label{thm:hcp2hccp-typing}
+\begin{theorem}\label{cor:hcp2hccp-typing}
   If $\seq[P]{\mathcal{G}}$ in \hcp, then $\seq[P]{\mathcal{G}}$ in \hccp.
 \end{theorem}
+\begin{corollary}\label{thm:cp2hccp-typing}
+  If $\seq[P]{\Gamma}$ in \cp, then $\seq[P]{\Gamma}$ in \hccp. 
+\end{corollary}
 \begin{theorem}\label{thm:hccp2hcp-typing}
   If $\seq{\mathcal{G}}$ in \hccp, then $\seq{\mathcal{G}}$ in \hcp.
 \end{theorem}
+\begin{corollary}\label{cor:hccp2cp-typing}
+  If $\seq{\mathcal{G}}$ in \hccp, then $\seq{\bigtens\mathcal{G}}$ in \cp.
+\end{corollary}
 
 
 \bibliographystyle{eptcs}

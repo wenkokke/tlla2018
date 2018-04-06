@@ -23,5 +23,5 @@ deploy:
   file: _build/release.zip
   skip_cleanup: true
   on:
-    repo: wenkokke/cycle
+    repo: wenkokke/hcp
 
