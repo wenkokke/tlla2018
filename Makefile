@@ -1,22 +1,22 @@
 TEXLIVEONFLY := $(shell command -v texliveonfly 2> /dev/null)
 
 DOC := $(foreach dir,$(dir $(wildcard doc/*/main.tex)),$(shell basename $(dir)))
-PDF := $(addprefix docs/,$(addsuffix .pdf,$(DOC)))
+PDF := $(addprefix pdfs/,$(addsuffix .pdf,$(DOC)))
 
 default: $(PDF)
 
-docs/:
-	mkdir -p docs/
+pdfs/:
+	mkdir -p pdfs/
 
 define DOC_template
-docs/$(1).pdf: docs/
+pdfs/$(1).pdf: pdfs/
 	cd doc/$(1);\
 		$(TEXLIVEONFLY)                             \
 			-c latexmk                                \
 			-a "-pdflatex=pdflatex                    \
 			    -f                                    \
 			    -pdf                                  \
-			    -outdir=../../docs                  \
+			    -outdir=../../pdfs                  \
 	        -latexoption=-interaction=nonstopmode \
 	        -latexoption=-halt-on-error           \
 	        -jobname=$(1)"                        \
@@ -29,7 +29,7 @@ setup:
 ifndef TEXLIVEONFLY
 	curl -L http://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz | tar xz -C $(HOME)
 	cd $(HOME)/install-tl-*;\
-		yes i | ./install-tl --profile=$(TRAVISdocs_DIR)/texlive.profile
+		yes i | ./install-tl --profile=$(TRAVISpdfs_DIR)/texlive.profile
 	tlmgr install                 \
 		luatex                      \
 		biber                       \
