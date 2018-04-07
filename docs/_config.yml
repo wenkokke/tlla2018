@@ -1,0 +1,14 @@
+title: Hypersequent CP
+baseurl: "/hcp"
+url: "http://wenkokke.github.io"
+
+markdown: kramdown
+theme: minima
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor/bundle/
+  - vendor/cache/
+  - vendor/gems/
+  - vendor/ruby/
