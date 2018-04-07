@@ -1,14 +1,20 @@
-title: Hypersequent CP
+title: Hypersequent Classical Processes
+author: Wen Kokke
+email: wen.kokke@ed.ac.uk
+twitter_username: wenkokke
+github_username: wenkokke
+
 baseurl: "/hcp"
 url: "http://wenkokke.github.io"
 
 markdown: kramdown
 theme: minima
+include:
+  - pdfs/*.pdf
 exclude:
   - Gemfile
   - Gemfile.lock
-  - node_modules
-  - vendor/bundle/
-  - vendor/cache/
-  - vendor/gems/
-  - vendor/ruby/
+  - Makefile
+  - doc/
+  - README.md
+  - texlive.profile
