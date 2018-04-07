@@ -1,1 +1,1 @@
-# hcp
+# Hypersequent CP
