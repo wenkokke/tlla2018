@@ -18,7 +18,7 @@ script:
 
 deploy:
   provider: pages
-  local-directory: _build/
+  local-directory: docs
   skip-cleanup: true
   github-token: $GITHUB_TOKEN
   on:
