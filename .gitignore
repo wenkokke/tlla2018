@@ -221,3 +221,4 @@ TSWLatexianTemp*
 _build/
 auto/
 *.pdf
+.#*

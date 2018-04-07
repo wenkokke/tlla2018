@@ -17,11 +17,9 @@ script:
   - make _build/release.zip
 
 deploy:
-  provider: releases
-  api_key:
-    secure: $GITHUB_TOKEN
-  file: _build/release.zip
-  skip_cleanup: true
+  provider: pages
+  local-directory: _build/
+  skip-cleanup: true
+  github-token: $GITHUB_TOKEN
   on:
-    repo: wenkokke/hcp
-
+    branch: master

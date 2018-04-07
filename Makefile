@@ -3,10 +3,7 @@ TEXLIVEONFLY := $(shell command -v texliveonfly 2> /dev/null)
 DOC := $(foreach dir,$(dir $(wildcard doc/*/main.tex)),$(shell basename $(dir)))
 PDF := $(addprefix _build/,$(addsuffix .pdf,$(DOC)))
 
-all: _build/release.zip
-
-_build/release.zip: $(PDF)
-	zip $@ $^
+default: $(PDF)
 
 _build/:
 	mkdir -p _build/
@@ -24,9 +21,6 @@ _build/$(1).pdf: _build/
 	        -latexoption=-halt-on-error           \
 	        -jobname=$(1)"                        \
 			main.tex
-
-
-.phony: _build/$(1).pdf
 endef
 
 $(foreach doc,$(DOC),$(eval $(call DOC_template,$(doc))))
