@@ -14,7 +14,7 @@ cache:
     - doc/preamble/twemoji
 
 script:
-  - make _build/release.zip
+  - make
 
 deploy:
   provider: pages
