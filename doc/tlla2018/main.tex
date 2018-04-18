@@ -1,8 +1,8 @@
 \documentclass[submission,copyright,creativecommons]{eptcs}
-\providecommand{\event}{Linearity and TLLA 2018} % Name of the event you are submitting to
+\providecommand{\event}{Linearity and TLLA 2018}
 \usepackage{breakurl} % Not needed if you use pdflatex only.
 \usepackage{underscore} % Only needed if you use pdflatex.
-\usepackage{textcomp,textgreek,upgreek} % Minimal dependencies for bibTeX.
+\usepackage{textcomp,textgreek,upgreek}
 \usepackage{amsthm}
 \newtheorem{definition}{Definition}
 \newtheorem{lemma}{Lemma}
@@ -24,8 +24,159 @@
 \begin{abstract}
 \end{abstract}
 
-
 %% Classical Processes
+
+\begin{definition}[Terms]\label{def:cp-terms}
+  \begin{gather*}
+    \begin{array}{rllrll}
+      \tm{P}, \tm{Q}, \tm{R}
+           :=& \tm{\cpLink{x}{y}}       &\text{link}
+      &  \mid& \tm{\cpCut{x}{P}{Q}}     &\text{parallel composition, ``cut''}
+      \\ \mid& \tm{\cpSend{x}{y}{P}{Q}} &\text{``output''}
+      &  \mid& \tm{\cpRecv{x}{y}{P}}    &\text{``input''}
+      \\ \mid& \tm{\cpHalt{x}}          &\text{halt}
+      &  \mid& \tm{\cpWait{x}{P}}       &\text{wait}
+      \\ \mid& \tm{\cpInl{x}{P}}        &\text{select left choice}
+      &  \mid& \tm{\cpInr{x}{P}}        &\text{select right choice}
+      \\ \mid& \tm{\cpCase{x}{P}{Q}}    &\text{offer binary choice}
+      &  \mid& \tm{\cpAbsurd{x}}        &\text{offer nullary choice}
+    \end{array}
+  \end{gather*}
+\end{definition}
+
+\begin{definition}[Structural congruence]\label{def:cp-equiv}
+  We define the structural congruence $\equiv$ as the congruence closure over
+  terms which satisfies the following additional axioms:
+  \begin{gather*}
+    \setlength{\arraycolsep}{3pt}
+    \begin{array}{llcll}
+      \cpEquivLinkComm
+      & \tm{\cpLink{x}{y}}
+      & \equiv
+      & \tm{\cpLink{y}{x}}
+      \\
+      \cpEquivCutComm
+      & \tm{\cpCut{x}{P}{Q}}
+      & \equiv
+      & \tm{\cpCut{x}{Q}{P}}
+      \\
+      \cpEquivCutAss1
+      & \tm{\cpCut{x}{P}{\cpCut{y}{Q}{R}}}
+      & \equiv
+      & \tm{\cpCut{y}{\cpCut{x}{P}{Q}}{R}}
+      & \text{if }\notFreeIn{x}{R}\text{ and }\notFreeIn{y}{P}
+    \end{array}
+  \end{gather*}
+\end{definition}
+
+\begin{definition}[Reduction]\label{def:cp-reduction}
+  A reduction $\reducesto{P}{Q}$ denotes that the process $\tm{P}$ can reduce
+  to the process $\tm{Q}$ in a single step.
+  The relation $\Longrightarrow^\star$ is the reflexive, transitive closure of
+  $\Longrightarrow$.
+  Reductions can only be constructed as follows:
+  \begin{gather*}
+    \begin{array}{llcll}
+      \cpRedAxCut1
+      & \tm{\cpCut{x}{\cpLink{w}{x}}{P}}
+      & \Longrightarrow
+      & \tm{\cpSub{w}{x}{P}} 
+      \\
+      \cpRedBetaTensParr
+      & \tm{\cpCut{x}{\cpSend{x}{y}{P}{Q}}{\cpRecv{x}{z}{R}}}
+      & \Longrightarrow
+      & \tm{\cpCut{y}{P}{\cpCut{x}{Q}{\cpSub{y}{z}{R}}}}
+      \\
+      \cpRedBetaOneBot
+      & \tm{\cpCut{x}{\cpHalt{x}}{\cpWait{x}{P}}}
+      & \Longrightarrow
+      & \tm{P}
+      \\
+      \cpRedBetaPlusWith1
+      & \tm{\cpCut{x}{\cpInl{x}{P}}{\cpCase{x}{Q}{R}}}
+      & \Longrightarrow
+      & \tm{\cpCut{x}{P}{Q}}
+      \\
+      \cpRedBetaPlusWith2
+      & \tm{\cpCut{x}{\cpInr{x}{P}}{\cpCase{x}{Q}{R}}}
+      & \Longrightarrow
+      & \tm{\cpCut{x}{P}{R}}
+      \\
+      \cpRedKappaTens1
+      & \tm{\cpCut{x}{\cpSend{y}{z}{P}{Q}}{R}}
+      & \Longrightarrow \;
+      & \tm{\cpSend{y}{z}{\cpCut{x}{P}{R}}{Q}}
+        \quad \text{if} \; \notFreeIn{x}{Q}
+      \\
+      \cpRedKappaTens2
+      & \tm{\cpCut{x}{\cpSend{y}{z}{P}{Q}}{R}}
+      & \Longrightarrow \;
+      & \tm{\cpSend{y}{z}{P}{\cpCut{x}{Q}{R}}}
+        \quad \text{if} \; \notFreeIn{x}{P}
+      \\
+      \cpRedKappaParr
+      & \tm{\cpCut{x}{\cpRecv{y}{z}{P}}{R}}
+      & \Longrightarrow \;
+      & \tm{\cpRecv{y}{z}{\cpCut{x}{P}{R}}}
+      \\
+      \cpRedKappaBot
+      & \tm{\cpCut{x}{\cpWait{y}{P}}{R}}
+      & \Longrightarrow \;
+      & \tm{\cpWait{y}{\cpCut{x}{P}{R}}}
+      \\
+      \cpRedKappaPlus1
+      & \tm{\cpCut{x}{\cpInl{y}{P}}{R}}
+      & \Longrightarrow \;
+      & \tm{\cpInl{y}{\cpCut{x}{P}{R}}}
+      \\
+      \cpRedKappaPlus2
+      &\tm{\cpCut{x}{\cpInr{y}{P}}{R}}
+      & \Longrightarrow \;
+      & \tm{\cpInr{y}{\cpCut{x}{P}{R}}}
+      \\
+      \cpRedKappaWith
+      & \tm{\cpCut{x}{\cpCase{y}{P}{Q}}{R}}
+      & \Longrightarrow \;
+      & \tm{\cpCase{y}{\cpCut{x}{P}{R}}{\cpCut{x}{Q}{R}}}
+      \\
+      \cpRedKappaTop
+      & \tm{\cpCut{x}{\cpAbsurd{y}}{R}}
+      & \Longrightarrow \;
+      & \tm{\cpAbsurd{y}}
+    \end{array}
+  \end{gather*}
+  \begin{center}
+    \begin{prooftree*}
+      \AXC{$\reducesto{P}{P^\prime}$}
+      \SYM{\cpRedGammaCut}
+      \UIC{$\reducesto{\cpCut{x}{P}{Q}}{\cpCut{x}{P^\prime}{Q}}$}
+    \end{prooftree*}
+    \begin{prooftree*}
+      \AXC{$\tm{P}\equiv\tm{Q}$}
+      \AXC{$\reducesto{Q}{Q^\prime}$}
+      \AXC{$\tm{Q^\prime}\equiv\tm{P^\prime}$}
+      \SYM{\cpRedGammaEquiv}
+      \TIC{$\reducesto{P}{P^\prime}$}
+    \end{prooftree*}
+  \end{center}
+\end{definition}
+
+\begin{definition}[Types]\label{def:cp-types}
+  \begin{gather*}
+    \begin{array}{rclrcl}
+      \ty{A}, \ty{B}, \ty{C}
+           :=& \ty{A \tens B} &\text{pair of independent processes}
+      &  \mid& \ty{\one}      &\text{unit for} \; {\tens}
+      \\ \mid& \ty{A \parr B} &\text{pair of interdependent processes}
+      &  \mid& \ty{\bot}      &\text{unit for} \; {\parr}
+      \\ \mid& \ty{A \plus B} &\text{internal choice}
+      &  \mid& \ty{\nil}      &\text{unit for} \; {\plus}
+      \\ \mid& \ty{A \with B} &\text{external choice}
+      &  \mid& \ty{\top}      &\text{unit for} \; {\with}
+    \end{array}
+  \end{gather*}
+\end{definition}
+
 \begin{figure*}[!htb]
   Structural Rules.
   \begin{center} \cpInfAx     \cpInfCut      \end{center}
@@ -42,63 +193,121 @@
 \end{figure*}
 
 %% Hypersequent Classical Processes
-\begin{figure*}[!htb]
-  Structural Rules.
-  \begin{center} \hcpInfAx     \hcpInfCut    \end{center}
-  \begin{center} \hcpInfMix    \hcpInfHalt   \end{center}
-  
-  Logical Rules.
-  \begin{center} \hcpInfTens   \hcpInfParr   \end{center}
-  \begin{center} \hcpInfOne    \hcpInfBot    \end{center}
-  \begin{center} \hcpInfPlus1  \hcpInfPlus2  \end{center}
-  \begin{center} \hcpInfWith                 \end{center}
-  \begin{center} \hcpInfNil    \hcpInfTop    \end{center} 
-  
-  \caption{Hypersequent Classical Processes (\hcp)}
-  \label{fig:hcp}
-\end{figure*}
 
-\begin{theorem}\label{thm:cp2hcp-typing}
-  If $\seq[P]{\Gamma}$ in \cp, then $\seq[P]{\Gamma}$ in \hcp.
-\end{theorem}
-\begin{theorem}\label{thm:hcp2cp-typing}
-  If $\seq[P]{\Gamma}$ in \hcp, then $\seq[P]{\Gamma}$ in \cp.
-\end{theorem}
-\begin{definition}\label{def:hcp-bigtens}
-  \(\!%
-  \begin{array}{lcl}
-    \ty{\bigparr\emptycontext}
-    & = & \ty{\bot}
-    \\
-    \ty{\bigparr(\tmty{x_1}{A_1}, \dots, \tmty{x_n}{A_n})}
-    & = & \ty{A_1 \parr \dots \parr A_n}
-  \end{array}
-  \)
+\begin{definition}[Terms]\label{def:hcp-terms}
+  \begin{gather*}
+    \begin{array}{rllrll}
+      \tm{P}, \tm{Q}, \tm{R}
+           :=& \tm{\cpLink{x}{y}}         &\text{link}
+      &  \mid& \tm{\piHalt}               &\text{terminated process}
+      \\ \mid& \tm{\piNew{x}{P}}          &\text{name restriction, ``new''}
+      &  \mid& \tm{( \piPar{P}{Q} )}      &\text{parallel composition, ``mix''}
+      \\ \mid& \tm{\piBoundSend{x}{y}{P}} &\text{output}
+      &  \mid& \tm{\piRecv{x}{y}{P}}      &\text{input}
+      \\ \mid& \tm{\piBoundSend{x}{}{P}}  &\text{``halt''}
+      &  \mid& \tm{\cpWait{x}{}{P}}       &\text{wait}
+      \\ \mid& \tm{\cpInl{x}{P}}          &\text{select left choice}
+      &  \mid& \tm{\cpInr{x}{P}}          &\text{select right choice}
+      \\ \mid& \tm{\cpCase{x}{P}{Q}}      &\text{offer binary choice}
+      &  \mid& \tm{\cpAbsurd{x}}          &\text{offer nullary choice}
+    \end{array}
+  \end{gather*}
 \end{definition}
-\begin{lemma}\label{lem:hcp-bigparr}
-  If $\seq{\Gamma}$ in \hcp, then $\seq{\bigparr\Gamma}$ in \hcp.
-\end{lemma}
-\begin{definition}\label{def:hcp-bigtens}
-  \(\!%
-  \begin{array}{lcl}
-    \ty{\bigtens\emptyhypercontext}
-    & = & \ty{\one}
-    \\
-    \ty{\bigtens(\Gamma_1 \hsep \dots \hsep \Gamma_n)}
-    & = & \ty{\bigparr\Gamma_1 \tens \dots \tens \bigparr\Gamma_n}
-  \end{array}
-  \)
+
+\begin{definition}[Structural congruence]\label{def:hcp-equiv}
+  We define the structural congruence $\equiv$ as the congruence closure over
+  terms which satisfies the following additional axioms:
+  \begin{gather*}
+    \setlength{\arraycolsep}{3pt}
+    \begin{array}{llcllllcll}
+        \cpEquivLinkComm
+      & \tm{\cpLink{x}{y}}
+      & \equiv
+      & \tm{\cpLink{y}{x}}
+      &
+      &
+        \hccpEquivMixHalt1
+      & \tm{\piPar{P}{\piHalt}}
+      & \equiv
+      & \tm{P}
+      &
+      \\
+        \hccpEquivMixComm
+      & \tm{\piPar{P}{Q}}
+      & \equiv
+      & \tm{\piPar{Q}{P}}
+      &
+      &
+        \hccpEquivMixAss1
+      & \tm{\piPar{P}{( \piPar{Q}{R} )}}
+      & \equiv
+      & \tm{\piPar{( \piPar{P}{Q} )}{R}}
+      &
+      \\
+        \hccpEquivNewComm
+      & \tm{\piNew{x}{\piNew{y}{P}}}
+      & \equiv
+      & \tm{\piNew{y}{\piNew{x}{P}}}
+      &
+      &
+        \hccpEquivScopeExt1
+      & \tm{\piNew{x}{( \piPar{P}{Q} )}}
+      & \equiv
+      & \tm{\piPar{P}{\piNew{x}{Q}}}
+      & \text{if }\notFreeIn{x}{P} 
+    \end{array}
+  \end{gather*}
 \end{definition}
-\begin{theorem}\label{thm:hcp-bigtens}
-  If $\seq{\mathcal{G}}$ in \hcp, then $\seq{\bigtens\mathcal{G}}$ in \hcp.
-\end{theorem}
-\begin{corollary}\label{cor:hcp-bigtens}
-  If $\seq{\mathcal{G}}$ in \hcp, then $\seq{\bigtens\mathcal{G}}$ in \cp.
-\end{corollary}
 
+\begin{definition}[Reduction]\label{def:hcp-reduction}
+  A reduction $\reducesto{P}{Q}$ denotes that the process $\tm{P}$ can reduce
+  to the process $\tm{Q}$ in a single step. Reductions can only be constructed
+  as follows:
+  \begin{gather*}
+    \begin{array}{llcll}
+      &
+      & \vdots
+      &
+      \\
+      \cpRedBetaTensParr
+      & \tm{\cpCut{x}{\piSend{x}{y}{P}}{\piRecv{x}{z}{R}}}
+      & \Longrightarrow
+      & \tm{\piNew{x}{\piNew{y}{(\piPar{P}{\cpSub{y}{z}{R}})}}}
+      \\
+      \cpRedBetaOneBot
+      & \tm{\cpCut{x}{\piSend{x}{}{P}}{\piRecv{x}{}{P}}}
+      & \Longrightarrow
+      & \tm{\piPar{P}{Q}}
+      \\
+      &
+      & \vdots
+      &
+    \end{array}
+  \end{gather*}
+  \begin{center}
+    \begin{prooftree*}
+      \AXC{$\reducesto{P}{P^\prime}$}
+      \SYM{\hccpRedGammaNew}
+      \UIC{$\reducesto{\piNew{x}{P}}{\piNew{x}{P^\prime}}$}
+    \end{prooftree*}
+    \begin{prooftree*}
+      \AXC{$\reducesto{P}{P^\prime}$}
+      \SYM{\hccpRedGammaMix}
+      \UIC{$\reducesto{\piPar{P}{Q}}{\piPar{P^\prime}{Q}}$}
+    \end{prooftree*}
+    \begin{prooftree*}
+      \AXC{$\tm{P}\equiv\tm{Q}$}
+      \AXC{$\reducesto{Q}{Q^\prime}$}
+      \AXC{$\tm{Q^\prime}\equiv\tm{P^\prime}$}
+      \SYM{\hccpRedGammaEquiv}
+      \TIC{$\reducesto{P}{P^\prime}$}
+    \end{prooftree*}
+  \end{center}
+  The relations $\Longrightarrow^{?}$, $\Longrightarrow^{+}$, and
+  $\Longrightarrow^\star$ are the reflexive, transitive and reflexive,
+  transitive closures of $\Longrightarrow$. 
+\end{definition}
 
-
-%% Hypersequent Classical Processes Taken Apart
 \begin{figure*}[!htb]
   Structural Rules.
   \begin{center} \hccpInfAx        \hccpInfCycle \end{center}
@@ -113,24 +322,141 @@
   \begin{center} \hccpInfNil       \hccpInfTop   \end{center}
 
   \centering
-  (Where each logical rule has the side condition that $\tm{x} \not\in \ty{\mathcal{G}}$.)
+  (Where each logical rule has the side condition that $\tm{x} \not\in
+  \ty{\mathcal{G}}$.)
 
-  \caption{Hypersequent Classical Processes \emph{Taken Apart} (\hccp)}
+  \caption{Hypersequent Classical Processes (\hcp)}
   \label{fig:hccp}
 \end{figure*}
 
-\begin{theorem}\label{cor:hcp2hccp-typing}
-  If $\seq[P]{\mathcal{G}}$ in \hcp, then $\seq[P]{\mathcal{G}}$ in \hccp.
+\begin{theorem}\label{thm:cp2hcp-typing}
+  If $\seq[P]{\Gamma}$ in \cp, then $\seq[\mtf{P}]{\Gamma}$ in \hcp.
 \end{theorem}
-\begin{corollary}\label{thm:cp2hccp-typing}
-  If $\seq[P]{\Gamma}$ in \cp, then $\seq[P]{\Gamma}$ in \hccp. 
-\end{corollary}
-\begin{theorem}\label{thm:hccp2hcp-typing}
-  If $\seq{\mathcal{G}}$ in \hccp, then $\seq{\mathcal{G}}$ in \hcp.
+\begin{proof}
+  By induction on the structure of the derivation of $\seq[P]{\Gamma}$.
+    \begin{itemize}
+  \item 
+    Case \textsc{Cut}.
+    We rewrite as follows:
+    \begin{center}
+      \scalebox{0.9}{\(
+        \begin{array}{lcl}
+          \AXC{$\seq[P]{\mathcal{G} \hsep \tmty{x}{A}, \Gamma}$}
+          \AXC{$\seq[Q]{\mathcal{H} \hsep \tmty{x}{A^\bot}, \Delta}$}
+          \NOM{Cut}
+          \BIC{$\seq[\cpCut{x}{P}{Q}]{
+          \mathcal{G} \hsep \mathcal{H} \hsep \Gamma, \Delta}$}
+          \DisplayProof
+          & \Rightarrow
+          & \AXC{$\seq[\mtf{P}]{\mathcal{G} \hsep \tmty{x}{A}, \Gamma}$}
+            \AXC{$\seq[\mtf{Q}]{\mathcal{H} \hsep \tmty{x}{A^\bot}, \Delta}$}
+            \NOM{H-Mix} 
+            \BIC{$\seq[\piPar{\mtf{P}}{\mtf{Q}}]{
+            \mathcal{G} \hsep \mathcal{H} \hsep
+            \tmty{x}{A}, \Gamma \hsep \tmty{x}{A^\bot}, \Delta}$}
+            \NOM{H-Cycle}
+            \UIC{$\seq[\piNew{x}{(\piPar{\mtf{P}}{\mtf{Q}})}]{
+            \mathcal{G} \hsep \mathcal{H} \hsep \Gamma, \Delta}$}
+            \DisplayProof
+        \end{array}
+        \)}
+    \end{center}
+  \item
+    Case $(\tens)$.
+    We rewrite as follows:
+    \begin{center}
+      \scalebox{0.9}{\(
+        \begin{array}{lcl}
+          \AXC{$\seq[P]{\mathcal{G} \hsep \tmty{y}{A}, \Gamma}$}
+          \AXC{$\seq[Q]{\mathcal{H} \hsep \tmty{x}{B}, \Delta}$}
+          \SYM{\tens}
+          \BIC{$\seq[\cpSend{x}{y}{P}{Q}]{
+          \mathcal{G} \hsep \mathcal{H} \hsep \tmty{x}{A \tens B}, \Gamma, \Delta}$}
+          \DisplayProof
+          & \Rightarrow
+          & \AXC{$\seq[\mtf{P}]{\mathcal{G} \hsep \tmty{y}{A}, \Gamma}$}
+            \AXC{$\seq[\mtf{Q}]{\mathcal{H} \hsep \tmty{x}{B}, \Delta}$}
+            \NOM{H-Mix}
+            \BIC{$\seq[\piPar{\mtf{P}}{\mtf{Q}}]{
+            \mathcal{G} \hsep \mathcal{H} \hsep
+            \tmty{y}{A}, \Gamma \hsep \tmty{x}{B}, \Delta}$}
+            \NOM{H-Cycle}
+            \UIC{$\seq[\piNew{x}{(\piPar{\mtf{P}}{\mtf{Q}})}]{
+            \mathcal{G} \hsep \mathcal{H} \hsep \Gamma, \Delta}$}
+            \DisplayProof
+        \end{array}
+        \)}
+    \end{center}
+  \item
+    Case $(\one)$.
+    We rewrite as follows:
+    \begin{center}
+      \scalebox{0.9}{\(
+        \begin{array}{lcl}
+          \AXC{}\SYM{\one}
+          \UIC{$\seq[\cpHalt{x}]{\tmty{x}{\one}}$}
+          \DisplayProof
+          & \Rightarrow
+          & \AXC{}
+            \NOM{H-Halt}
+            \UIC{$\seq[\piHalt]{\emptyhypercontext}$}
+            \SYM{\one}
+            \UIC{$\seq[\piBoundSend{x}{}{\piHalt}]{\tmty{x}{\one}}$}
+            \DisplayProof
+        \end{array}      
+        \)}
+    \end{center}
+  \end{itemize}
+  The other cases are trivial.
+\end{proof}
+
+\begin{definition}\label{def:hcp-bigparr}
+  We can interpret environments as types by collapsing them using a series
+  of pars.
+  \begin{gather*}
+    \begin{array}{lcl}
+      \ty{\bigparr(\emptycontext)}
+      & = & \ty{\bot}
+      \\
+      \ty{\bigparr(\tmty{x_1}{A_1} , \dots , \tmty{x_n}{A_n})}
+      & = & \ty{A_1 \parr \dots \parr A_n}
+    \end{array}
+  \end{gather*}
+\end{definition}
+
+\begin{lemma}\label{lem:hcp-bigparr}
+  If $\seq{\Gamma}$ in \hcp, then $\seq{\bigparr\Gamma}$ in \hcp.
+\end{lemma}
+\begin{proof}
+  By induction on the structure of $\Gamma$.
+  \begin{itemize}
+  \item
+    If $\ty{\Gamma} = \ty{A}$, then the statement is trivially true.
+  \item
+    If $\ty{\Gamma} = \ty{A, B, \Gamma'}$,
+    then we apply $(\parr)$ to get $\seq{A \parr B, \Gamma'}$,\\
+    and apply the induction hypothesis.
+  \end{itemize}
+\end{proof}
+
+\begin{definition}\label{def:hcp-bigtens}
+  We can interpret hyper-environments as types by collapsing them using a series
+  of tensors. In the case of the empty hyper-environment
+  $\ty{\emptyhypercontext}$, we interpret this as the unit of tensor.
+  \begin{gather*}
+    \begin{array}{lcl}
+      \ty{\bigtens(\emptyhypercontext)}
+      & = & \ty{\one}
+      \\
+      \ty{\bigtens(\Gamma_1 \hsep \dots \hsep \Gamma_n)}
+      & = & \ty{\bigparr\Gamma_1 \tens \dots \tens \bigparr\Gamma_n}
+    \end{array}
+  \end{gather*}
+\end{definition}
+
+\begin{theorem}\label{thm:hcp2cp-bigtens}
+  If $\seq{\mathcal{G}}$ in \hcp, then $\seq{\bigtens\mathcal{G}}$ in \cp.
 \end{theorem}
-\begin{corollary}\label{cor:hccp2cp-typing}
-  If $\seq{\mathcal{G}}$ in \hccp, then $\seq{\bigtens\mathcal{G}}$ in \cp.
-\end{corollary}
 
 
 \bibliographystyle{eptcs}
