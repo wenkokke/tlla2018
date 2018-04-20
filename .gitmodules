@@ -1,0 +1,3 @@
+[submodule "doc/preamble"]
+	path = doc/preamble
+	url = git@github.com:wenkokke/latex-preamble.git
