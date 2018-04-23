@@ -603,35 +603,35 @@
 \end{proof}
 
 \begin{theorem}\label{thm:cp2hcp-equiv}
-  If $\tm{P}\equiv\tm{Q}$ in \cp, then $\tm{\mtf{P}}\equiv\tm{\mtf{Q}}$ in \hcp.
+  $\tm{P}\equiv\tm{Q}$ in \cp iff $\tm{\mtf{P}}\equiv\tm{\mtf{Q}}$ in \hcp.
 \end{theorem}
 \begin{proof}
   By induction on the derivation of $\tm{P}\equiv\tm{Q}$.
-  \begin{itemize}
-  \item
-    Case \cpEquivCutComm.
-    \begin{gather*}
-    \begin{array}{lcl}
-      \tm{\piNew{x}{(\piPar{\mtf{P}}{\mtf{Q}})}}
-      & \equiv & \text{by \hccpEquivMixComm}
-      \\
-      \tm{\piNew{x}{(\piPar{\mtf{Q}}{\mtf{P}})}}
-    \end{array}
-    \end{gather*}
-  \item
-    Case \cpEquivCutAss1.
-    \begin{gather*}
-    \begin{array}{lcl}
-      \tm{\piNew{x}{(\piPar{\mtf{P}}{\piNew{y}{(\piPar{\mtf{Q}}{\mtf{R}})}})}}
-      & \equiv & \text{%
-                 by \hccpEquivNewComm, \hccpEquivMixAss1, \hccpEquivMixComm,
-                 and \hccpEquivScopeExt{}}
-      \\
-      \tm{\piNew{y}{(\piPar{\piNew{x}{(\piPar{\mtf{P}}{\mtf{Q}})}}{\mtf{R}})}}
-    \end{array}
-    \end{gather*}
-  \end{itemize}
-  The other cases are trivial.
+% \begin{itemize}
+% \item
+%   Case \cpEquivCutComm.
+%   \begin{gather*}
+%   \begin{array}{lcl}
+%     \tm{\piNew{x}{(\piPar{\mtf{P}}{\mtf{Q}})}}
+%     & \equiv & \text{by \hccpEquivMixComm}
+%     \\
+%     \tm{\piNew{x}{(\piPar{\mtf{Q}}{\mtf{P}})}}
+%   \end{array}
+%   \end{gather*}
+% \item
+%   Case \cpEquivCutAss1.
+%   \begin{gather*}
+%   \begin{array}{lcl}
+%     \tm{\piNew{x}{(\piPar{\mtf{P}}{\piNew{y}{(\piPar{\mtf{Q}}{\mtf{R}})}})}}
+%     & \equiv & \text{%
+%                by \hccpEquivNewComm, \hccpEquivMixAss1, \hccpEquivMixComm,
+%                and \hccpEquivScopeExt{}}
+%     \\
+%     \tm{\piNew{y}{(\piPar{\piNew{x}{(\piPar{\mtf{P}}{\mtf{Q}})}}{\mtf{R}})}}
+%   \end{array}
+%   \end{gather*}
+% \end{itemize}
+% The other cases are trivial.
 \end{proof}
 
 \begin{theorem}\label{thm:cp2hcp-reduction}
@@ -639,36 +639,36 @@
 \end{theorem}
 \begin{proof}
   By induction on the the derivation of $\reducesto{P}{Q}$.
-  \begin{itemize}
-  \item
-    Case \cpRedBetaTensParr.
-    \begin{gather*}
-    \begin{array}{lcl}
-      \tm{\piNew{x}{(\piPar{\piBoundSend{x}{y}{(\piPar{P}{Q})}}{\piRecv{x}{z}{R}})}}
-      & \Longrightarrow & \text{by \hccpRedBetaTensParr}
-      \\
-      \tm{\piNew{x}{\piNew{y}{(\piPar{(\piPar{P}{Q})}{\cpSub{y}{z}{R}})}}}
-      & \equiv & \text{%
-                 by \hccpEquivNewComm, \hccpEquivMixAss1, and \hccpEquivScopeExt1}
-      \\
-      \tm{\piNew{y}{(\piPar{P}{\piNew{x}{(\piPar{Q}{\cpSub{y}{z}{R}})}})}}
-    \end{array}
-    \end{gather*}
-  \item
-    Case \cpRedBetaOneBot.
-    \begin{gather*}
-    \begin{array}{lcl}
-      \tm{\piNew{x}{(\piPar{\piBoundSend{x}{}{\piHalt}}{\piRecv{x}{}{\mtf{Q}}})}}
-      & \Longrightarrow & \text{by \hccpRedBetaOneBot}
-      \\
-      \tm{(\piPar{\piHalt}{\mtf{Q}})}
-      & \equiv & \text{by \hccpEquivMixHalt1}
-      \\
-      \tm{\mtf{Q}}
-    \end{array}
-    \end{gather*}
-  \end{itemize}
-  The other cases are trivial.
+% \begin{itemize}
+% \item
+%   Case \cpRedBetaTensParr.
+%   \begin{gather*}
+%   \begin{array}{lcl}
+%     \tm{\piNew{x}{(\piPar{\piBoundSend{x}{y}{(\piPar{P}{Q})}}{\piRecv{x}{z}{R}})}}
+%     & \Longrightarrow & \text{by \hccpRedBetaTensParr}
+%     \\
+%     \tm{\piNew{x}{\piNew{y}{(\piPar{(\piPar{P}{Q})}{\cpSub{y}{z}{R}})}}}
+%     & \equiv & \text{%
+%                by \hccpEquivNewComm, \hccpEquivMixAss1, and \hccpEquivScopeExt1}
+%     \\
+%     \tm{\piNew{y}{(\piPar{P}{\piNew{x}{(\piPar{Q}{\cpSub{y}{z}{R}})}})}}
+%   \end{array}
+%   \end{gather*}
+% \item
+%   Case \cpRedBetaOneBot.
+%   \begin{gather*}
+%   \begin{array}{lcl}
+%     \tm{\piNew{x}{(\piPar{\piBoundSend{x}{}{\piHalt}}{\piRecv{x}{}{\mtf{Q}}})}}
+%     & \Longrightarrow & \text{by \hccpRedBetaOneBot}
+%     \\
+%     \tm{(\piPar{\piHalt}{\mtf{Q}})}
+%     & \equiv & \text{by \hccpEquivMixHalt1}
+%     \\
+%     \tm{\mtf{Q}}
+%   \end{array}
+%   \end{gather*}
+% \end{itemize}
+% The other cases are trivial.
 \end{proof}
 
 \begin{theorem}\label{hcp2cp-reduction}
@@ -676,7 +676,10 @@
   $\reducesto{P}{Q}$ in \cp and $\tm{R}\Longrightarrow^\star\tm{\mtf{Q}}$ in \hcp.
 \end{theorem}
 \begin{proof}
-  By induction on the derivation of $\reducesto{\mtf{P}}{R}$
+  By induction on the derivation of $\reducesto{\mtf{P}}{R}$.
+  The cases for \hccpRedAxCut1 and the $\beta$-rules are trivial.
+  For the $\kappa\nu$-rules, we rewrite by the appropriate $\kappa{\ppar}$ rule,
+  and vice versa.
 \end{proof}
 
 \begin{definition}\label{def:hcp-gammakappa}
