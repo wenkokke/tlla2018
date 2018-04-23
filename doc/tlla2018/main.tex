@@ -1,6 +1,7 @@
 \documentclass[submission,copyright,creativecommons]{eptcs}
 \providecommand{\event}{Linearity and TLLA 2018}
-\usepackage{amsthm,amsmath}
+\usepackage[fleqn]{amsmath}
+\usepackage{amsthm}
 \usepackage{nameref,hyperref,cleveref}
 \usepackage[inline]{enumitem}
 \usepackage{breakurl} % Not needed if you use pdflatex only.
@@ -16,9 +17,17 @@
 \author{%
   Wen Kokke
   \institute{University of Edinburgh\\ Edinburgh, Scotland}
-  \email{wen.kokke@ed.ac.uk}}
+  \email{wen.kokke@ed.ac.uk}
+  \and
+  Marco Peressotti
+  \institute{University of Southern Denmark\\ Odense, Denmark}
+  \email{peressotti@imada.sdu.dk}
+  \and
+  Fabrizio Montesi
+  \institute{University of Southern Denmark\\ Odense, Denmark}
+  \email{fmontesi@imada.sdu.dk}}
 \def\titlerunning{Taking Linear Logic Apart}
-\def\authorrunning{Wen Kokke}
+\def\authorrunning{W.\ Kokke, M.\ Peressotti, and F.\ Montesi}
 
 \begin{document}
 \maketitle
@@ -49,7 +58,7 @@
 \begin{definition}[Structural congruence]\label{def:cp-equiv}
   We define the structural congruence $\equiv$ as the congruence closure over
   terms which satisfies the following additional axioms:
-  \begin{gather*}
+  \[
     \setlength{\arraycolsep}{3pt}
     \begin{array}{llcll}
       \cpEquivLinkComm
@@ -68,7 +77,7 @@
       & \tm{\cpCut{y}{\cpCut{x}{P}{Q}}{R}}
       & \text{if }\notFreeIn{x}{R}\text{ and }\notFreeIn{y}{P}
     \end{array}
-  \end{gather*}
+  \]
 \end{definition}
 
 \begin{definition}[Reduction]\label{def:cp-reduction}
@@ -77,7 +86,7 @@
   The relation $\Longrightarrow^\star$ is the reflexive, transitive closure of
   $\Longrightarrow$.
   Reductions can only be constructed as follows:
-  \begin{gather*}
+  \[
     \begin{array}{llcll}
       \cpRedAxCut1
       & \tm{\cpCut{x}{\cpLink{w}{x}}{P}}
@@ -146,7 +155,7 @@
       & \Longrightarrow \;
       & \tm{\cpAbsurd{y}}
     \end{array}
-  \end{gather*}
+  \]
   \begin{center}
     \begin{prooftree*}
       \AXC{$\reducesto{P}{P^\prime}$}
@@ -164,7 +173,7 @@
 \end{definition}
 
 \begin{definition}[Types]\label{def:cp-types}
-  \begin{gather*}
+  \[
     \begin{array}{rclrcl}
       \ty{A}, \ty{B}, \ty{C}
            :=& \ty{A \tens B} &\text{pair of independent processes}
@@ -176,7 +185,7 @@
       \\ \mid& \ty{A \with B} &\text{external choice}
       &  \mid& \ty{\top}      &\text{unit for} \; {\with}
     \end{array}
-  \end{gather*}
+  \]
 \end{definition}
 
 \begin{figure*}[!htb]
@@ -198,7 +207,7 @@
 \section{Hypersequent Classical Processes}
 
 \begin{definition}[Terms]\label{def:hcp-terms}
-  \begin{gather*}
+  \[
     \begin{array}{rllrll}
       \tm{P}, \tm{Q}, \tm{R}
            :=& \tm{\cpLink{x}{y}}         &\text{link}
@@ -214,13 +223,13 @@
       \\ \mid& \tm{\cpCase{x}{P}{Q}}      &\text{offer binary choice}
       &  \mid& \tm{\cpAbsurd{x}}          &\text{offer nullary choice}
     \end{array}
-  \end{gather*}
+  \]
 \end{definition}
 
 \begin{definition}[Structural congruence]\label{def:hcp-equiv}
   We define the structural congruence $\equiv$ as the congruence closure over
   terms which satisfies the following additional axioms:
-  \begin{gather*}
+  \[
     \setlength{\arraycolsep}{3pt}
     \begin{array}{llcllllcll}
         \cpEquivLinkComm
@@ -259,7 +268,7 @@
       & \tm{\piPar{P}{\piNew{x}{Q}}}
       & \text{if }\notFreeIn{x}{P} 
     \end{array}
-  \end{gather*}
+  \]
 \end{definition}
 
 \begin{definition}[Reduction]\label{def:hcp-reduction}
@@ -268,7 +277,7 @@
   The relation $\Longrightarrow^\star$ is the reflexive, transitive closure of
   $\Longrightarrow$.
   Reductions can only be constructed as follows:
-  \begin{gather*}
+  \[
     \begin{array}{llcll}
       \hccpRedAxCut1
       & \tm{\cpCut{x}{\cpLink{w}{x}}{P}}
@@ -276,12 +285,12 @@
       & \tm{\cpSub{w}{x}{P}} 
       \\
       \hccpRedBetaTensParr
-      & \tm{\cpCut{x}{\piSend{x}{y}{P}}{\piRecv{x}{z}{R}}}
+      & \tm{\cpCut{x}{\piBoundSend{x}{y}{P}}{\piRecv{x}{z}{R}}}
       & \Longrightarrow
       & \tm{\piNew{x}{\piNew{y}{(\piPar{P}{\cpSub{y}{z}{R}})}}}
       \\
       \hccpRedBetaOneBot
-      & \tm{\cpCut{x}{\piSend{x}{}{P}}{\piRecv{x}{}{P}}}
+      & \tm{\cpCut{x}{\piBoundSend{x}{}{P}}{\piRecv{x}{}{P}}}
       & \Longrightarrow
       & \tm{\piPar{P}{Q}}
       \\
@@ -375,7 +384,7 @@
       & \Longrightarrow
       & \tm{\cpAbsurd{y}}
     \end{array}
-  \end{gather*}
+  \]
   \begin{center}
     \begin{prooftree*}
       \AXC{$\reducesto{P}{P^\prime}$}
@@ -452,12 +461,11 @@
   If $\seq[P]{\Gamma}$ in \cp, then $\seq[\mtf{P}]{\Gamma}$ in \hcp.
 \end{theorem}
 \begin{proof}
-  By induction on the structure of the derivation of $\seq[P]{\Gamma}$.
+  By induction on the derivation of $\seq[P]{\Gamma}$.
     \begin{itemize}
   \item 
-    Case \textsc{Cut}.
-    We rewrite to:
-    \[
+    Case \textsc{Cut}. We rewrite to:
+    \begin{gather*}
       \begin{array}{lcl}
         \AXC{$\seq[P]{\Gamma, \tmty{x}{A}}$}
         \AXC{$\seq[Q]{\Delta, \tmty{x}{A^\bot}}$}
@@ -475,11 +483,10 @@
           \Gamma, \Delta}$}
           \DisplayProof
       \end{array}
-    \]
+    \end{gather*}
   \item
-    Case $(\tens)$.
-    We rewrite as follows:
-    \[
+    Case $(\tens)$. We rewrite as follows:
+    \begin{gather*}
       \begin{array}{lcl}
         \AXC{$\seq[P]{\Gamma, \tmty{y}{A}}$}
         \AXC{$\seq[Q]{\Delta, \tmty{x}{B}}$}
@@ -497,11 +504,10 @@
           \Gamma, \Delta, \tmty{x}{A \tens B}}$}
           \DisplayProof
       \end{array}
-    \]
+    \end{gather*}
   \item
-    Case $(\one)$.
-    We rewrite as follows:
-    \[
+    Case $(\one)$. We rewrite as follows:
+    \begin{flalign*}
       \begin{array}{lcl}
         \AXC{}\SYM{\one}
         \UIC{$\seq[\cpHalt{x}]{\tmty{x}{\one}}$}
@@ -514,7 +520,7 @@
           \UIC{$\seq[\piBoundSend{x}{}{\piHalt}]{\tmty{x}{\one}}$}
           \DisplayProof
       \end{array}      
-    \]
+    \end{flalign*}
   \end{itemize}
   The other cases are trivial.
 \end{proof}
@@ -523,37 +529,30 @@
   If $\tm{P}\equiv\tm{Q}$ in \cp, then $\tm{\mtf{P}}\equiv\tm{\mtf{Q}}$ in \hcp.
 \end{theorem}
 \begin{proof}
-  By induction on the structure of the derivation of $\tm{P}\equiv\tm{Q}$.
+  By induction on the derivation of $\tm{P}\equiv\tm{Q}$.
   \begin{itemize}
   \item
     Case \cpEquivCutComm.
-    \[
-      \begin{array}{lcl}
-        \tm{\piNew{x}{(\piPar{\mtf{P}}{\mtf{Q}})}}
-        & \equiv & \text{by \hccpEquivMixComm}
-        \\
-        \tm{\piNew{x}{(\piPar{\mtf{Q}}{\mtf{P}})}}
-      \end{array}
-    \]
+    \begin{gather*}
+    \begin{array}{lcl}
+      \tm{\piNew{x}{(\piPar{\mtf{P}}{\mtf{Q}})}}
+      & \equiv & \text{by \hccpEquivMixComm}
+      \\
+      \tm{\piNew{x}{(\piPar{\mtf{Q}}{\mtf{P}})}}
+    \end{array}
+    \end{gather*}
   \item
     Case \cpEquivCutAss1.
-    \[
-      \begin{array}{lcl}
-        \tm{\piNew{x}{(\piPar{\mtf{P}}{\piNew{y}{(\piPar{\mtf{Q}}{\mtf{R}})}})}}
-        & \equiv & \text{by \hccpEquivScopeExt2}
-        \\
-        \tm{\piNew{x}{\piNew{y}{(\piPar{\mtf{P}}{(\piPar{\mtf{Q}}{\mtf{R}})})}}}
-        & \equiv & \text{by \hccpEquivNewComm}
-        \\
-        \tm{\piNew{y}{\piNew{x}{(\piPar{\mtf{P}}{(\piPar{\mtf{Q}}{\mtf{R}})})}}}
-        & \equiv & \text{by \hccpEquivMixAss1}
-        \\
-        \tm{\piNew{y}{\piNew{x}{(\piPar{(\piPar{\mtf{P}}{\mtf{Q}})}{\mtf{R}})}}}
-        & \equiv & \text{by \hccpEquivScopeExt1 and \hccpEquivMixComm}
-        \\
-        \tm{\piNew{y}{(\piPar{\piNew{x}{(\piPar{\mtf{P}}{\mtf{Q}})}}{\mtf{R}})}}
-      \end{array}
-    \]
+    \begin{gather*}
+    \begin{array}{lcl}
+      \tm{\piNew{x}{(\piPar{\mtf{P}}{\piNew{y}{(\piPar{\mtf{Q}}{\mtf{R}})}})}}
+      & \equiv & \text{%
+                 by \hccpEquivNewComm, \hccpEquivMixAss1, \hccpEquivMixComm,
+                 and \hccpEquivScopeExt{}}
+      \\
+      \tm{\piNew{y}{(\piPar{\piNew{x}{(\piPar{\mtf{P}}{\mtf{Q}})}}{\mtf{R}})}}
+    \end{array}
+    \end{gather*}
   \end{itemize}
   The other cases are trivial.
 \end{proof}
@@ -562,45 +561,48 @@
   If $\reducesto{P}{Q}$ in \cp, then $\reducesto{\mtf{P}}{\mtf{Q}}$ in \hcp.
 \end{theorem}
 \begin{proof}
-  By induction on the structure of the derivation of $\reducesto{P}{Q}$.
+  By induction on the the derivation of $\reducesto{P}{Q}$.
   \begin{itemize}
   \item
     Case \cpRedBetaTensParr.
     \begin{gather*}
-      \begin{array}{lcl}
-        \tm{\piNew{x}{(\piPar{\piBoundSend{x}{y}{(\piPar{P}{Q})}}{\piRecv{x}{z}{R}})}}
-        & \Longrightarrow & \text{by \hccpRedBetaTensParr}
-        \\
-        \tm{\piNew{x}{\piNew{y}{(\piPar{(\piPar{P}{Q})}{\cpSub{y}{z}{R}})}}}
-        & \equiv & \text{by \hccpEquivNewComm}
-        \\
-        \tm{\piNew{y}{\piNew{x}{(\piPar{(\piPar{P}{Q})}{\cpSub{y}{z}{R}})}}}
-        & \equiv & \text{by \hccpEquivMixAss1}
-        \\
-        \tm{\piNew{y}{\piNew{x}{(\piPar{P}{(\piPar{Q}{\cpSub{y}{z}{R}})})}}}
-        & \equiv & \text{by \hccpEquivScopeExt1}
-        \\
-        \tm{\piNew{y}{(\piPar{P}{\piNew{x}{(\piPar{Q}{\cpSub{y}{z}{R}})}})}}
-      \end{array}
+    \begin{array}{lcl}
+      \tm{\piNew{x}{(\piPar{\piBoundSend{x}{y}{(\piPar{P}{Q})}}{\piRecv{x}{z}{R}})}}
+      & \Longrightarrow & \text{by \hccpRedBetaTensParr}
+      \\
+      \tm{\piNew{x}{\piNew{y}{(\piPar{(\piPar{P}{Q})}{\cpSub{y}{z}{R}})}}}
+      & \equiv & \text{%
+                 by \hccpEquivNewComm, \hccpEquivMixAss1, and \hccpEquivScopeExt1}
+      \\
+      \tm{\piNew{y}{(\piPar{P}{\piNew{x}{(\piPar{Q}{\cpSub{y}{z}{R}})}})}}
+    \end{array}
     \end{gather*}
   \item
     Case \cpRedBetaOneBot.
     \begin{gather*}
-      \begin{array}{lcl}
-        \tm{\piNew{x}{(\piPar{\piBoundSend{x}{}{\piHalt}}{\piRecv{x}{}{\mtf{Q}}})}}
-        & \Longrightarrow & \text{by \hccpRedBetaOneBot}
-        \\
-        \tm{(\piPar{\piHalt}{\mtf{Q}})}
-        & \equiv & \text{by \hccpEquivMixHalt1}
-        \\
-        \tm{\mtf{Q}}
-      \end{array}
+    \begin{array}{lcl}
+      \tm{\piNew{x}{(\piPar{\piBoundSend{x}{}{\piHalt}}{\piRecv{x}{}{\mtf{Q}}})}}
+      & \Longrightarrow & \text{by \hccpRedBetaOneBot}
+      \\
+      \tm{(\piPar{\piHalt}{\mtf{Q}})}
+      & \equiv & \text{by \hccpEquivMixHalt1}
+      \\
+      \tm{\mtf{Q}}
+    \end{array}
     \end{gather*}
   \end{itemize}
   The other cases are trivial.
 \end{proof}
 
-\begin{definition}\label{def:hcp-kappa}
+\begin{theorem}\label{hcp2cp-reduction}
+  If $\reducesto{\mtf{P}}{R}$ in \hcp, then there is a $\tm{Q}$ such that
+  $\reducesto{P}{Q}$ in \cp and $\tm{R}\Longrightarrow^\star\tm{\mtf{Q}}$ in \hcp.
+\end{theorem}
+\begin{proof}
+  By induction on the derivation of $\reducesto{\mtf{P}}{R}$
+\end{proof}
+
+\begin{definition}\label{def:hcp-gammakappa}
   We define the relation $\tm{P}\equiv_{\gamma\kappa}\tm{Q}$ as the congruence
   closure of the $\gamma$- and $\kappa$-rules for \hcp (see
   \cref{def:hcp-reduction}).
@@ -616,11 +618,13 @@
   We repeatedly apply the $\kappa{\ppar}$-rules to move the applications of
   \textsc{H-Mix} upwards. There are three cases:
   \begin{enumerate*}[label={\alph*)}]
-  \item if an \textsc{H-Mix} gets stuck under an \textsc{H-New}, it forms a
-    \textsc{Cut};
-  \item if an \textsc{H-Mix} gets stuck under a $(\tens)$, it forms a \cp
-    $(\tens)$;
-  \item otherwise, it moves all the way to the top.
+  \item
+    if an \textsc{H-Mix} gets stuck under an \textsc{H-New}, it forms a
+    \cp \textsc{Cut};
+  \item
+    if an \textsc{H-Mix} gets stuck under a $(\tens)$, it forms a \cp $(\tens)$;
+  \item
+    otherwise, it moves all the way to the top.
   \end{enumerate*}
   Since the only way to continue after a $(\one)$ is by using an \textsc{H-Mix},
   all applications of $(\one)$ are now be followed by an application of
@@ -630,19 +634,19 @@
 We can interpret environments as types by collapsing them using a series of
 pars.
 \begin{definition}\label{def:bigparr}
-  \(
+  \begin{gather*}
   \begin{array}{lcl}
     \ty{\bigparr(\tmty{x_1}{A_1} , \dots , \tmty{x_n}{A_n})}
     & = & \ty{A_1 \parr \dots \parr A_n}
   \end{array}
-  \)
+  \end{gather*}
 \end{definition}
 
 \begin{lemma}\label{lem:cp-bigparr}
   If $\seq{\Gamma}$ in \cp, then $\seq{\bigparr\Gamma}$ in \cp.
 \end{lemma}
 \begin{proof}
-  By induction on the structure of $\Gamma$.
+  By induction on the structure of the environment $\Gamma$.
   \begin{itemize}
   \item
     If $\ty{\Gamma} = \ty{A}$, then the statement is trivially true.
@@ -657,7 +661,7 @@ We can interpret hyper-environments as types by collapsing them using a series
 of tensors. In the case of the empty hyper-environment
 $\ty{\emptyhypercontext}$, we interpret this as the unit of tensor.
 \begin{definition}\label{def:bigtens}
-  \(
+  \begin{gather*}
   \begin{array}{lcl}
     \ty{\bigtens(\emptyhypercontext)}
     & = & \ty{\one}
@@ -665,7 +669,7 @@ $\ty{\emptyhypercontext}$, we interpret this as the unit of tensor.
     \ty{\bigtens(\Gamma_1 \hsep \dots \hsep \Gamma_n)}
     & = & \ty{\bigparr\Gamma_1 \tens \dots \tens \bigparr\Gamma_n}
   \end{array}
-  \)
+  \end{gather*}
 \end{definition}
 
 \begin{theorem}\label{thm:hcp2cp-bigtens}
