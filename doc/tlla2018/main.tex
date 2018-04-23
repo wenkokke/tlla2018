@@ -267,8 +267,7 @@
   to the process $\tm{Q}$ in a single step.
   The relation $\Longrightarrow^\star$ is the reflexive, transitive closure of
   $\Longrightarrow$.
-  Reductions can be constructed as using the rules from \cref{def:cp-reduction},
-  with the following changes:
+  Reductions can only be constructed as follows:
   \begin{gather*}
     \begin{array}{llcll}
       \hccpRedAxCut1
@@ -679,7 +678,7 @@ $\ty{\emptyhypercontext}$, we interpret this as the unit of tensor.
     If $\ty{\mathcal{G}} = \ty{\emptyhypercontext}$, we apply $(\one)$.
   \item
     If $\ty{\mathcal{G}} = \ty{\Gamma_1 \hsep \dots \hsep \Gamma_n}$,
-    we apply \cref{lem:hcp2cp-split} to obtain proofs of $\seq{\Gamma_1}, \dots,
+    we apply \cref{lem:hcp-disentangle} to obtain proofs of $\seq{\Gamma_1}, \dots,
     \seq{\Gamma_n}$ in \cp, then we apply \cref{lem:cp-bigparr} to each of
     those proofs to obtain proofs of $\seq{\bigparr\Gamma_1}, \dots,
     \seq{\bigparr\Gamma_n}$, and join them using $(\tens)$ to obtain a single
