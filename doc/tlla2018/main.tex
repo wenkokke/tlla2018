@@ -29,7 +29,7 @@
 \section{Classical Processes}
 
 \begin{definition}[Terms]\label{def:cp-terms}
-  \begin{gather*}
+  \[
     \begin{array}{rllrll}
       \tm{P}, \tm{Q}, \tm{R}
            :=& \tm{\cpLink{x}{y}}       &\text{link}
@@ -43,7 +43,7 @@
       \\ \mid& \tm{\cpCase{x}{P}{Q}}    &\text{offer binary choice}
       &  \mid& \tm{\cpAbsurd{x}}        &\text{offer nullary choice}
     \end{array}
-  \end{gather*}
+  \]
 \end{definition}
 
 \begin{definition}[Structural congruence]\label{def:cp-equiv}
@@ -271,23 +271,110 @@
   with the following changes:
   \begin{gather*}
     \begin{array}{llcll}
-      &
-      & \vdots
-      &
+      \hccpRedAxCut1
+      & \tm{\cpCut{x}{\cpLink{w}{x}}{P}}
+      & \Longrightarrow
+      & \tm{\cpSub{w}{x}{P}} 
       \\
-      \cpRedBetaTensParr
+      \hccpRedBetaTensParr
       & \tm{\cpCut{x}{\piSend{x}{y}{P}}{\piRecv{x}{z}{R}}}
       & \Longrightarrow
       & \tm{\piNew{x}{\piNew{y}{(\piPar{P}{\cpSub{y}{z}{R}})}}}
       \\
-      \cpRedBetaOneBot
+      \hccpRedBetaOneBot
       & \tm{\cpCut{x}{\piSend{x}{}{P}}{\piRecv{x}{}{P}}}
       & \Longrightarrow
       & \tm{\piPar{P}{Q}}
       \\
-      &
-      & \vdots
-      &
+      \hccpRedBetaPlusWith1
+      & \tm{\cpCut{x}{\cpInl{x}{P}}{\cpCase{x}{Q}{R}}}
+      & \Longrightarrow
+      & \tm{\cpCut{x}{P}{Q}}
+      \\
+      \hccpRedBetaPlusWith2
+      & \tm{\cpCut{x}{\cpInr{x}{P}}{\cpCase{x}{Q}{R}}}
+      & \Longrightarrow
+      & \tm{\cpCut{x}{P}{R}}
+      \\
+      \hccpRedKappaNuTens
+      & \tm{\piNew{x}{\piBoundSend{y}{z}{P}}}
+      & \Longrightarrow
+      & \tm{\piBoundSend{y}{z}{\piNew{x}{P}}}
+      \\
+      \hccpRedKappaNuParr
+      & \tm{\piNew{x}{\piRecv{y}{z}{P}}}
+      & \Longrightarrow
+      & \tm{\piRecv{y}{z}{\piNew{x}{P}}}
+      \\
+      \hccpRedKappaNuOne
+      & \tm{\piNew{x}{\piBoundSend{y}{}{P}}}
+      & \Longrightarrow
+      & \tm{\piBoundSend{y}{}{\piNew{x}{P}}}
+      \\
+      \hccpRedKappaNuBot
+      & \tm{\piNew{x}{\piRecv{y}{}{P}}}
+      & \Longrightarrow
+      & \tm{\piRecv{y}{}{\piNew{x}{P}}}
+      \\
+      \hccpRedKappaNuPlus1
+      & \tm{\piNew{x}{\cpInl{y}{P}}}
+      & \Longrightarrow
+      & \tm{\cpInl{y}{\piNew{x}{P}}}
+      \\
+      \hccpRedKappaNuPlus2
+      & \tm{\piNew{x}{\cpInr{y}{P}}}
+      & \Longrightarrow
+      & \tm{\cpInr{y}{\piNew{x}{P}}}
+      \\
+      \hccpRedKappaNuWith
+      & \tm{\piNew{x}{\cpCase{y}{P}{Q}}}
+      & \Longrightarrow
+      & \tm{\cpCase{y}{\piNew{x}{P}}{\piNew{x}{Q}}}
+      \\
+      \hccpRedKappaNuTop
+      & \tm{\piNew{x}{\cpAbsurd{y}}}
+      & \Longrightarrow
+      & \tm{\cpAbsurd{y}}
+      \\
+      \hccpRedKappaMixTens
+      & \tm{(\piPar{\piBoundSend{y}{z}{P}}{R})}
+      & \Longrightarrow
+      & \tm{\piBoundSend{y}{z}{(\piPar{P}{R})}}
+      \\
+      \hccpRedKappaMixParr
+      & \tm{(\piPar{\piRecv{y}{z}{P}}{R})}
+      & \Longrightarrow
+      & \tm{\piRecv{y}{z}{(\piPar{P}{R})}}
+      \\
+      \hccpRedKappaMixOne
+      & \tm{(\piPar{\piBoundSend{y}{}{P}}{R})}
+      & \Longrightarrow
+      & \tm{\piBoundSend{y}{}{(\piPar{P}{R})}}
+      \\
+      \hccpRedKappaMixBot
+      & \tm{(\piPar{\piRecv{y}{}{P}}{R})}
+      & \Longrightarrow
+      & \tm{\piRecv{y}{}{(\piPar{P}{R})}}
+      \\
+      \hccpRedKappaMixPlus1
+      & \tm{(\piPar{\cpInl{y}{P}}{R})}
+      & \Longrightarrow
+      & \tm{\cpInl{y}{(\piPar{P}{R})}}
+      \\
+      \hccpRedKappaMixPlus2
+      & \tm{(\piPar{\cpInr{y}{P}}{R})}
+      & \Longrightarrow
+      & \tm{\cpInr{y}{(\piPar{P}{R})}}
+      \\
+      \hccpRedKappaMixWith
+      & \tm{(\piPar{\cpCase{y}{P}{Q}}{R})}
+      & \Longrightarrow
+      & \tm{\cpCase{y}{(\piPar{P}{R})}{(\piPar{Q}{R})}}
+      \\
+      \hccpRedKappaMixTop
+      & \tm{(\piPar{\cpAbsurd{y}}{R})}
+      & \Longrightarrow
+      & \tm{\cpAbsurd{y}}
     \end{array}
   \end{gather*}
   \begin{center}
@@ -317,7 +404,6 @@
   \begin{center} \hccpInfMix       \hccpInfHalt  \end{center}
 
   Logical Rules.
-
   \begin{center} \hccpInfBoundTens \hccpInfParr  \end{center}
   \begin{center} \hccpInfOne       \hccpInfBot   \end{center}
   \begin{center} \hccpInfPlus1     \hccpInfPlus2 \end{center}
@@ -385,7 +471,7 @@
           \NOM{H-Mix} 
           \BIC{$\seq[\piPar{\mtf{P}}{\mtf{Q}}]{
           \Gamma, \tmty{x}{A} \hsep \Delta, \tmty{x}{A^\bot}}$}
-          \NOM{H-Cycle}
+          \NOM{H-New}
           \UIC{$\seq[\piNew{x}{(\piPar{\mtf{P}}{\mtf{Q}})}]{
           \Gamma, \Delta}$}
           \DisplayProof
@@ -515,15 +601,42 @@
   The other cases are trivial.
 \end{proof}
 
+\begin{definition}\label{def:hcp-kappa}
+  We define the relation $\tm{P}\equiv_{\gamma\kappa}\tm{Q}$ as the congruence
+  closure of the $\gamma$- and $\kappa$-rules for \hcp (see
+  \cref{def:hcp-reduction}).
+\end{definition}
+
+\begin{lemma}[Disentangle]\label{lem:hcp-disentangle}
+  If $\seq[P]{\Gamma_1 \hsep \dots \hsep \Gamma_n}$ in \hcp,
+  then there exist $\seq[P_1]{\Gamma_1}, \dots, \seq[P_n]{\Gamma_n}$ in \cp,
+  such that
+  $\tm{P}\equiv_{\gamma\kappa}\tm{(\mtf{P_1}\ppar\dots\ppar\mtf{P_n})}$.
+\end{lemma}
+\begin{proof}  
+  We repeatedly apply the $\kappa{\ppar}$-rules to move the applications of
+  \textsc{H-Mix} upwards. There are three cases:
+  \begin{enumerate*}[label={\alph*)}]
+  \item if an \textsc{H-Mix} gets stuck under an \textsc{H-New}, it forms a
+    \textsc{Cut};
+  \item if an \textsc{H-Mix} gets stuck under a $(\tens)$, it forms a \cp
+    $(\tens)$;
+  \item otherwise, it moves all the way to the top.
+  \end{enumerate*}
+  Since the only way to continue after a $(\one)$ is by using an \textsc{H-Mix},
+  all applications of $(\one)$ are now be followed by an application of
+  \textsc{H-Halt}, forming a \cp $(\one)$.
+\end{proof}
+
+We can interpret environments as types by collapsing them using a series of
+pars.
 \begin{definition}\label{def:bigparr}
-  We can interpret environments as types by collapsing them using a series
-  of pars.
-  \begin{gather*}
-    \begin{array}{lcl}
-      \ty{\bigparr(\tmty{x_1}{A_1} , \dots , \tmty{x_n}{A_n})}
-      & = & \ty{A_1 \parr \dots \parr A_n}
-    \end{array}
-  \end{gather*}
+  \(
+  \begin{array}{lcl}
+    \ty{\bigparr(\tmty{x_1}{A_1} , \dots , \tmty{x_n}{A_n})}
+    & = & \ty{A_1 \parr \dots \parr A_n}
+  \end{array}
+  \)
 \end{definition}
 
 \begin{lemma}\label{lem:cp-bigparr}
@@ -541,138 +654,20 @@
   \end{itemize}
 \end{proof}
 
+We can interpret hyper-environments as types by collapsing them using a series
+of tensors. In the case of the empty hyper-environment
+$\ty{\emptyhypercontext}$, we interpret this as the unit of tensor.
 \begin{definition}\label{def:bigtens}
-  We can interpret hyper-environments as types by collapsing them using a series
-  of tensors. In the case of the empty hyper-environment
-  $\ty{\emptyhypercontext}$, we interpret this as the unit of tensor.
-  \begin{gather*}
-    \begin{array}{lcl}
-      \ty{\bigtens(\emptyhypercontext)}
-      & = & \ty{\one}
-      \\
-      \ty{\bigtens(\Gamma_1 \hsep \dots \hsep \Gamma_n)}
-      & = & \ty{\bigparr\Gamma_1 \tens \dots \tens \bigparr\Gamma_n}
-    \end{array}
-  \end{gather*}
+  \(
+  \begin{array}{lcl}
+    \ty{\bigtens(\emptyhypercontext)}
+    & = & \ty{\one}
+    \\
+    \ty{\bigtens(\Gamma_1 \hsep \dots \hsep \Gamma_n)}
+    & = & \ty{\bigparr\Gamma_1 \tens \dots \tens \bigparr\Gamma_n}
+  \end{array}
+  \)
 \end{definition}
-
-\begin{lemma}\label{lem:hcp2cp-split}
-  If $\seq{\Gamma_1 \hsep \dots \hsep \Gamma_n}$ in \hcp,
-  then there exist $\seq{\Gamma_1}, \dots, \seq{\Gamma_n}$ in \cp.
-\end{lemma}
-\begin{proof}  
-  By induction on the structure of the derivation of
-  $\seq{\Gamma_1 \hsep \dots \hsep \Gamma_n}$,
-  taking care to remember the continuation of the derivation.
-  \begin{itemize}
-  \item 
-    Case \textsc{Cycle}. We know there \emph{must} be a corresponding
-    \textsc{H-Mix} deeper in the derivation. We have:
-    \[
-      \AXC{}\noLine\UIC{$\seq{\mathcal{G}_1}$}
-      \AXC{}\noLine\UIC{$\seq{\mathcal{G}_2}$}
-      \NOM{H-Mix}
-      \BIC{$\seq{\mathcal{G}_1 \hsep \mathcal{G}_2}$}
-      \DisplayProof
-      \; \cdots f \cdots \;
-      \AXC{}\noLine
-      \UIC{$\seq{\mathcal{G}_3 \hsep \Gamma, A \hsep \Delta, A^\bot}$}
-      \NOM{H-Cycle}
-      \UIC{$\seq{\mathcal{G}_3 \hsep \Gamma, \Delta}$}
-      \DisplayProof
-      \; \cdots h \cdots \;
-      \AXC{}\noLine
-      \UIC{$\seq{\Gamma_1 \hsep \dots \hsep \Gamma_n}$}
-      \DisplayProof
-    \]
-    By induction, we obtain some number of proofs in \cp corresponding
-    to the sequents in $\ty{\mathcal{G}_1}$ and $\ty{\mathcal{G}_2}$.
-    Each rule in $f$ modifies only one of these proofs (or joins two).
-    Therefore we can split $f$, applying each rule to its corresponding proof
-    (joining proofs as necessary).
-    We now have several proofs, including two of $\seq{\Gamma, A}$ and
-    $\seq{\Delta, A^\bot}$, which we join using \textsc{Cut}.
-    Then we do the same for the rules in $h$.
-  \item
-    Case $(\tens)$. We know there \emph{must} be a corresponding
-    \textsc{H-Mix} deeper in the derivation. We have:
-    \[
-      \AXC{}\noLine\UIC{$\seq{\mathcal{G}_1}$}
-      \AXC{}\noLine\UIC{$\seq{\mathcal{G}_2}$}
-      \NOM{H-Mix}
-      \BIC{$\seq{\mathcal{G}_1 \hsep \mathcal{G}_2}$}
-      \DisplayProof
-      \; \cdots f \cdots \;
-      \AXC{}\noLine\UIC{$\seq{\mathcal{G}_3 \hsep \Gamma, A \hsep \Delta, B}$}
-      \SYM{\tens}
-      \UIC{$\seq{\mathcal{G}_3 \hsep \Gamma, \Delta, {A \tens B}}$}
-      \DisplayProof
-      \; \cdots h \cdots \;
-      \AXC{}\noLine\UIC{$\seq{\Gamma_1 \hsep \dots \hsep \Gamma_n}$}
-      \DisplayProof
-    \]
-    By induction, we obtain some number of proofs in \cp corresponding
-    to the sequents in $\ty{\mathcal{G}_1}$ and $\ty{\mathcal{G}_2}$.
-    Each rule in $f$ modifies only one of these proofs (or joins two).
-    Therefore we can split $f$, applying each rule to its corresponding proof
-    (joining proofs as necessary).
-    We now have several proofs, including two of $\seq{\Gamma, A}$ and
-    $\seq{\Delta, B}$, which we join using $(\tens)$.
-    Then we do the same for the rules in $h$.
-  \item
-    Case $(\one)$. We know there \emph{must} be a corresponding \textsc{H-Halt}
-    deeper in the derivation. There are two cases: either the corresponding
-    \textsc{H-Halt} follows immediately, in which case we rewrite the both rules
-    to an application of $(\one)$ in \cp, or it is deeper in the proof, in which
-    case it must be followed by an application of \textsc{Mix}. We have:
-    \[
-      \AXC{}
-      \NOM{H-Halt}
-      \UIC{\seq{\emptyhypercontext}}
-      \AXC{}\noLine\UIC{$\seq{\mathcal{G}_1}$}
-      \NOM{H-Mix}
-      \BIC{$\seq{\mathcal{G}_1}$}
-      \DisplayProof
-      \; \cdots f \cdots \;
-      \AXC{}\noLine\UIC{$\seq{\mathcal{G}_2}$} 
-      \SYM{\one}
-      \UIC{$\seq{\mathcal{G}_2 \hsep \one}$}
-      \DisplayProof
-      \; \cdots h \cdots \;
-      \AXC{}\noLine
-      \UIC{$\seq{\Gamma_1 \hsep \dots \hsep \Gamma_n}$}
-      \DisplayProof
-    \]
-    By induction, we obtain some number of proofs in \cp corresponding
-    to the sequents in $\ty{\mathcal{G}_1}$.
-    Each rule in $f$ modifies only one of these proofs (or joins two).
-    Therefore we can split $f$, applying each rule to its corresponding proof
-    (joining proofs as necessary).
-    We now have several proofs corresponding to the sequents in
-    $\ty{\mathcal{G}_2}$.
-    Then we do the same for the rules in $h$.
-  \item
-    Case \textsc{Mix}. We know that there is no application of \textsc{H-Cycle}
-    or $(\tens)$ which eliminates the hypersequent separator introduced by this
-    application of \textsc{Mix}. We have:
-    \[
-      \AXC{}\noLine\UIC{$\seq{\mathcal{G}_1}$}
-      \AXC{}\noLine\UIC{$\seq{\mathcal{G}_2}$}
-      \NOM{H-Mix}
-      \BIC{$\seq{\mathcal{G}_1 \hsep \mathcal{G}_2}$}
-      \DisplayProof
-      \; \cdots f \cdots \;
-      \AXC{}\noLine
-      \UIC{$\seq{\Gamma_1 \hsep \dots \hsep \Gamma_n}$}
-      \DisplayProof
-    \]
-    By induction, we obtain some number of proofs in \cp corresponding
-    to the sequents in $\ty{\mathcal{G}_1}$ and $\ty{\mathcal{G}_2}$.
-    Each rule in $f$ modifies only one of these proofs (or joins two).
-    Therefore we can split $f$, applying each rule to its corresponding proof
-    (joining proofs as necessary).
-  \end{itemize}
-\end{proof}
 
 \begin{theorem}\label{thm:hcp2cp-bigtens}
   If $\seq{\mathcal{G}}$ in \hcp, then $\seq{\bigtens\mathcal{G}}$ in \cp.
