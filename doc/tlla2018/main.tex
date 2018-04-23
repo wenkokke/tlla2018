@@ -56,8 +56,8 @@
 \end{definition}
 
 \begin{definition}[Structural congruence]\label{def:cp-equiv}
-  We define the structural congruence $\equiv$ as the congruence closure over
-  terms which satisfies the following additional axioms:
+  The structural congruence $\equiv$ is the congruence closure over terms which
+  satisfies the following additional axioms:
   \[
     \setlength{\arraycolsep}{3pt}
     \begin{array}{llcll}
@@ -262,8 +262,8 @@
 \end{definition}
 
 \begin{definition}[Structural congruence]\label{def:hcp-equiv}
-  We define the structural congruence $\equiv$ as the congruence closure over
-  terms which satisfies the following additional axioms:
+  The structural congruence $\equiv$ is the congruence closure over terms which
+  satisfies the following additional axioms:
   \[
     \setlength{\arraycolsep}{3pt}
     \begin{array}{llcllllcll}
@@ -505,9 +505,8 @@
 
 \section{Relation between \cp and \hcp}
 
+We define a translation from terms in \cp to terms in \hcp which breaks down the term constructs in \cp into their more atomic constructs in \hcp:
 \begin{definition}\label{def:cp2hcp-terms}
-  We define a translation from terms in \cp to terms in \hcp which breaks down
-  the term constructs in \cp into their more atomic constructs in \hcp.
   \[
     \begin{array}{lcllcl}
          \tm{\mtf{\cpLink{x}{y}}}
@@ -682,10 +681,9 @@
   and vice versa.
 \end{proof}
 
-\begin{definition}\label{def:hcp-gammakappa}
-  We define the relation $\tm{P}\equiv_{\gamma\kappa}\tm{Q}$ as the congruence
-  closure of the $\gamma$- and $\kappa$-rules for \hcp (see
-  \cref{def:hcp-reduction}).
+\begin{definition}\label{def:hcp-gk}
+  The relation $\tm{P}\equiv_{\gamma\kappa}\tm{Q}$ is the congruence closure of
+  the $\gamma$- and $\kappa$-rules for \hcp (\cref{def:hcp-reduction}).
 \end{definition}
 
 \begin{lemma}[Disentangle]\label{lem:hcp-disentangle}
@@ -768,7 +766,6 @@ $\ty{\emptyhypercontext}$, we interpret this as the unit of tensor.
     proof of $\seq{\bigtens\mathcal{G}}$ in \cp.
   \end{itemize}
 \end{proof}
-
 
 \bibliographystyle{eptcs}
 \bibliography{main}
