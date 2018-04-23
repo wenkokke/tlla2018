@@ -203,6 +203,41 @@
   \label{fig:cp}
 \end{figure*}
 
+\begin{lemma}[Preservation for $\equiv$]\label{lem:cp-preservation-equiv}
+  If $\tm{P}\equiv\tm{Q}$, then $\seq[P]{\Gamma}$ iff $\seq[Q]{\Gamma}$.
+\end{lemma}
+\begin{proof}
+  By induction on the derivation of $\tm{P}\equiv\tm{Q}$.
+\end{proof}
+
+\begin{theorem}[Preservation]\label{thm:cp-preservation}
+  If $\seq[P]{\Gamma}$ and $\reducesto{P}{Q}$, then $\seq[Q]{\Gamma}$.
+\end{theorem}
+\begin{proof}
+  By induction on the derivation of $\reducesto{P}{Q}$.
+\end{proof}
+
+\begin{theorem}[Progress]\label{thm:cp-progress}
+  If $\seq[P]{\Gamma}$, then there exists a $\tm{Q}$ such that
+  $\tm{P}\Longrightarrow^\star\tm{Q}$ and $\tm{Q}$ is not a cut.
+\end{theorem}
+\begin{proof}
+  By induction on the derivation of $\seq[P]{\Gamma}$.
+  If the last rule is \textsc{Cut}, there are four cases:
+  \begin{enumerate*}[label={\alph*)}]
+  \item
+    if either side of the cut is an axiom, we apply \cpRedAxCut1;
+  \item
+    if either side of the cut is itself a cut, we recursively eliminate the cut;
+  \item
+    if both sides are logical rules acting on the cut formula, we apply
+    one of the $\beta$-rules;
+  \item
+    otherwise, at least one side is a logical rule acting on a formula other
+    than the cut formula, in which case we apply one of the $\kappa$-rules.
+  \end{enumerate*}
+\end{proof}
+
 
 \section{Hypersequent Classical Processes}
 
@@ -212,7 +247,7 @@
       \tm{P}, \tm{Q}, \tm{R}
            :=& \tm{\cpLink{x}{y}}         &\text{link}
       &  \mid& \tm{\piHalt}               &\text{terminated process}
-      \\ \mid& \tm{\piNew{x}{P}}          &\text{name restriction, ``new''}
+      \\ \mid& \tm{\piNew{x}{P}}          &\text{name restriction, ``cut''}
       &  \mid& \tm{( \piPar{P}{Q} )}      &\text{parallel composition, ``mix''}
       \\ \mid& \tm{\piBoundSend{x}{y}{P}} &\text{``output''}
       &  \mid& \tm{\piRecv{x}{y}{P}}      &\text{``input''}
@@ -426,6 +461,48 @@
   \label{fig:hccp}
 \end{figure*}
 
+\begin{lemma}[Preservation for $\equiv$]\label{lem:hcp-preservation-equiv}
+  If $\tm{P}\equiv\tm{Q}$, then $\seq[P]{\mathcal{G}}$ iff $\seq[Q]{\Gamma}$.
+\end{lemma}
+\begin{proof}
+  By induction on the derivation of $\tm{P}\equiv\tm{Q}$.
+\end{proof}
+
+\begin{theorem}[Preservation]\label{thm:hcp-preservation}
+  If $\seq[P]{\mathcal{G}}$ and $\reducesto{P}{Q}$, then $\seq[Q]{\Gamma}$.
+\end{theorem}
+\begin{proof}
+  By induction on the derivation of $\reducesto{P}{Q}$.
+\end{proof}
+
+\begin{theorem}[Progress]\label{thm:hcp-progress}
+  If $\seq[P]{\mathcal{G}}$, then there exists a $\tm{Q}$ such that
+  $\tm{P}\Longrightarrow^\star\tm{Q}$ and $\tm{Q}$ is not a cut or a mix.
+\end{theorem}
+\begin{proof}
+  By induction on the derivation of $\seq[P]{\mathcal{G}}$.
+  If the last rule is a cut, there are three cases:
+  \begin{enumerate*}[label={\alph*)}]
+  \item
+    if the rule under the cut is the corresponding mix, we eliminate both as in
+    \cref{thm:cp-progress};
+  \item
+    if the rule under the cut is an unrelated mix, we rewrite by
+    \hccpEquivScopeExt{}, and recursively eliminate the cut; 
+  \item
+    if the rule under the cut is a logical rule, we apply one of the
+    $\kappa\nu$-rules.
+  \end{enumerate*}
+  If the last rule is mix, there are two cases:
+  \begin{enumerate*}[label={\alph*)}]
+  \item
+    if the rule under the mix is a cut or another mix, we recursively eliminate it;
+  \item
+    if the rule under the mix is a logical rule, we apply one of the
+    $\kappa{\ppar}$-rules. 
+  \end{enumerate*}
+\end{proof}
+
 \section{Relation between \cp and \hcp}
 
 \begin{definition}\label{def:cp2hcp-terms}
@@ -478,7 +555,7 @@
           \NOM{H-Mix} 
           \BIC{$\seq[\piPar{\mtf{P}}{\mtf{Q}}]{
           \Gamma, \tmty{x}{A} \hsep \Delta, \tmty{x}{A^\bot}}$}
-          \NOM{H-New}
+          \NOM{H-Cut}
           \UIC{$\seq[\piNew{x}{(\piPar{\mtf{P}}{\mtf{Q}})}]{
           \Gamma, \Delta}$}
           \DisplayProof
@@ -615,19 +692,18 @@
   $\tm{P}\equiv_{\gamma\kappa}\tm{(\mtf{P_1}\ppar\dots\ppar\mtf{P_n})}$.
 \end{lemma}
 \begin{proof}  
-  We repeatedly apply the $\kappa{\ppar}$-rules to move the applications of
-  \textsc{H-Mix} upwards. There are three cases:
+  We repeatedly apply the $\kappa{\ppar}$-rules to move the mixes upwards.
+  There are three cases:
   \begin{enumerate*}[label={\alph*)}]
   \item
-    if an \textsc{H-Mix} gets stuck under an \textsc{H-New}, it forms a
-    \cp \textsc{Cut};
+    if a mix gets stuck under a cut, it forms a \cp cut;
   \item
-    if an \textsc{H-Mix} gets stuck under a $(\tens)$, it forms a \cp $(\tens)$;
+    if a mix gets stuck under a $(\tens)$, it forms a \cp $(\tens)$;
   \item
     otherwise, it moves all the way to the top.
   \end{enumerate*}
-  Since the only way to continue after a $(\one)$ is by using an \textsc{H-Mix},
-  all applications of $(\one)$ are now be followed by an application of
+  Since the only way to continue after a $(\one)$ is by using a mix, all
+  applications of $(\one)$ are now be followed by an application of
   \textsc{H-Halt}, forming a \cp $(\one)$.
 \end{proof}
 
