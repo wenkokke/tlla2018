@@ -1,17 +1,38 @@
-\documentclass[submission,copyright,creativecommons]{eptcs}
+\documentclass[draft,submission,copyright,creativecommons]{eptcs}
 \providecommand{\event}{Linearity and TLLA 2018}
+\usepackage[british]{babel}
+\usepackage[all]{foreign}
 \usepackage[fleqn]{amsmath}
 \usepackage{amsthm}
-\usepackage{nameref,hyperref,cleveref}
 \usepackage[inline]{enumitem}
 \usepackage{breakurl} % Not needed if you use pdflatex only.
 \usepackage{underscore} % Only needed if you use pdflatex.
 \usepackage{textcomp,textgreek,upgreek}
+\usepackage[
+	sectionbib,
+	square,
+	numbers,
+	sort&compress
+	]{natbib} % \citet
+\usepackage{nameref,hyperref,cleveref}
+\hypersetup{
+	hidelinks,
+	final
+}
 \newtheorem{definition}{Definition}
 \newtheorem{lemma}{Lemma}
 \newtheorem{theorem}{Theorem}
 \newtheorem{corollary}{Corollary}
 \input{preamble-typing}
+
+\usepackage[
+%	disable,     % hide all todos
+	obeyDraft,   % show todos only in draft mode
+%	obeyFinal,   % hide todos if in final mode
+	textwidth=3cm,
+	textsize=small,
+]{todonotes}
+
 
 \title{Taking Linear Logic Apart}
 \author{%
@@ -19,15 +40,15 @@
   \institute{University of Edinburgh\\ Edinburgh, Scotland}
   \email{wen.kokke@ed.ac.uk}
   \and
-  Marco Peressotti
-  \institute{University of Southern Denmark\\ Odense, Denmark}
-  \email{peressotti@imada.sdu.dk}
-  \and
   Fabrizio Montesi
   \institute{University of Southern Denmark\\ Odense, Denmark}
-  \email{fmontesi@imada.sdu.dk}}
+  \email{fmontesi@imada.sdu.dk}
+  \and
+  Marco Peressotti
+  \institute{University of Southern Denmark\\ Odense, Denmark}
+  \email{peressotti@imada.sdu.dk}}
 \def\titlerunning{Taking Linear Logic Apart}
-\def\authorrunning{W.\ Kokke, M.\ Peressotti, and F.\ Montesi}
+\def\authorrunning{W.\ Kokke, F.\ Montesi, and M.\ Peressotti}
 
 \begin{document}
 \maketitle
@@ -43,8 +64,8 @@
       \tm{P}, \tm{Q}, \tm{R}
            :=& \tm{\cpLink{x}{y}}       &\text{link}
       &  \mid& \tm{\cpCut{x}{P}{Q}}     &\text{parallel composition, ``cut''}
-      \\ \mid& \tm{\cpSend{x}{y}{P}{Q}} &\text{``output''}
-      &  \mid& \tm{\cpRecv{x}{y}{P}}    &\text{``input''}
+      \\ \mid& \tm{\cpSend{x}{y}{P}{Q}} &\text{output}
+      &  \mid& \tm{\cpRecv{x}{y}{P}}    &\text{input}
       \\ \mid& \tm{\cpHalt{x}}          &\text{halt}
       &  \mid& \tm{\cpWait{x}{P}}       &\text{wait}
       \\ \mid& \tm{\cpInl{x}{P}}        &\text{select left choice}
@@ -767,7 +788,25 @@ $\ty{\emptyhypercontext}$, we interpret this as the unit of tensor.
   \end{itemize}
 \end{proof}
 
-\bibliographystyle{eptcs}
+\section{Related Work}
+
+Since its inception, linear logic was described as the logic of concurrency \citep{girard1987}. Correspondences between the proof theory of linear logic and variants of the $\pi$-calculus emerged soon afterwards \citep{abramsky1994,bellin1994}, by interpreting linear logic propositions as types for channels. Later, linearity inspired also the seminal theories of linear types for the $\pi$-calculus \cite{kobayashi1999} and session types \cite{honda1998}. Even though the two theories do not use exactly linear logic, the work by \citet{dardha2017} shows that the link is still strong enough that session types can be encoded into linear types.
+
+It took more than ten years for a formal correspondence between linear logic and (a variant of) session types to emerge, with the seminal paper by \citet{caires2010}. This then inspired the development of Classical Processes (CP) by \citet{wadler2014}. %, which we have already discussed in the Introduction. %\todo{mention this}
+
+The idea of extending linear logic to hypersequents for typing processes is not new. Specifically, in \cite{carbone18}, the multiplicative-additive fragment of Intuitionistic Linear Logic is extended with hypersequents to type choreographies (global descriptions of process communications). Differently, HCP is based on CLL, uses hypersequents to type processes.
+%, and deals also with exponentials and polymorphism. 
+The major difference is that the rules for manipulating hypersequents are different w.r.t.~\cite{carbone18}. In particular, hypersequents can be 
+formed in \cite{carbone18} only when sequents share resources (\cf our \NOM{H-Mix}), and resource sharing is then explicitly tracked using an additional connection modality (which is not present in \hcp).
+
+%As a consequence, the work in \cite{carbone18} does not support an LTS for the same reasons that we discussed for CP in the Introduction. Adding a connection modality to CT might be interesting for providing an LTS semantics to the choreographies studied in \cite{carbone18}.
+
+
+\section{Conclusions}
+\label{sec:conclusions}
+
+%\bibliographystyle{eptcs}
+\bibliographystyle{abbrvnat}
 \bibliography{main}
 \end{document}
 %%% Local Variables:
