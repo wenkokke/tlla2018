@@ -23,6 +23,7 @@
 \newtheorem{lemma}{Lemma}
 \newtheorem{theorem}{Theorem}
 \newtheorem{corollary}{Corollary}
+\newtheorem{example}{Example}
 \input{preamble-typing}
 
 \usepackage[
@@ -54,20 +55,29 @@
 \maketitle
 
 \begin{abstract}
-We introduce the calculus of Hypersequent Classical Processes (\hcp), which extends the research line on the relationship between linear logic and bridges the gap between the structures of operators used as proof terms in previous work and those of the standard $\pi$-calculus (in particular parallel operator and restriction).
-The key twist from previous work is registering parallelism in typing judgements, by generalising linear logic judgements from one sequents to many (hypersequents).
+  Process calculi based in logic, such as \piDILL and \cp, provide a foundation
+  for deadlock-free concurrent programming.
+  However, there is a mismatch between the structures of operators used as proof
+  terms in previous work, and the term constructs of the standard \textpi-calculus.
+  We introduce the Hypersequent Classical Processes (\hcp), which addresses this
+  mismatch.
+  The key insight is to register parallelism in the typing judgements using
+  hypersequents, a technique from logic which generalises judgements from one
+  sequent to many.
+  This allows us to take apart the term constructs used in Classical Processes
+  (\cp) to more closely match those of the standard $\pi$-calculus.
+  We prove that \hcp enjoys subject reduction and progress, and prove several
+  properties relating it back to \cp.
 \end{abstract}
 
 \section{Introduction}
 \label{sec:introduction}
 
-Classical Processes (CP) \cite{wadler2014} is a process calculus inspired by the correspondence between the session-typed $\pi$-calculus and linear logic \cite{caires2010}, where processes correspond to proofs, session types (communication protocols) to propositions, and communication to cut elimination. Bridging process languages to linear logic paves the way to apply methods developed in one field to the other. This already worked for a few results, in both directions. For example, the proof theory of linear logic can be used to guarantee progress for processes \cite{caires2010,wadler2014}, and multiparty session types, originally developed for processes \cite{honda2016}, inspired a generalisation of the standard cut rule to the composition of an arbitrary number of proofs, allowing for safe circular dependencies among proofs \cite{carbone17}.
+Classical Processes (CP) \cite{wadler2014} is a process calculus inspired by the correspondence between the session-typed $\pi$-calculus and linear logic \cite{caires2010}, where processes correspond to proofs, session types (communication protocols) to propositions, and communication to cut elimination. Bridging process languages to linear logic paves the way to apply methods developed in one field to the other. This already worked for a few results, in both directions. For example, the proof theory of linear logic can be used to guarantee progress for processes \cite{caires2010,wadler2014}, and multiparty session types, originally developed for processes \cite{honda2016}, inspired a generalisation of the standard cut rule to the composition of an arbitrary number of proofs, allowing for safe circular dependencies among proofs \cite{carbone17}. 
 
 The hallmark of CP is that the semantics of processes is given by sound proof transformations in Classical Linear Logic (CLL). While this permits reusing the metatheory of linear logic ``as is'' to reason about process behaviour (\eg, cut elimination yields communication progress), it also exhibits some fundamental discrepancies with the key operators of the $\pi$-calculus \cite{milner1992a,milner1992b}.
 
-Some discrepancies are syntactic. For example, the term for output of a linear name is $\cpSend{x}{y}{P}{Q}$, read ``send $y$ over $x$ and proceed as $P$ in parallel to $Q$''. Notice that the term constructor for output here actually 
-takes $x$, $y$, $P$ and $Q$ as parameters at the same time. This discrepancy is caused by adopting processes as proof terms for CLL: the typing rule for 
-output (\ie, the $\tens$ rule of CLL) checks that the processes respectively implementing the behaviours of $y$ ($P$) and of $x$ ($Q$) share no resources, by taking two premises ($P$ and $Q$).
+Some discrepancies are syntactic. For example, the term for output of a linear name is $\cpSend{x}{y}{P}{Q}$, read ``send $y$ over $x$ and proceed as $P$ in parallel to $Q$''. Notice that the term constructor for output here actually takes $x$, $y$, $P$ and $Q$ as parameters at the same time. This discrepancy is caused by adopting processes as proof terms for CLL: the typing rule for output (\ie, the $\tens$ rule of CLL) checks that the processes respectively implementing the behaviours of $y$ ($P$) and of $x$ ($Q$) share no resources, by taking two premises ($P$ and $Q$).
 In general, there is no independent parallel term $P \mid Q$ in the grammar of CP, and even if we added it as the $\NOM{Mix}$ rule suggested in the original presentation of CP \cite{wadler2014}, it would not allow $P$ and $Q$ to communicate as in standard $\pi$-calculus. Synchronisation is governed instead by the restriction operator $\piNew{x}{(\piPar{P}{Q})}$ (we use the latest syntax for CP, from \cite{carbone2016}), which links $x$ at $P$ with $y$ at $Q$ to enable communication. Again, parallel is mixed with another operator (restriction here), but in this case it means that $P$ and $Q$ will communicate
 
 The discrepancies carry over from syntax (and typing) to semantics.
@@ -138,9 +148,9 @@ Notice how the rule needs to inspect the structure of the continuation of the ou
       & \tm{\cpSub{w}{x}{P}} 
       \\
       \cpRedBetaTensParr
-      & \tm{\cpCut{x}{\cpSend{x}{y}{P}{Q}}{\cpRecv{x}{z}{R}}}
+      & \tm{\cpCut{x}{\cpSend{x}{y}{P}{Q}}{\cpRecv{x}{y}{R}}}
       & \Longrightarrow
-      & \tm{\cpCut{y}{P}{\cpCut{x}{Q}{\cpSub{y}{z}{R}}}}
+      & \tm{\cpCut{y}{P}{\cpCut{x}{Q}{R}}}
       \\
       \cpRedBetaOneBot
       & \tm{\cpCut{x}{\cpHalt{x}}{\cpWait{x}{P}}}
@@ -285,6 +295,13 @@ Notice how the rule needs to inspect the structure of the continuation of the ou
 
 \section{Hypersequent Classical Processes}
 
+\begin{example}
+  \(
+  \seq[\cpCase{x}{(\piPar{P}{Q})}{(\piPar{P'}{Q'})}]{
+    \Gamma, \Delta, \tmty{x}{A \with B}}
+  \)
+\end{example}
+
 \begin{definition}[Terms]\label{def:hcp-terms}
   \[
     \begin{array}{rllrll}
@@ -364,9 +381,9 @@ Notice how the rule needs to inspect the structure of the continuation of the ou
       & \tm{\cpSub{w}{x}{P}} 
       \\
       \hccpRedBetaTensParr
-      & \tm{\cpCut{x}{\piBoundSend{x}{y}{P}}{\piRecv{x}{z}{R}}}
+      & \tm{\cpCut{x}{\piBoundSend{x}{y}{P}}{\piRecv{x}{y}{R}}}
       & \Longrightarrow
-      & \tm{\piNew{x}{\piNew{y}{(\piPar{P}{\cpSub{y}{z}{R}})}}}
+      & \tm{\piNew{x}{\piNew{y}{(\piPar{P}{R})}}}
       \\
       \hccpRedBetaOneBot
       & \tm{\cpCut{x}{\piBoundSend{x}{}{P}}{\piRecv{x}{}{P}}}
@@ -548,6 +565,12 @@ Notice how the rule needs to inspect the structure of the continuation of the ou
 \end{proof}
 
 \section{Relation between \cp and \hcp}
+
+\begin{itemize}
+\item Every \cp process is an \hcp process.
+\item \hcp processes represent multiple entangled \cp processes.
+\item \hcp supports the same protocols as \cp.
+\end{itemize}
 
 We define a translation from terms in \cp to terms in \hcp which breaks down the term constructs in \cp into their more atomic constructs in \hcp:
 \begin{definition}\label{def:cp2hcp-terms}
@@ -811,6 +834,7 @@ $\ty{\emptyhypercontext}$, we interpret this as the unit of tensor.
   \end{itemize}
 \end{proof}
 
+<<<<<<< HEAD
 \section{Related Work}
 
 Since its inception, linear logic was described as the logic of concurrency \citep{girard1987}. Correspondences between the proof theory of linear logic and variants of the $\pi$-calculus emerged soon afterwards \citep{abramsky1994,bellin1994}, by interpreting linear logic propositions as types for channels. Later, linearity inspired also the seminal theories of linear types for the $\pi$-calculus \cite{kobayashi1999} and session types \cite{honda1998}. Even though the two theories do not use exactly linear logic, the work by \citet{dardha2017} shows that the link is still strong enough that session types can be encoded into linear types.
@@ -828,8 +852,7 @@ formed in \cite{carbone18} only when sequents share resources (\cf our \NOM{H-Mi
 \section{Conclusions}
 \label{sec:conclusions}
 
-%\bibliographystyle{eptcs}
-\bibliographystyle{abbrvnat}
+\bibliographystyle{eptcs}
 \bibliography{main}
 \end{document}
 %%% Local Variables:
