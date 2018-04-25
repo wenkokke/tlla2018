@@ -122,7 +122,19 @@ Here, the parallel composition $\tm{(\piPar{P}{Q})}$ is of no relevance to this
 communication, yet the rule needs to inspect it to be able to nest the name
 restrictions appropriately in the resulting term.
 
+We proceed as follows.
+We introduce \cp and restate its proofs of subject reduction and progress
+(\cref{sec:cp}), then introduce \hcp and give its proofs of subject reduction
+and progress (\cref{sec:hcp}).
+We then prove several properties relating the two. Specifically, we prove that
+every \cp process is an \hcp process, that every \hcp process corresponds to
+several entangled \cp processes, and that \hcp supports the same communication
+protocols as \cp, and no more (\cref{sec:cp2hcp}).
+Finally, we discuss related work and conclude
+(\cref{sec:related-work,sec:conclusions}).
+
 \section{Classical Processes}
+\label{sec:cp}
 
 \begin{definition}[Terms]\label{def:cp-terms}
   \[
@@ -327,6 +339,7 @@ restrictions appropriately in the resulting term.
 
 
 \section{Hypersequent Classical Processes}
+\label{sec:hcp}
 
 \begin{example}
   \(
@@ -598,6 +611,7 @@ restrictions appropriately in the resulting term.
 \end{proof}
 
 \section{Relation between \cp and \hcp}
+\label{sec:cp2hcp}
 
 \begin{itemize}
 \item Every \cp process is an \hcp process.
