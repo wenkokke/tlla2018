@@ -8,31 +8,15 @@
 \usepackage{breakurl} % Not needed if you use pdflatex only.
 \usepackage{underscore} % Only needed if you use pdflatex.
 \usepackage{textcomp,textgreek,upgreek}
-\usepackage[
-	sectionbib,
-	square,
-	numbers,
-	sort&compress
-	]{natbib} % \citet
 \usepackage{nameref,hyperref,cleveref}
-\hypersetup{
-	hidelinks,
-	final
-}
+\hypersetup{hidelinks,final}
 \newtheorem{definition}{Definition}
 \newtheorem{lemma}{Lemma}
 \newtheorem{theorem}{Theorem}
 \newtheorem{corollary}{Corollary}
 \newtheorem{example}{Example}
 \input{preamble-typing}
-
-\usepackage[
-%	disable,     % hide all todos
-	obeyDraft,   % show todos only in draft mode
-%	obeyFinal,   % hide todos if in final mode
-	textwidth=3cm,
-	textsize=small,
-]{todonotes}
+\usepackage[sectionbib,square,numbers,sort&compress]{natbib}
 
 
 \title{Taking Linear Logic Apart}
@@ -73,21 +57,70 @@
 \section{Introduction}
 \label{sec:introduction}
 
-Classical Processes (CP) \cite{wadler2014} is a process calculus inspired by the correspondence between the session-typed $\pi$-calculus and linear logic \cite{caires2010}, where processes correspond to proofs, session types (communication protocols) to propositions, and communication to cut elimination. Bridging process languages to linear logic paves the way to apply methods developed in one field to the other. This already worked for a few results, in both directions. For example, the proof theory of linear logic can be used to guarantee progress for processes \cite{caires2010,wadler2014}, and multiparty session types, originally developed for processes \cite{honda2016}, inspired a generalisation of the standard cut rule to the composition of an arbitrary number of proofs, allowing for safe circular dependencies among proofs \cite{carbone17}. 
+Classical Processes (\cp) \cite{wadler2012} is a process calculus inspired by the
+correspondence between the session-typed $\pi$-calculus and linear logic
+\cite{caires2010}, where processes correspond to proofs, session types
+(communication protocols) to propositions, and communication to cut elimination.
+Bridging process languages to linear logic paves the way for applying methods
+developed in one field to the other.
+For instance, the proof theory of linear logic can be used to guarantee progress
+for processes~\cite{caires2010,wadler2012}.
 
-The hallmark of CP is that the semantics of processes is given by sound proof transformations in Classical Linear Logic (CLL). While this permits reusing the metatheory of linear logic ``as is'' to reason about process behaviour (\eg, cut elimination yields communication progress), it also exhibits some fundamental discrepancies with the key operators of the $\pi$-calculus \cite{milner1992a,milner1992b}.
+The main attraction of \cp is that its semantics are \emph{prescribed} by the
+cut elimination procedure of Classical Linear Logic (CLL).
+This permits us to reuse the metatheory of linear logic ``as is'' to reason about
+the behaviour of processes.
+However, there is a mismatch between the structure of the proof terms of CLL and
+the term constructs of the standard \textpi-calculus~\cite{milner1992a,milner1992b}.
+For instance, the term for output of a linear name is
+$\tm{\cpSend{x}{y}{P}{Q}}$, which is read ``send $y$ over $x$ and proceed as $P$
+in parallel to $Q$''.
+Note that this is a single term constructor, which takes all four arguments at
+the same time.
+This is caused by directly adopting the $(\tens)$-rule from CLL as the process
+calculus construct for sending: the $(\tens)$-rule has two premises, and checks
+that they share no resources.
 
-Some discrepancies are syntactic. For example, the term for output of a linear name is $\cpSend{x}{y}{P}{Q}$, read ``send $y$ over $x$ and proceed as $P$ in parallel to $Q$''. Notice that the term constructor for output here actually takes $x$, $y$, $P$ and $Q$ as parameters at the same time. This discrepancy is caused by adopting processes as proof terms for CLL: the typing rule for output (\ie, the $\tens$ rule of CLL) checks that the processes respectively implementing the behaviours of $y$ ($P$) and of $x$ ($Q$) share no resources, by taking two premises ($P$ and $Q$).
-In general, there is no independent parallel term $P \mid Q$ in the grammar of CP, and even if we added it as the $\NOM{Mix}$ rule suggested in the original presentation of CP \cite{wadler2014}, it would not allow $P$ and $Q$ to communicate as in standard $\pi$-calculus. Synchronisation is governed instead by the restriction operator $\piNew{x}{(\piPar{P}{Q})}$ (we use the latest syntax for CP, from \cite{carbone2016}), which links $x$ at $P$ with $y$ at $Q$ to enable communication. Again, parallel is mixed with another operator (restriction here), but in this case it means that $P$ and $Q$ will communicate
+There is no independent parallel term $\tm{(\piPar{P}{Q})}$ in the grammar of
+\cp terms.
+Instead, the parallel composition shows up in any term which corresponds to a
+binary rule.
+Even if we were to add an independent parallel composition via the
+\textsc{Mix}-rule, as suggested in the original presentation of
+\cp~\cite{wadler2012}, there would be no way to allow the composed process
+$\tm{P}$ and $\tm{Q}$ to communicate as in the standard \textpi-calculus, as
+there is no independent name restriction either!
+Instead, synchronisation is governed by the ``cut'' operator
+$\tm{\piNew{x}{(\piPar{P}{Q})}}$, which composes $\tm{P}$ and $\tm{Q}$, enabling
+them to communicate along $\tm{x}$.
+Worse, if we naively added an independent parallel composition as well as an
+name restriction, using the rules shown below, we would lose cut elimination,
+and therefore deadlock-freedom!
+\begin{center}
+  \begin{prooftree*}
+    \AXC{$\seq[ P ]{ \Gamma }$}
+    \AXC{$\seq[ Q ]{ \Delta }$}
+    \NOM{Mix}
+    \BIC{$\seq[ \piPar{P}{Q} ]{ \Gamma , \Delta }$}
+  \end{prooftree*}
+  \begin{prooftree*}
+    \AXC{$\seq[ P ]{ \Gamma, \tmty{x}{A}, \tmty{y}{A^\bot} }$}
+    \NOM{``Cut''}
+    \UIC{$\seq[ \piNew{xy}{P} ]{ \Gamma }$}
+  \end{prooftree*}
+\end{center}
 
-The discrepancies carry over from syntax (and typing) to semantics.
-The rule for reducing an output with an input in CP is the following.
+This syntactic mismatch has an effect on the semantics as well.
+For instance, the $\beta$-reduction for output and input in \cp is
 \[
-	\cpCut{x}{\cpSend{x}{y}{P}{Q}}{\cpRecv{x}{y}{R}}
-  \Longrightarrow
-  \cpCut{y}{P}{\cpCut{x}{Q}{R}}
+	\reducesto
+  {\cpCut{x}{\cpSend{x}{y}{P}{Q}}{\cpRecv{x}{y}{R}}}
+  {\cpCut{y}{P}{\cpCut{x}{Q}{R}}}.
 \]
-Notice how the rule needs to inspect the structure of the continuation of the output term ($\piPar{P}{Q}$) to produce a typable structure for the resulting network, by nesting restrictions appropriately.
+Note that the parallel composition $\tm{(\piPar{P}{Q})}$ is of no relevance to
+the communication, yet the rule needs to inspect the structure of the
+continuation of the output to be able to nest the name restrictions
+appropriately in the resulting term.
 
 \section{Classical Processes}
 
@@ -834,27 +867,46 @@ $\ty{\emptyhypercontext}$, we interpret this as the unit of tensor.
   \end{itemize}
 \end{proof}
 
-<<<<<<< HEAD
 \section{Related Work}
+\label{sec:related-work}
 
-Since its inception, linear logic was described as the logic of concurrency \citep{girard1987}. Correspondences between the proof theory of linear logic and variants of the $\pi$-calculus emerged soon afterwards \citep{abramsky1994,bellin1994}, by interpreting linear logic propositions as types for channels. Later, linearity inspired also the seminal theories of linear types for the $\pi$-calculus \cite{kobayashi1999} and session types \cite{honda1998}. Even though the two theories do not use exactly linear logic, the work by \citet{dardha2017} shows that the link is still strong enough that session types can be encoded into linear types.
+Since its inception, linear logic has been described as the logic of
+concurrency~\cite{girard1987}.
+Correspondences between the proof theory of linear logic and variants of the
+\textpi-calculus emerged soon afterwards \cite{abramsky1994,bellin1994}, by
+interpreting linear logic propositions as types for channels.
+Later, linearity inspired also the seminal theories of linear types for the
+\textpi-calculus \cite{kobayashi1999} and session types \cite{honda1998}.
+Even though the two theories do not have a direct correspondence with linear
+logic, the link is still strong enough that session types
+can be encoded into linear types \cite{dardha2017}.
 
-It took more than ten years for a formal correspondence between linear logic and (a variant of) session types to emerge, with the seminal paper by \citet{caires2010}. This then inspired the development of Classical Processes (CP) by \citet{wadler2014}. %, which we have already discussed in the Introduction. %\todo{mention this}
+It took more than ten years for a formal correspondence between linear logic and
+(a variant of) session types to emerge, with the seminal paper by \citet{caires2010}.
+This inspired the development of Classical Processes by \citet{wadler2012},
+which we have discussed in great detail in this paper.
 
-The idea of extending linear logic to hypersequents for typing processes is not new. Specifically, in \cite{carbone18}, the multiplicative-additive fragment of Intuitionistic Linear Logic is extended with hypersequents to type choreographies (global descriptions of process communications). Differently, HCP is based on CLL, uses hypersequents to type processes.
-%, and deals also with exponentials and polymorphism. 
-The major difference is that the rules for manipulating hypersequents are different w.r.t.~\cite{carbone18}. In particular, hypersequents can be 
-formed in \cite{carbone18} only when sequents share resources (\cf our \NOM{H-Mix}), and resource sharing is then explicitly tracked using an additional connection modality (which is not present in \hcp).
+The idea of extending linear logic to hypersequents for typing processes is not
+novel.
+For instance, \citet{carbone2018} extended the multiplicative-additive fragment
+of intuitionistic linear logic with hypersequents to type global descriptions of
+process communications known as choreographies.
 
-%As a consequence, the work in \cite{carbone18} does not support an LTS for the same reasons that we discussed for CP in the Introduction. Adding a connection modality to CT might be interesting for providing an LTS semantics to the choreographies studied in \cite{carbone18}.
-
+This work differs from our approach in that \hcp is based on \emph{classical}
+linear logic, and uses hypersequents to type processes.
+Furthermore, the rules for manipulating hypersequents are different.
+In \citet{carbone2018}, hypersequents can be formed only when sequents share
+resources (\cf \textsc{H-Mix}), and resource sharing is then explicitly tracked
+using an additional connection modality (which is not present in \hcp).
 
 \section{Conclusions}
 \label{sec:conclusions}
 
+\clearpage
 \bibliographystyle{eptcs}
 \bibliography{main}
 \end{document}
 %%% Local Variables:
 %%% TeX-master: "main"
 %%% End:
+
