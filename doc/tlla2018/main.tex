@@ -16,6 +16,7 @@
 \newtheorem{corollary}{Corollary}
 \newtheorem{example}{Example}
 \input{preamble-typing}
+\usepackage[parfill]{parskip}
 \usepackage[sectionbib,square,numbers,sort&compress]{natbib}
 
 
@@ -112,15 +113,14 @@ and therefore deadlock-freedom!
 
 This syntactic mismatch has an effect on the semantics as well.
 For instance, the $\beta$-reduction for output and input in \cp is
-\[
-	\reducesto
-  {\cpCut{x}{\cpSend{x}{y}{P}{Q}}{\cpRecv{x}{y}{R}}}
-  {\cpCut{y}{P}{\cpCut{x}{Q}{R}}}.
-\]
-Note that the parallel composition $\tm{(\piPar{P}{Q})}$ is of no relevance to
-the communication, yet the rule needs to inspect the structure of the
-continuation of the output to be able to nest the name restrictions
-appropriately in the resulting term.
+\(
+\reducesto
+{\cpCut{x}{\cpSend{x}{y}{P}{Q}}{\cpRecv{x}{y}{R}}}
+{\cpCut{y}{P}{\cpCut{x}{Q}{R}}}
+\).
+Here, the parallel composition $\tm{(\piPar{P}{Q})}$ is of no relevance to this
+communication, yet the rule needs to inspect it to be able to nest the name
+restrictions appropriately in the resulting term.
 
 \section{Classical Processes}
 
@@ -891,9 +891,8 @@ novel.
 For instance, \citet{carbone2018} extended the multiplicative-additive fragment
 of intuitionistic linear logic with hypersequents to type global descriptions of
 process communications known as choreographies.
-
-This work differs from our approach in that \hcp is based on \emph{classical}
-linear logic, and uses hypersequents to type processes.
+This work differs from our approach in that \hcp is based on classical linear
+logic, and uses hypersequents to type processes.
 Furthermore, the rules for manipulating hypersequents are different.
 In \citet{carbone2018}, hypersequents can be formed only when sequents share
 resources (\cf \textsc{H-Mix}), and resource sharing is then explicitly tracked
@@ -903,7 +902,7 @@ using an additional connection modality (which is not present in \hcp).
 \label{sec:conclusions}
 
 \clearpage
-\bibliographystyle{eptcs}
+\bibliographystyle{abbrvnat}
 \bibliography{main}
 \end{document}
 %%% Local Variables:
