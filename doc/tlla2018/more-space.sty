@@ -1,0 +1,56 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{more-space}
+
+\RequirePackage{etoolbox}
+
+\@ifclassloaded{eptcs}{
+\AtEndPreamble{
+\renewcommand\section{\@startsection{section}{1}{\z@}%
+                       {-11\p@ \@plus -2\p@ \@minus -2\p@}%
+                       {6\p@ \@plus 2\p@ \@minus 2\p@}%
+                       {\normalfont\large\bfseries\boldmath
+                        \rightskip=\z@ \@plus 8em\pretolerance=10000 }}
+\renewcommand\subsection{\@startsection{subsection}{2}{\z@}%
+                       {-10\p@ \@plus -2\p@ \@minus -2\p@}%
+                       {4\p@ \@plus 2\p@ \@minus 2\p@}%
+                       {\normalfont\normalsize\bfseries\boldmath
+                        \rightskip=\z@ \@plus 8em\pretolerance=10000 }}
+\renewcommand\subsubsection{\@startsection{subsubsection}{3}{\z@}%
+                       {-18\p@ \@plus -4\p@ \@minus -4\p@}%
+                       {-0.5em \@plus -0.22em \@minus -0.1em}%
+                       {\normalfont\normalsize\bfseries\boldmath}}
+\renewcommand\paragraph{\@startsection{paragraph}{4}{\z@}%
+                       {-5\p@ \@plus -2\p@ \@minus -6\p@}%
+                       {-0.3em \@plus -0.1em \@minus -0.1em}%
+                       {\normalfont\normalsize\itshape}}
+
+% This bit change the spacing in the title - abstract part
+% and makes the abstract a little bit wider
+\renewenvironment{abstract}{%
+     \vspace{-3mm} % raise it a bit
+      \list{}{\advance\topsep by0.35cm\relax\small
+      \leftmargin=.80cm   %make it wider was 1cm
+      \labelwidth=\z@
+      \listparindent=\z@
+      \itemindent\listparindent
+      \rightmargin\leftmargin}\item[]}
+    {\endlist}
+
+\addtolength{\floatsep}{-3mm}% space left between floats.
+\addtolength{\textfloatsep}{-5mm}
+\addtolength{\intextsep}{-6mm}
+\addtolength{\abovecaptionskip}{-2mm}% space above caption
+
+\addtolength{\topmargin}{-5mm}% gap above header
+\addtolength{\topskip}{-1mm}% between header and text
+\addtolength{\textheight}{5mm}% height of main text
+\addtolength{\textwidth}{3mm}% width of text
+}
+\AtBeginDocument{
+% spacing before and after math display
+\setlength{\abovedisplayskip}{4pt}
+\setlength{\belowdisplayskip}{4pt}
+% increase penalty for new lines
+\linepenalty=1000
+}
+}{} %end if eptcs class loaded

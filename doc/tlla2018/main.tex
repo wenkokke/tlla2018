@@ -4,6 +4,7 @@
 \usepackage[all]{foreign}
 \usepackage[fleqn]{amsmath}
 \usepackage{amsthm}
+\allowdisplaybreaks
 \usepackage[inline]{enumitem}
 \usepackage{breakurl} % Not needed if you use pdflatex only.
 \usepackage{underscore} % Only needed if you use pdflatex.
@@ -16,7 +17,8 @@
 \newtheorem{corollary}{Corollary}
 \newtheorem{example}{Example}
 \input{preamble-typing}
-\usepackage[parfill]{parskip}
+%\usepackage[parfill]{parskip}
+\usepackage{more-space}
 \usepackage[sectionbib,square,numbers,sort&compress]{natbib}
 
 \title{Taking Linear Logic Apart}
@@ -49,7 +51,7 @@
   hypersequents, a technique from logic which generalises judgements from one
   sequent to many.
   This allows us to take apart the term constructs used in Classical Processes
-  (\cp) to more closely match those of the standard $\pi$-calculus.
+  (\cp) to more closely match those of the standard \textpi-calculus.
   We prove that \hcp enjoys subject reduction and progress, and prove several
   properties relating it back to \cp.
 \end{abstract}
@@ -58,7 +60,7 @@
 \label{sec:introduction}
 
 Classical Processes (\cp) \cite{wadler2012} is a process calculus inspired by the
-correspondence between the session-typed $\pi$-calculus and linear logic
+correspondence between the session-typed \textpi-calculus and linear logic
 \cite{caires2010}, where processes correspond to proofs, session types
 (communication protocols) to propositions, and communication to cut elimination.
 Bridging process languages to linear logic paves the way for applying methods
@@ -127,7 +129,7 @@ The key insight is to register parallelism in the typing judgements using
 hypersequents, a technique from logic which generalises judgements from one
 sequent to many.
 This allows us to take apart the term constructs used in Classical Processes
-(\cp) to more closely match those of the standard $\pi$-calculus.
+(\cp) to more closely match those of the standard \textpi-calculus.
 We proceed as follows.
 We start by introducing \cp (\cref{sec:cp}).
 Then, we introduce \hcp and prove it enjoys subject reduction and progress
@@ -218,12 +220,12 @@ Reductions relate processes with their reduced forms.
   The relation $\Longrightarrow^\star$ is the reflexive, transitive closure of
   $\Longrightarrow$.
   Reductions can only be constructed as follows:
-  \[
+ \[
     \begin{array}{llcll}
       \cpRedAxCut1
       & \tm{\cpCut{x}{\cpLink{w}{x}}{P}}
       & \Longrightarrow
-      & \tm{\cpSub{w}{x}{P}}
+      & \tm{\cpSub{w}{x}{P}} 
       \\
       \cpRedBetaTensParr
       & \tm{\cpCut{x}{\cpSend{x}{y}{P}{Q}}{\cpRecv{x}{y}{R}}}
@@ -367,16 +369,16 @@ Typing judgements associate processes with collections of typed channels.
   that the process \tm{P} communicates along channels $\tm{x_1}\dots\tm{x_n}$
   following protocols $\ty{A_1}\dots\ty{A_n}$.
   Typing judgements can be constructed using the following inference rules.
-  \\[0.5\baselineskip]
+  
   Structural Rules.
-  \begin{center} \cpInfAx     \cpInfCut   \end{center}\vspace*{0.5\baselineskip}
+  \begin{center} \cpInfAx     \cpInfCut   \end{center}\vspace*{-.5\baselineskip}
 
   Logical Rules.
-  \begin{center} \cpInfTens   \cpInfParr  \end{center}\vspace*{0.5\baselineskip}
-  \begin{center} \cpInfOne    \cpInfBot   \end{center}\vspace*{0.5\baselineskip}
-  \begin{center} \cpInfPlus1  \cpInfPlus2 \end{center}\vspace*{0.5\baselineskip}
-  \begin{center} \cpInfWith               \end{center}\vspace*{0.5\baselineskip}
-  \begin{center} \cpInfNil    \cpInfTop   \end{center}\vspace*{0.5\baselineskip}
+  \begin{center} \cpInfTens   \cpInfParr  \end{center}\vspace*{-.5\baselineskip}
+  \begin{center} \cpInfOne    \cpInfBot   \end{center}\vspace*{-.5\baselineskip}
+  \begin{center} \cpInfPlus1  \cpInfPlus2 \end{center}\vspace*{-.5\baselineskip}
+  \begin{center} \cpInfWith               \end{center}\vspace*{-.5\baselineskip}
+  \begin{center} \cpInfNil    \cpInfTop   \end{center}\vspace*{-.5\baselineskip}
 \end{definition}
 \cp enjoys subject reduction, progress, and termination~\cite{wadler2012}.
 \begin{lemma}[Preservation for $\equiv$]\label{lem:cp-preservation-equiv}
@@ -900,12 +902,13 @@ We define a translation from terms in \cp to terms in \hcp which breaks down the
 We can interpret environments as types by collapsing them using a series of
 pars.
 \begin{definition}\label{def:bigparr}
-  \begin{gather*}
-  \begin{array}{lcl}
-    \ty{\bigparr(\tmty{x_1}{A_1} , \dots , \tmty{x_n}{A_n})}
-    & = & \ty{A_1 \parr \dots \parr A_n}
-  \end{array}
-  \end{gather*}
+$\ty{\bigparr(\tmty{x_1}{A_1} , \dots , \tmty{x_n}{A_n})} =  \ty{A_1 \parr \dots \parr A_n}$.
+%  \begin{gather*}
+%  \begin{array}{lcl}
+%    \ty{\bigparr(\tmty{x_1}{A_1} , \dots , \tmty{x_n}{A_n})}
+%    & = & \ty{A_1 \parr \dots \parr A_n}
+%  \end{array}
+%  \end{gather*}
 \end{definition}
 
 \begin{lemma}\label{lem:cp-bigparr}
@@ -913,29 +916,31 @@ pars.
 \end{lemma}
 \begin{proof}
   By induction on the structure of the environment $\Gamma$.
-  \begin{itemize}
-  \item
+%  \begin{itemize}
+%  \item
     If $\ty{\Gamma} = \ty{A}$, then the statement is trivially true.
-  \item
+%  \item
     If $\ty{\Gamma} = \ty{A, B, \Gamma'}$,
-    then we apply $(\parr)$ to get $\seq{A \parr B, \Gamma'}$,\\
-    and apply the induction hypothesis.
-  \end{itemize}
+    then we apply $(\parr)$ to get $\seq{A \parr B, \Gamma'}$, and apply the induction hypothesis.
+%  \end{itemize}
 \end{proof}
 
 We can interpret hyper-environments as types by collapsing them using a series
 of tensors. In the case of the empty hyper-environment
 $\ty{\emptyhypercontext}$, we interpret this as the unit of tensor.
 \begin{definition}\label{def:bigtens}
-  \begin{gather*}
-  \begin{array}{lcl}
-    \ty{\bigtens(\emptyhypercontext)}
-    & = & \ty{\one}
-    \\
-    \ty{\bigtens(\Gamma_1 \hsep \dots \hsep \Gamma_n)}
-    & = & \ty{\bigparr\Gamma_1 \tens \dots \tens \bigparr\Gamma_n}
-  \end{array}
-  \end{gather*}
+  $\ty{\bigtens(\emptyhypercontext)} = \ty{\one}$
+  and 
+  $\ty{\bigtens(\Gamma_1 \hsep \dots \hsep \Gamma_n)} = \ty{\bigparr\Gamma_1 \tens \dots \tens \bigparr\Gamma_n}$.
+%  \begin{gather*}
+%  \begin{array}{lcl}
+%    \ty{\bigtens(\emptyhypercontext)}
+%    & = & \ty{\one}
+%    \\
+%    \ty{\bigtens(\Gamma_1 \hsep \dots \hsep \Gamma_n)}
+%    & = & \ty{\bigparr\Gamma_1 \tens \dots \tens \bigparr\Gamma_n}
+%  \end{array}
+%  \end{gather*}
 \end{definition}
 
 \begin{theorem}\label{thm:hcp2cp-bigtens}
@@ -943,17 +948,17 @@ $\ty{\emptyhypercontext}$, we interpret this as the unit of tensor.
 \end{theorem}
 \begin{proof}
   By case analysis on the structure of the hyper-environment $\ty{\mathcal{G}}$.
-  \begin{itemize}
-  \item
+%  \begin{itemize}
+%  \item
     If $\ty{\mathcal{G}} = \ty{\emptyhypercontext}$, we apply $(\one)$.
-  \item
+%  \item
     If $\ty{\mathcal{G}} = \ty{\Gamma_1 \hsep \dots \hsep \Gamma_n}$,
     we apply \cref{lem:hcp-disentangle} to obtain proofs of $\seq{\Gamma_1}, \dots,
     \seq{\Gamma_n}$ in \cp, then we apply \cref{lem:cp-bigparr} to each of
     those proofs to obtain proofs of $\seq{\bigparr\Gamma_1}, \dots,
     \seq{\bigparr\Gamma_n}$, and join them using $(\tens)$ to obtain a single
     proof of $\seq{\bigtens\mathcal{G}}$ in \cp.
-  \end{itemize}
+%  \end{itemize}
 \end{proof}
 
 \section{Related Work}
@@ -974,6 +979,7 @@ It took more than ten years for a formal correspondence between linear logic and
 (a variant of) session types to emerge, with the seminal paper by \citet{caires2010}.
 This inspired the development of Classical Processes by \citet{wadler2012}.
 
+\looseness=-1
 The idea of using hypersequents to capture parallelism in linear logic judgements is not
 novel: \citet{carbone2018} extended the multiplicative-additive fragment
 of intuitionistic linear logic with hypersequents to type global descriptions of
