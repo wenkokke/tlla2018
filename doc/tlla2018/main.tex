@@ -135,6 +135,12 @@ Finally, we discuss related work and conclude
 \section{Classical Processes}
 \label{sec:cp}
 
+In order to keep the discussion of \hcp in \cref{sec:hcp} simple, we restrict
+ourselves to the multiplicative-applicative subset of \cp.
+We foresee no problems in extending the proofs in \cref{sec:hcp} to cover the
+remaining features of \cp (polymophism and the exponentials).
+
+The term language of \cp is a variant of the \textpi-calculus.
 \begin{definition}[Terms]\label{def:cp-terms}
   \[
     \begin{array}{rllrll}
@@ -152,7 +158,25 @@ Finally, we discuss related work and conclude
     \end{array}
   \]
 \end{definition}
+The variables $\tm{x}$, $\tm{y}$, and $\tm{z}$ range over channel names.
+The construct $\tm{\cpLink{x}{y}}$ links two
+channels~\cite{sangiorgi1996,boreale1998}, forwarding messages received on
+$\tm{x}$ to $\tm{y}$ and vice versa.
+The construct $\tm{\cpCut{x}{P}{Q}}$ creates a new channel $\tm{x}$, and composes
+two processes, $\tm{P}$ and $\tm{Q}$, which communicate on $\tm{x}$, in parallel.
+Therefore, in $\tm{\cpCut{x}{P}{Q}}$ the name $\tm{x}$ is bound in both $\tm{P}$
+and $\tm{Q}$.
+In $\tm{\cpRecv{x}{y}{P}}$ and $\tm{\cpSend{x}{y}{P}{Q}}$, round brackets denote
+input, square brackets denote output.
+We use bound output~\cite{sangiorgi1996}, meaning that both input and output
+bind a new name.
+In $\tm{\cpRecv{x}{y}{P}}$ the new name $\tm{y}$ is bound in $\tm{P}$.
+In $\tm{\cpSend{x}{y}{P}{Q}}$, the new name $\tm{y}$ is only bound in $\tm{P}$,
+while $\tm{x}$ is only bound in $\tm{Q}$.
 
+Terms in \cp are identified up to structural congruence, which states that
+links are symmetric, and parallel compositions $\tm{\cpCut{x}{P}{Q}}$ are
+associative and commutative.
 \begin{definition}[Structural congruence]\label{def:cp-equiv}
   The structural congruence $\equiv$ is the congruence closure over terms which
   satisfies the following additional axioms:
