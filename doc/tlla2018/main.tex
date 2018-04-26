@@ -121,16 +121,25 @@ Here, the parallel composition $\tm{(\piPar{P}{Q})}$ is of no relevance to this
 communication, yet the rule needs to inspect it to be able to nest the name
 restrictions appropriately in the resulting term.
 
+In this paper, we introduce the Hypersequent Classical Processes (\hcp), which
+addresses this mismatch.
+The key insight is to register parallelism in the typing judgements using
+hypersequents, a technique from logic which generalises judgements from one
+sequent to many.
+This allows us to take apart the term constructs used in Classical Processes
+(\cp) to more closely match those of the standard $\pi$-calculus.
 We proceed as follows.
-We introduce \cp and restate its proofs of subject reduction and progress
-(\cref{sec:cp}), then introduce \hcp and give its proofs of subject reduction
-and progress (\cref{sec:hcp}).
-We then prove several properties relating the two. Specifically, we prove that
-every \cp process is an \hcp process, that every \hcp process corresponds to
-several entangled \cp processes, and that \hcp supports the same communication
-protocols as \cp, and no more (\cref{sec:cp2hcp}).
+We start by introducing \cp (\cref{sec:cp}).
+Then, we introduce \hcp and prove it enjoys subject reduction and progress
+(\cref{sec:hcp}).
+We prove several properties relating the two.
+Specifically, we prove that every \cp process is an \hcp process, that every
+\hcp process corresponds to several entangled \cp processes, and that \hcp
+supports the same communication protocols as \cp, and no more
+(\cref{sec:cp2hcp}).
 Finally, we discuss related work and conclude
 (\cref{sec:related-work,sec:conclusions}).
+
 
 \section{Classical Processes}
 \label{sec:cp}
@@ -141,6 +150,21 @@ We foresee no problems in extending the proofs in \cref{sec:hcp} to cover the
 remaining features of \cp (polymophism and the exponentials).
 
 The term language of \cp is a variant of the \textpi-calculus.
+The variables $\tm{x}$, $\tm{y}$, and $\tm{z}$ range over channel names.
+The construct $\tm{\cpLink{x}{y}}$ links two
+channels~\cite{sangiorgi1996,boreale1998}, forwarding messages received on
+$\tm{x}$ to $\tm{y}$ and vice versa.
+The construct $\tm{\cpCut{x}{P}{Q}}$ creates a new channel $\tm{x}$, and composes
+two processes, $\tm{P}$ and $\tm{Q}$, which communicate on $\tm{x}$, in parallel.
+Therefore, in $\tm{\cpCut{x}{P}{Q}}$ the name $\tm{x}$ is bound in both $\tm{P}$
+and $\tm{Q}$.
+In $\tm{\cpRecv{x}{y}{P}}$ and $\tm{\cpSend{x}{y}{P}{Q}}$, round brackets denote
+input, square brackets denote output.
+We use bound output~\cite{sangiorgi1996}, meaning that both input and output
+bind a new name.
+In $\tm{\cpRecv{x}{y}{P}}$ the new name $\tm{y}$ is bound in $\tm{P}$.
+In $\tm{\cpSend{x}{y}{P}{Q}}$, the new name $\tm{y}$ is only bound in $\tm{P}$,
+while $\tm{x}$ is only bound in $\tm{Q}$.
 \begin{definition}[Terms]\label{def:cp-terms}
   \[
     \begin{array}{rllrll}
@@ -158,21 +182,6 @@ The term language of \cp is a variant of the \textpi-calculus.
     \end{array}
   \]
 \end{definition}
-The variables $\tm{x}$, $\tm{y}$, and $\tm{z}$ range over channel names.
-The construct $\tm{\cpLink{x}{y}}$ links two
-channels~\cite{sangiorgi1996,boreale1998}, forwarding messages received on
-$\tm{x}$ to $\tm{y}$ and vice versa.
-The construct $\tm{\cpCut{x}{P}{Q}}$ creates a new channel $\tm{x}$, and composes
-two processes, $\tm{P}$ and $\tm{Q}$, which communicate on $\tm{x}$, in parallel.
-Therefore, in $\tm{\cpCut{x}{P}{Q}}$ the name $\tm{x}$ is bound in both $\tm{P}$
-and $\tm{Q}$.
-In $\tm{\cpRecv{x}{y}{P}}$ and $\tm{\cpSend{x}{y}{P}{Q}}$, round brackets denote
-input, square brackets denote output.
-We use bound output~\cite{sangiorgi1996}, meaning that both input and output
-bind a new name.
-In $\tm{\cpRecv{x}{y}{P}}$ the new name $\tm{y}$ is bound in $\tm{P}$.
-In $\tm{\cpSend{x}{y}{P}{Q}}$, the new name $\tm{y}$ is only bound in $\tm{P}$,
-while $\tm{x}$ is only bound in $\tm{Q}$.
 
 Terms in \cp are identified up to structural congruence, which states that
 links are symmetric, and parallel compositions $\tm{\cpCut{x}{P}{Q}}$ are
@@ -202,6 +211,7 @@ associative and commutative.
   \]
 \end{definition}
 
+Reductions relate processes with their reduced forms.
 \begin{definition}[Reduction]\label{def:cp-reduction}
   A reduction $\reducesto{P}{Q}$ denotes that the process $\tm{P}$ can reduce
   to the process $\tm{Q}$ in a single step.
@@ -294,6 +304,18 @@ associative and commutative.
   \end{center}
 \end{definition}
 
+Channels in \cp are typed using a session type system which corresponds to
+classical linear logic.
+A process communicating over a channel of type \ty{A \tens B} must be ready to
+split into two independent processes (two processes which share no
+channels), ready to communicate over a channel of type \ty{A} and \ty{B},
+respectively, and process communicating over a channel of type \ty{A \parr B} is
+dual to this, and therefore must be ready to start communicating concurrently
+with two independent processes.
+A process communicating over a channel of type \ty{A \plus B} can choose to
+communicate either as \ty{A} or \ty{B}, and a process communicating over a
+channel of type \ty{A \with B} must be able to communicate either as \ty{A} or
+\ty{B}.
 \begin{definition}[Types]\label{def:cp-types}
   \[
     \begin{array}{rclrcl}
@@ -309,57 +331,54 @@ associative and commutative.
     \end{array}
   \]
 \end{definition}
-
-\begin{figure*}[!htb]
+Duality plays a crucial role in both linear logic and session types.
+In \cp, the two endpoints of a channel are assigned dual types.
+This ensures that, for instance, whenever a process \emph{sends} across a
+channel, the process on the other end of that channel is waiting to
+\emph{receive}.
+Each type $\ty{A}$ has a dual, written $\ty{A^\bot}$.
+Duality is an involutive function.
+\begin{definition}[Duality]\label{def:cp-negation}
+  \[
+    \begin{array}{lcllcllcllcl}
+         \ty{(A \tens B)^\bot} &=& \ty{A^\bot \parr B^\bot}
+      &  \ty{\one^\bot}        &=& \ty{\bot}
+      &  \ty{(A \parr B)^\bot} &=& \ty{A^\bot \tens B^\bot}
+      &  \ty{\bot^\bot}        &=& \ty{\one}
+      \\ \ty{(A \plus B)^\bot} &=& \ty{A^\bot \with B^\bot}
+      &  \ty{\nil^\bot}        &=& \ty{\top}
+      &  \ty{(A \with B)^\bot} &=& \ty{A^\bot \plus B^\bot}
+      &  \ty{\top^\bot}        &=& \ty{\nil}
+    \end{array}
+  \]
+\end{definition}
+Environments associate channels with types.
+Names in environments must be unique, and environments $\ty{\Gamma}$ and
+$\ty{\Delta}$ can only be combined as $\ty{\Gamma}, \ty{\Delta}$ if
+$\ty{\fv{\Gamma}} \cap \ty{\fv{\Delta}} = \varnothing$.
+\begin{definition}[Environments]\label{def:cp-environments}
+  \(
+    \ty{\Gamma}, \ty{\Delta}, \ty{\Theta} := \tmty{x_1}{A_1}\dots\tmty{x_n}{A_n}
+  \) 
+\end{definition}
+Typing judgements associate processes with collections of typed channels.
+\begin{definition}[Typing judgements]\label{def:cp}
+  A typing judgement $\seq[{ P }]{\tmty{x_1}{A_1}\dots\tmty{x_n}{A_n}}$ denotes
+  that the process \tm{P} communicates along channels $\tm{x_1}\dots\tm{x_n}$
+  following protocols $\ty{A_1}\dots\ty{A_n}$.
+  Typing judgements can be constructed using the following inference rules.
+  \\[0.5\baselineskip]
   Structural Rules.
-  \begin{center} \cpInfAx     \cpInfCut      \end{center}
+  \begin{center} \cpInfAx     \cpInfCut   \end{center}\vspace*{0.5\baselineskip}
 
   Logical Rules.
-  \begin{center} \cpInfTens   \cpInfParr     \end{center}
-  \begin{center} \cpInfOne    \cpInfBot      \end{center}
-  \begin{center} \cpInfPlus1  \cpInfPlus2    \end{center}
-  \begin{center} \cpInfWith                  \end{center}
-  \begin{center} \cpInfNil    \cpInfTop      \end{center}
-
-  \caption{Classical Processes (\cp)}
-  \label{fig:cp}
-\end{figure*}
-
-\begin{lemma}[Preservation for $\equiv$]\label{lem:cp-preservation-equiv}
-  If $\tm{P}\equiv\tm{Q}$, then $\seq[P]{\Gamma}$ iff $\seq[Q]{\Gamma}$.
-\end{lemma}
-\begin{proof}
-  By induction on the derivation of $\tm{P}\equiv\tm{Q}$.
-\end{proof}
-
-\begin{theorem}[Preservation]\label{thm:cp-preservation}
-  If $\seq[P]{\Gamma}$ and $\reducesto{P}{Q}$, then $\seq[Q]{\Gamma}$.
-\end{theorem}
-\begin{proof}
-  By induction on the derivation of $\reducesto{P}{Q}$.
-\end{proof}
-
-\begin{theorem}[Progress]\label{thm:cp-progress}
-  If $\seq[P]{\Gamma}$, then there exists a $\tm{Q}$ such that
-  $\tm{P}\Longrightarrow^\star\tm{Q}$ and $\tm{Q}$ is not a cut.
-\end{theorem}
-\begin{proof}
-  By induction on the derivation of $\seq[P]{\Gamma}$.
-  If the last rule is \textsc{Cut}, there are four cases:
-  \begin{enumerate*}[label={\alph*)}]
-  \item
-    if either side of the cut is an axiom, we apply \cpRedAxCut1;
-  \item
-    if either side of the cut is itself a cut, we recursively eliminate the cut;
-  \item
-    if both sides are logical rules acting on the cut formula, we apply
-    one of the $\beta$-rules;
-  \item
-    otherwise, at least one side is a logical rule acting on a formula other
-    than the cut formula, in which case we apply one of the $\kappa$-rules.
-  \end{enumerate*}
-\end{proof}
-
+  \begin{center} \cpInfTens   \cpInfParr  \end{center}\vspace*{0.5\baselineskip}
+  \begin{center} \cpInfOne    \cpInfBot   \end{center}\vspace*{0.5\baselineskip}
+  \begin{center} \cpInfPlus1  \cpInfPlus2 \end{center}\vspace*{0.5\baselineskip}
+  \begin{center} \cpInfWith               \end{center}\vspace*{0.5\baselineskip}
+  \begin{center} \cpInfNil    \cpInfTop   \end{center}\vspace*{0.5\baselineskip}
+\end{definition}
+\cp enjoys subject reduction, progress, and termination~\cite{wadler2012}.
 
 \section{Hypersequent Classical Processes}
 \label{sec:hcp}
@@ -591,14 +610,14 @@ associative and commutative.
   \label{fig:hccp}
 \end{figure*}
 
-\begin{lemma}[Preservation for $\equiv$]\label{lem:hcp-preservation-equiv}
+\begin{lemma}[Type preservation for \equiv]\label{lem:hcp-preservation-equiv}
   If $\tm{P}\equiv\tm{Q}$, then $\seq[P]{\mathcal{G}}$ iff $\seq[Q]{\mathcal G}$.
 \end{lemma}
 \begin{proof}
   By induction on the derivation of $\tm{P}\equiv\tm{Q}$.
 \end{proof}
 
-\begin{theorem}[Preservation]\label{thm:hcp-preservation}
+\begin{theorem}[Subject reduction]\label{thm:hcp-preservation}
   If $\seq[P]{\mathcal{G}}$ and $\reducesto{P}{Q}$, then $\seq[Q]{\mathcal G}$.
 \end{theorem}
 \begin{proof}
