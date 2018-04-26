@@ -379,6 +379,39 @@ Typing judgements associate processes with collections of typed channels.
   \begin{center} \cpInfNil    \cpInfTop   \end{center}\vspace*{0.5\baselineskip}
 \end{definition}
 \cp enjoys subject reduction, progress, and termination~\cite{wadler2012}.
+\begin{lemma}[Preservation for $\equiv$]\label{lem:cp-preservation-equiv}
+  If $\tm{P}\equiv\tm{Q}$, then $\seq[P]{\Gamma}$ iff $\seq[Q]{\Gamma}$.
+\end{lemma}
+\begin{proof}
+  By induction on the derivation of $\tm{P}\equiv\tm{Q}$.
+\end{proof}
+\begin{theorem}[Preservation]\label{thm:cp-preservation}
+  If $\seq[P]{\Gamma}$ and $\reducesto{P}{Q}$, then $\seq[Q]{\Gamma}$.
+\end{theorem}
+\begin{proof}
+  By induction on the derivation of $\reducesto{P}{Q}$.
+\end{proof}
+\begin{theorem}[Progress]\label{thm:cp-progress}
+  If $\seq[P]{\Gamma}$, then there exists a $\tm{Q}$ such that
+  $\tm{P}\Longrightarrow^\star\tm{Q}$ and $\tm{Q}$ is not a cut.
+\end{theorem}
+\begin{proof}
+  By induction on the derivation of $\seq[P]{\Gamma}$.
+  If the last rule is \textsc{Cut}, there are four cases:
+  \begin{enumerate*}[label={\alph*)}]
+  \item
+    if either side of the cut is an axiom, we apply \cpRedAxCut1;
+  \item
+    if either side of the cut is itself a cut, we recursively eliminate the cut;
+  \item
+    if both sides are logical rules acting on the cut formula, we apply
+    one of the $\beta$-rules;
+  \item
+    otherwise, at least one side is a logical rule acting on a formula other
+    than the cut formula, in which case we apply one of the $\kappa$-rules.
+  \end{enumerate*}
+\end{proof}
+
 
 \section{Hypersequent Classical Processes}
 \label{sec:hcp}
@@ -610,14 +643,14 @@ Typing judgements associate processes with collections of typed channels.
   \label{fig:hccp}
 \end{figure*}
 
-\begin{lemma}[Type preservation for \equiv]\label{lem:hcp-preservation-equiv}
+\begin{lemma}[Preservation for $\equiv$]\label{lem:hcp-preservation-equiv}
   If $\tm{P}\equiv\tm{Q}$, then $\seq[P]{\mathcal{G}}$ iff $\seq[Q]{\mathcal G}$.
 \end{lemma}
 \begin{proof}
   By induction on the derivation of $\tm{P}\equiv\tm{Q}$.
 \end{proof}
 
-\begin{theorem}[Subject reduction]\label{thm:hcp-preservation}
+\begin{theorem}[Preservation]\label{thm:hcp-preservation}
   If $\seq[P]{\mathcal{G}}$ and $\reducesto{P}{Q}$, then $\seq[Q]{\mathcal G}$.
 \end{theorem}
 \begin{proof}
