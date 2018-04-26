@@ -19,7 +19,6 @@
 \usepackage[parfill]{parskip}
 \usepackage[sectionbib,square,numbers,sort&compress]{natbib}
 
-
 \title{Taking Linear Logic Apart}
 \author{%
   Wen Kokke
@@ -79,8 +78,8 @@ in parallel to $Q$''.
 Note that this is a single term constructor, which takes all four arguments at
 the same time.
 This is caused by directly adopting the $(\tens)$-rule from CLL as the process
-calculus construct for sending: the $(\tens)$-rule has two premises, and checks
-that they share no resources.
+calculus construct for sending: the $(\tens)$-rule has two premises (corresponding to $\tm P$ and $\tm Q$ in the output term), and checks
+that they share no resources (in the output term, $\tm x$ can be used only by $\tm P$, and $\tm y$ can be used only by $\tm Q$).
 
 There is no independent parallel term $\tm{(\piPar{P}{Q})}$ in the grammar of
 \cp terms.
@@ -94,7 +93,7 @@ there is no independent name restriction either!
 Instead, synchronisation is governed by the ``cut'' operator
 $\tm{\piNew{x}{(\piPar{P}{Q})}}$, which composes $\tm{P}$ and $\tm{Q}$, enabling
 them to communicate along $\tm{x}$.
-Worse, if we naively added an independent parallel composition as well as an
+Worse, if we naively added an independent parallel composition as well as a
 name restriction, using the rules shown below, we would lose cut elimination,
 and therefore deadlock-freedom!
 \begin{center}
@@ -190,7 +189,7 @@ Finally, we discuss related work and conclude
       \cpRedAxCut1
       & \tm{\cpCut{x}{\cpLink{w}{x}}{P}}
       & \Longrightarrow
-      & \tm{\cpSub{w}{x}{P}} 
+      & \tm{\cpSub{w}{x}{P}}
       \\
       \cpRedBetaTensParr
       & \tm{\cpCut{x}{\cpSend{x}{y}{P}{Q}}{\cpRecv{x}{y}{R}}}
@@ -408,7 +407,7 @@ Finally, we discuss related work and conclude
       & \tm{\piNew{x}{( \piPar{P}{Q} )}}
       & \equiv
       & \tm{\piPar{P}{\piNew{x}{Q}}}
-      & \text{if }\notFreeIn{x}{P} 
+      & \text{if }\notFreeIn{x}{P}
     \end{array}
   \]
 \end{definition}
@@ -424,7 +423,7 @@ Finally, we discuss related work and conclude
       \hccpRedAxCut1
       & \tm{\cpCut{x}{\cpLink{w}{x}}{P}}
       & \Longrightarrow
-      & \tm{\cpSub{w}{x}{P}} 
+      & \tm{\cpSub{w}{x}{P}}
       \\
       \hccpRedBetaTensParr
       & \tm{\cpCut{x}{\piBoundSend{x}{y}{P}}{\piRecv{x}{y}{R}}}
@@ -569,14 +568,14 @@ Finally, we discuss related work and conclude
 \end{figure*}
 
 \begin{lemma}[Preservation for $\equiv$]\label{lem:hcp-preservation-equiv}
-  If $\tm{P}\equiv\tm{Q}$, then $\seq[P]{\mathcal{G}}$ iff $\seq[Q]{\Gamma}$.
+  If $\tm{P}\equiv\tm{Q}$, then $\seq[P]{\mathcal{G}}$ iff $\seq[Q]{\mathcal G}$.
 \end{lemma}
 \begin{proof}
   By induction on the derivation of $\tm{P}\equiv\tm{Q}$.
 \end{proof}
 
 \begin{theorem}[Preservation]\label{thm:hcp-preservation}
-  If $\seq[P]{\mathcal{G}}$ and $\reducesto{P}{Q}$, then $\seq[Q]{\Gamma}$.
+  If $\seq[P]{\mathcal{G}}$ and $\reducesto{P}{Q}$, then $\seq[Q]{\mathcal G}$.
 \end{theorem}
 \begin{proof}
   By induction on the derivation of $\reducesto{P}{Q}$.
@@ -595,7 +594,7 @@ Finally, we discuss related work and conclude
     \cref{thm:cp-progress};
   \item
     if the rule under the cut is an unrelated mix, we rewrite by
-    \hccpEquivScopeExt{}, and recursively eliminate the cut; 
+    \hccpEquivScopeExt{}, and recursively eliminate the cut;
   \item
     if the rule under the cut is a logical rule, we apply one of the
     $\kappa\nu$-rules.
@@ -606,7 +605,7 @@ Finally, we discuss related work and conclude
     if the rule under the mix is a cut or another mix, we recursively eliminate it;
   \item
     if the rule under the mix is a logical rule, we apply one of the
-    $\kappa{\ppar}$-rules. 
+    $\kappa{\ppar}$-rules.
   \end{enumerate*}
 \end{proof}
 
@@ -653,7 +652,7 @@ We define a translation from terms in \cp to terms in \hcp which breaks down the
 \begin{proof}
   By induction on the derivation of $\seq[P]{\Gamma}$.
     \begin{itemize}
-  \item 
+  \item
     Case \textsc{Cut}. We rewrite to:
     \begin{gather*}
       \begin{array}{lcl}
@@ -665,7 +664,7 @@ We define a translation from terms in \cp to terms in \hcp which breaks down the
         & \Rightarrow
         & \AXC{$\seq[\mtf{P}]{\Gamma, \tmty{x}{A}}$}
           \AXC{$\seq[\mtf{Q}]{\Delta, \tmty{x}{A^\bot}}$}
-          \NOM{H-Mix} 
+          \NOM{H-Mix}
           \BIC{$\seq[\piPar{\mtf{P}}{\mtf{Q}}]{
           \Gamma, \tmty{x}{A} \hsep \Delta, \tmty{x}{A^\bot}}$}
           \NOM{H-Cut}
@@ -709,7 +708,7 @@ We define a translation from terms in \cp to terms in \hcp which breaks down the
           \SYM{\one}
           \UIC{$\seq[\piBoundSend{x}{}{\piHalt}]{\tmty{x}{\one}}$}
           \DisplayProof
-      \end{array}      
+      \end{array}
     \end{flalign*}
   \end{itemize}
   The other cases are trivial.
@@ -806,7 +805,7 @@ We define a translation from terms in \cp to terms in \hcp which breaks down the
   such that
   $\tm{P}\equiv_{\gamma\kappa}\tm{(\mtf{P_1}\ppar\dots\ppar\mtf{P_n})}$.
 \end{lemma}
-\begin{proof}  
+\begin{proof}
   We repeatedly apply the $\kappa{\ppar}$-rules to move the mixes upwards.
   There are three cases:
   \begin{enumerate*}[label={\alph*)}]
@@ -885,7 +884,7 @@ $\ty{\emptyhypercontext}$, we interpret this as the unit of tensor.
 \label{sec:related-work}
 
 Since its inception, linear logic has been described as the logic of
-concurrency~\cite{girard1987}.
+concurrency \cite{girard1987}.
 Correspondences between the proof theory of linear logic and variants of the
 \textpi-calculus emerged soon afterwards \cite{abramsky1994,bellin1994}, by
 interpreting linear logic propositions as types for channels.
@@ -897,18 +896,14 @@ can be encoded into linear types \cite{dardha2017}.
 
 It took more than ten years for a formal correspondence between linear logic and
 (a variant of) session types to emerge, with the seminal paper by \citet{caires2010}.
-This inspired the development of Classical Processes by \citet{wadler2012},
-which we have discussed in great detail in this paper.
+This inspired the development of Classical Processes by \citet{wadler2012}.
 
-The idea of extending linear logic to hypersequents for typing processes is not
-novel.
-For instance, \citet{carbone2018} extended the multiplicative-additive fragment
+The idea of using hypersequents to capture parallelism in linear logic judgements is not
+novel: \citet{carbone2018} extended the multiplicative-additive fragment
 of intuitionistic linear logic with hypersequents to type global descriptions of
 process communications known as choreographies.
-This work differs from our approach in that \hcp is based on classical linear
-logic, and uses hypersequents to type processes.
-Furthermore, the rules for manipulating hypersequents are different.
-In \citet{carbone2018}, hypersequents can be formed only when sequents share
+This work is distinct from our approach in that \hcp is based on classical linear
+logic and manipulates hypersequents differently: in \citet{carbone2018}, hypersequents can be formed only when sequents share
 resources (\cf \textsc{H-Mix}), and resource sharing is then explicitly tracked
 using an additional connection modality (which is not present in \hcp).
 
@@ -922,4 +917,3 @@ using an additional connection modality (which is not present in \hcp).
 %%% Local Variables:
 %%% TeX-master: "main"
 %%% End:
-
