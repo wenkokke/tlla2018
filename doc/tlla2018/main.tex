@@ -9,7 +9,8 @@
 \usepackage{breakurl} % Not needed if you use pdflatex only.
 \usepackage{underscore} % Only needed if you use pdflatex.
 \usepackage{textcomp,textgreek,upgreek}
-\usepackage{nameref,hyperref,cleveref}
+\usepackage{nameref,hyperref}
+\usepackage[capitalise,nameinlink,noabbrev]{cleveref}
 \hypersetup{hidelinks,final}
 \newtheorem{definition}{Definition}
 \newtheorem{lemma}{Lemma}
@@ -167,7 +168,7 @@ bind a new name.
 In $\tm{\cpRecv{x}{y}{P}}$ the new name $\tm{y}$ is bound in $\tm{P}$.
 In $\tm{\cpSend{x}{y}{P}{Q}}$, the new name $\tm{y}$ is only bound in $\tm{P}$,
 while $\tm{x}$ is only bound in $\tm{Q}$.
-\begin{definition}[Terms]\label{def:cp-terms}
+\begin{definition}[Terms]\label{def:cp-terms}  Process terms are given by the following grammar:
   \[
     \begin{array}{rllrll}
       \tm{P}, \tm{Q}, \tm{R}
@@ -213,13 +214,7 @@ associative and commutative.
   \]
 \end{definition}
 
-Reductions relate processes with their reduced forms.
-\begin{definition}[Reduction]\label{def:cp-reduction}
-  A reduction $\reducesto{P}{Q}$ denotes that the process $\tm{P}$ can reduce
-  to the process $\tm{Q}$ in a single step.
-  The relation $\Longrightarrow^\star$ is the reflexive, transitive closure of
-  $\Longrightarrow$.
-  Reductions can only be constructed as follows:
+\begin{figure}
  \[
     \begin{array}{llcll}
       \cpRedAxCut1
@@ -304,6 +299,15 @@ Reductions relate processes with their reduced forms.
       \TIC{$\reducesto{P}{P^\prime}$}
     \end{prooftree*}
   \end{center}
+  \caption{Classical Processes, reduction relation.}
+  \label{fig:cp-reduction}
+\end{figure}
+
+Reductions relate processes with their reduced forms \eg, a reduction $\reducesto{P}{Q}$ denotes that the process $\tm{P}$ can reduce to the process $\tm{Q}$ in a single step.
+\begin{definition}[Reduction]\label{def:cp-reduction}
+  Reductions are described by the smallest relation $\Longrightarrow$ on process terms closed under rules in \cref{fig:cp-reduction}.
+  The relation $\Longrightarrow^\star$ is the reflexive, transitive closure of 
+  $\Longrightarrow$.
 \end{definition}
 
 Channels in \cp are typed using a session type system which corresponds to
@@ -363,22 +367,26 @@ $\ty{\fv{\Gamma}} \cap \ty{\fv{\Delta}} = \varnothing$.
     \ty{\Gamma}, \ty{\Delta}, \ty{\Theta} := \tmty{x_1}{A_1}\dots\tmty{x_n}{A_n}
   \) 
 \end{definition}
+\begin{figure}
+%  Structural Rules.
+  \begin{center}\cpInfAx     \cpInfCut  \end{center}\vspace*{-.5\baselineskip}
+%  Logical Rules.
+  \begin{center}\cpInfTens   \cpInfParr \cpInfOne    \end{center}\vspace*{-.5\baselineskip}
+%  \begin{center}\end{center}\vspace*{-.5\baselineskip}
+  \begin{center}\cpInfBot  \cpInfPlus1  \cpInfPlus2\end{center}\vspace*{-.5\baselineskip}
+  \begin{center}\cpInfWith               
+%  \end{center}\vspace*{-.5\baselineskip}\begin{center}
+  \cpInfNil    \cpInfTop  \end{center} %\vspace*{-.5\baselineskip}
+  \caption{Classical Processes, typing.}
+  \label{fig:cp}
+\end{figure}
+\noindent
 Typing judgements associate processes with collections of typed channels.
 \begin{definition}[Typing judgements]\label{def:cp}
   A typing judgement $\seq[{ P }]{\tmty{x_1}{A_1}\dots\tmty{x_n}{A_n}}$ denotes
   that the process \tm{P} communicates along channels $\tm{x_1}\dots\tm{x_n}$
   following protocols $\ty{A_1}\dots\ty{A_n}$.
-  Typing judgements can be constructed using the following inference rules.
-  \\[0.5\baselineskip]
-  Structural Rules.
-  \begin{center}\cpInfAx     \cpInfCut  \end{center}\vspace*{0.5\baselineskip}
-
-  Logical Rules.
-  \begin{center}\cpInfTens   \cpInfParr \end{center}\vspace*{0.5\baselineskip}
-  \begin{center}\cpInfOne    \cpInfBot  \end{center}\vspace*{0.5\baselineskip}
-  \begin{center}\cpInfPlus1  \cpInfPlus2\end{center}\vspace*{0.5\baselineskip}
-  \begin{center}\cpInfWith              \end{center}\vspace*{0.5\baselineskip}
-  \begin{center}\cpInfNil    \cpInfTop  \end{center}\vspace*{0.5\baselineskip}
+  Typing judgements are derived using rules in \cref{fig:cp}.
 \end{definition}
 \cp enjoys subject reduction, progress, and termination~\cite{wadler2012}.
 \begin{lemma}[Preservation for $\equiv$]\label{lem:cp-preservation-equiv}
@@ -483,12 +491,7 @@ Typing judgements associate processes with collections of typed channels.
   \]
 \end{definition}
 
-\begin{definition}[Reduction]\label{def:hcp-reduction}
-  A reduction $\reducesto{P}{Q}$ denotes that the process $\tm{P}$ can reduce
-  to the process $\tm{Q}$ in a single step.
-  The relation $\Longrightarrow^\star$ is the reflexive, transitive closure of
-  $\Longrightarrow$.
-  Reductions can only be constructed as follows:
+\begin{figure}[t]
   \[
     \begin{array}{llcll}
       \hccpRedAxCut1
@@ -616,28 +619,36 @@ Typing judgements associate processes with collections of typed channels.
       \TIC{$\reducesto{P}{P^\prime}$}
     \end{prooftree*}
   \end{center}
+  \caption{Hypersequent Classical Processes, reduction relation.}
+  \label{fig:hcp-reduction}
+\end{figure}
+
+\begin{definition}[Reduction]\label{def:hcp-reduction}
+ Reductions are described by the smallest relation $\Longrightarrow$ on process terms closed under rules in \cref{fig:hcp-reduction}.
+%  A reduction $\reducesto{P}{Q}$ denotes that the process $\tm{P}$ can reduce
+%  to the process $\tm{Q}$ in a single step.
+%  The relation $\Longrightarrow^\star$ is the reflexive, transitive closure of
+%  $\Longrightarrow$.
+%  Reductions can only be constructed as follows:
 \end{definition}
+
+\begin{figure}[t]
+%  Structural Rules.
+  \begin{center}\hccpInfAx        \hccpInfCycle\end{center}\vspace*{-.5\baselineskip}
+  \begin{center}\hccpInfMix       \hccpInfHalt \end{center}\vspace*{-.5\baselineskip}
+%  Logical Rules.
+  \begin{center}\hccpInfBoundTens \hccpInfParr \hccpInfOne \end{center}\vspace*{-.5\baselineskip}
+  \begin{center}\hccpInfBot \hccpInfPlus1 \hccpInfPlus2\end{center}\vspace*{-.5\baselineskip}
+  \begin{center}\hccpInfWith \quad \hccpInfNil \quad \hccpInfTop  \end{center} %\vspace*{.5\baselineskip}
+  \caption{Hypersequent Classical Processes, typing.}
+  \label{fig:hcp}
+\end{figure}
 
 \begin{definition}[Typing judgements]\label{def:hcp}
   A typing judgement $\seq[P]{\Gamma_1 \hsep \dots \hsep \Gamma_n}$ denotes
   that the process $\tm{P}$ consists of $n$ independent, but potentially
   interleaved processes, each of which communicates according to its own
-  protocol $\Gamma_i$. 
-  Typing judgements can be constructed using the following inference rules.
-  \\[0.5\baselineskip]
-  Structural Rules.
-  \begin{center}\hccpInfAx        \hccpInfCycle\end{center}\vspace*{-.5\baselineskip}
-  \begin{center}\hccpInfMix       \hccpInfHalt \end{center}\vspace*{-.5\baselineskip}
-
-  Logical Rules.
-  \begin{center}\hccpInfBoundTens \hccpInfParr \end{center}\vspace*{-.5\baselineskip}
-  \begin{center}\hccpInfOne       \hccpInfBot  \end{center}\vspace*{-.5\baselineskip}
-  \begin{center}\hccpInfPlus1     \hccpInfPlus2\end{center}\vspace*{-.5\baselineskip}
-  \begin{center}\hccpInfWith                   \end{center}\vspace*{-.5\baselineskip}
-  \begin{center}\hccpInfNil       \hccpInfTop  \end{center}\vspace*{.5\baselineskip}
-
-  Where each logical rule has the side condition that $\tm{x} \not\in
-  \ty{\mathcal{G}}$.
+  protocol $\Gamma_i$. Typing judgements are derived using rules in \cref{fig:hcp}---each rule has the side condition that $\tm{x} \not\in    \ty{\mathcal{G}}$.
 \end{definition}
 
 \begin{lemma}[Preservation for $\equiv$]\label{lem:hcp-preservation-equiv}
@@ -992,8 +1003,8 @@ logic and manipulates hypersequents differently: in \citet{carbone2018}, hyperse
 resources (\cf \textsc{H-Mix}), and resource sharing is then explicitly tracked
 using an additional connection modality (which is not present in \hcp).
 
-\section{Conclusions}
-\label{sec:conclusions}
+%\section{Conclusions}
+%\label{sec:conclusions}
 
 \clearpage
 \bibliographystyle{abbrvnat}
