@@ -369,14 +369,14 @@ Typing judgements associate processes with collections of typed channels.
   Typing judgements can be constructed using the following inference rules.
   \\[0.5\baselineskip]
   Structural Rules.
-  \begin{center} \cpInfAx     \cpInfCut   \end{center}\vspace*{0.5\baselineskip}
+  \begin{center}\cpInfAx     \cpInfCut  \end{center}\vspace*{0.5\baselineskip}
 
   Logical Rules.
-  \begin{center} \cpInfTens   \cpInfParr  \end{center}\vspace*{0.5\baselineskip}
-  \begin{center} \cpInfOne    \cpInfBot   \end{center}\vspace*{0.5\baselineskip}
-  \begin{center} \cpInfPlus1  \cpInfPlus2 \end{center}\vspace*{0.5\baselineskip}
-  \begin{center} \cpInfWith               \end{center}\vspace*{0.5\baselineskip}
-  \begin{center} \cpInfNil    \cpInfTop   \end{center}\vspace*{0.5\baselineskip}
+  \begin{center}\cpInfTens   \cpInfParr \end{center}\vspace*{0.5\baselineskip}
+  \begin{center}\cpInfOne    \cpInfBot  \end{center}\vspace*{0.5\baselineskip}
+  \begin{center}\cpInfPlus1  \cpInfPlus2\end{center}\vspace*{0.5\baselineskip}
+  \begin{center}\cpInfWith              \end{center}\vspace*{0.5\baselineskip}
+  \begin{center}\cpInfNil    \cpInfTop  \end{center}\vspace*{0.5\baselineskip}
 \end{definition}
 \cp enjoys subject reduction, progress, and termination~\cite{wadler2012}.
 \begin{lemma}[Preservation for $\equiv$]\label{lem:cp-preservation-equiv}
@@ -415,13 +415,6 @@ Typing judgements associate processes with collections of typed channels.
 
 \section{Hypersequent Classical Processes}
 \label{sec:hcp}
-
-\begin{example}
-  \(
-  \seq[\cpCase{x}{(\piPar{P}{Q})}{(\piPar{P'}{Q'})}]{
-    \Gamma, \Delta, \tmty{x}{A \with B}}
-  \)
-\end{example}
 
 \begin{definition}[Terms]\label{def:hcp-terms}
   \[
@@ -623,25 +616,27 @@ Typing judgements associate processes with collections of typed channels.
   \end{center}
 \end{definition}
 
-\begin{figure*}[!htb]
+\begin{definition}[Typing judgements]\label{def:hcp}
+  A typing judgement $\seq[P]{\Gamma_1 \hsep \dots \hsep \Gamma_n}$ denotes
+  that the process $\tm{P}$ consists of $n$ independent, but potentially
+  interleaved processes, each of which communicates according to its own
+  protocol $\Gamma_i$. 
+  Typing judgements can be constructed using the following inference rules.
+  \\[0.5\baselineskip]
   Structural Rules.
-  \begin{center} \hccpInfAx        \hccpInfCycle \end{center}
-  \begin{center} \hccpInfMix       \hccpInfHalt  \end{center}
+  \begin{center}\hccpInfAx        \hccpInfCycle\end{center}\vspace*{0.5\baselineskip}
+  \begin{center}\hccpInfMix       \hccpInfHalt \end{center}\vspace*{0.5\baselineskip}
 
   Logical Rules.
-  \begin{center} \hccpInfBoundTens \hccpInfParr  \end{center}
-  \begin{center} \hccpInfOne       \hccpInfBot   \end{center}
-  \begin{center} \hccpInfPlus1     \hccpInfPlus2 \end{center}
-  \begin{center} \hccpInfWith                    \end{center}
-  \begin{center} \hccpInfNil       \hccpInfTop   \end{center}
+  \begin{center}\hccpInfBoundTens \hccpInfParr \end{center}\vspace*{0.5\baselineskip}
+  \begin{center}\hccpInfOne       \hccpInfBot  \end{center}\vspace*{0.5\baselineskip}
+  \begin{center}\hccpInfPlus1     \hccpInfPlus2\end{center}\vspace*{0.5\baselineskip}
+  \begin{center}\hccpInfWith                   \end{center}\vspace*{0.5\baselineskip}
+  \begin{center}\hccpInfNil       \hccpInfTop  \end{center}\vspace*{0.5\baselineskip}
 
-  \centering
-  (Where each logical rule has the side condition that $\tm{x} \not\in
-  \ty{\mathcal{G}}$.)
-
-  \caption{Hypersequent Classical Processes (\hcp)}
-  \label{fig:hccp}
-\end{figure*}
+  Where each logical rule has the side condition that $\tm{x} \not\in
+  \ty{\mathcal{G}}$.
+\end{definition}
 
 \begin{lemma}[Preservation for $\equiv$]\label{lem:hcp-preservation-equiv}
   If $\tm{P}\equiv\tm{Q}$, then $\seq[P]{\mathcal{G}}$ iff $\seq[Q]{\mathcal G}$.
@@ -689,10 +684,18 @@ Typing judgements associate processes with collections of typed channels.
 \label{sec:cp2hcp}
 
 \begin{itemize}
+\item Not every \hcp process is a \cp process.
 \item Every \cp process is an \hcp process.
 \item \hcp processes represent multiple entangled \cp processes.
 \item \hcp supports the same protocols as \cp.
 \end{itemize}
+
+\begin{example}
+  \(
+  \seq[\cpCase{x}{(\piPar{P}{Q})}{(\piPar{P'}{Q'})}]{
+    \Gamma, \Delta, \tmty{x}{A \with B}}
+  \)
+\end{example}
 
 We define a translation from terms in \cp to terms in \hcp which breaks down the term constructs in \cp into their more atomic constructs in \hcp:
 \begin{definition}\label{def:cp2hcp-terms}
