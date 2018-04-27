@@ -510,11 +510,10 @@ Secondly, because we have decomposed $\tm{\cpCut{x}{P}{Q}}$ into an independent
 name restriction and parallel composition, the $\kappa$-rules and the relevant
 $\gamma$-rule all decompose as well.
 \begin{definition}[Reduction]\label{def:hcp-reduction}
-  A reduction $\reducesto{P}{Q}$ denotes that the process $\tm{P}$ can reduce
-  to the process $\tm{Q}$ in a single step.
-  The relation $\Longrightarrow^\star$ is the reflexive, transitive closure of
-  $\Longrightarrow$.
-  Reductions can only be constructed as follows:
+  Reductions are described by the smallest relation $\Longrightarrow$ on process
+  terms closed under rules in \cref{fig:hcp-reduction}.
+\end{definition}
+\begin{figure}
   \[
     \begin{array}{llcll}
       \hccpRedAxCut1
@@ -646,15 +645,6 @@ $\gamma$-rule all decompose as well.
   \label{fig:hcp-reduction}
 \end{figure}
 
-\begin{definition}[Reduction]\label{def:hcp-reduction}
- Reductions are described by the smallest relation $\Longrightarrow$ on process terms closed under rules in \cref{fig:hcp-reduction}.
-%  A reduction $\reducesto{P}{Q}$ denotes that the process $\tm{P}$ can reduce
-%  to the process $\tm{Q}$ in a single step.
-%  The relation $\Longrightarrow^\star$ is the reflexive, transitive closure of
-%  $\Longrightarrow$.
-%  Reductions can only be constructed as follows:
-\end{definition}
-
 \begin{definition}[Hyper-environment]\label{def:hcp-hyper-environment}
   \(
   \ty{\mathcal{G}}, \ty{\mathcal{H}} :=
@@ -670,7 +660,7 @@ $\gamma$-rule all decompose as well.
   entangled processes, each of which communicates according to its own
   protocol $\Gamma_i$.
   Typing judgements can be constructed using the following inference rules.
-  Each logical rule has the side condition that $\tm{x} \not\in \ty{\mathcal{G}$.
+  Each logical rule has the side condition that $\tm{x} \not\in \ty{\mathcal{G}}$.
   \\[0.5\baselineskip]
   Structural Rules.
   \begin{center}\hccpInfAx        \hccpInfCycle\end{center}\vspace*{0.5\baselineskip}
@@ -686,14 +676,14 @@ $\gamma$-rule all decompose as well.
 \end{definition}
 
 \begin{lemma}[Preservation for $\equiv$]\label{lem:hcp-preservation-equiv}
-  If $\tm{P}\equiv\tm{Q}$, then $\seq[P]{\mathcal{G}}$ iff $\seq[Q]{\mathcal G}$.
+  If $\tm{P}\equiv\tm{Q}$, then $\seq[P]{\mathcal{G}}$ iff $\seq[Q]{\mathcal{G}}$.
 \end{lemma}
 \begin{proof}
   By induction on the derivation of $\tm{P}\equiv\tm{Q}$.
 \end{proof}
 
 \begin{theorem}[Preservation]\label{thm:hcp-preservation}
-  If $\seq[P]{\mathcal{G}}$ and $\reducesto{P}{Q}$, then $\seq[Q]{\mathcal G}$.
+  If $\seq[P]{\mathcal{G}}$ and $\reducesto{P}{Q}$, then $\seq[Q]{\mathcal{G}}$.
 \end{theorem}
 \begin{proof}
   By induction on the derivation of $\reducesto{P}{Q}$.
