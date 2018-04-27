@@ -712,7 +712,7 @@ $\tm{\piBoundSend{x}{}{\piRecv{x}{}{\piHalt}}}$.
 \end{figure}
 
 \paragraph{Metatheory}
-Much like \cp, \hcp enjoys subject reduction, progress, and termination.
+\hcp enjoys subject reduction, progress, and termination.
 \begin{lemma}[Preservation for $\equiv$]\label{lem:hcp-preservation-equiv}
   If $\tm{P}\equiv\tm{Q}$, then $\seq[P]{\mathcal{G}}$ iff $\seq[Q]{\mathcal{G}}$.
 \end{lemma}
@@ -764,20 +764,16 @@ Much like \cp, \hcp enjoys subject reduction, progress, and termination.
 \section{Relation between \cp and \hcp}
 \label{sec:cp2hcp}
 
-\begin{itemize}
-\item Not every \hcp process is a \cp process.
-\item Every \cp process is an \hcp process.
-\item \hcp processes represent multiple entangled \cp processes.
+In this section, we discuss the relation between \cp and \hcp.
+We will prove three important theorems:
+\begin{enumerate*}[label={\alph*)}]
+\item every \cp process is an \hcp process;
+\item \hcp processes represent multiple entangled \cp processes; and
 \item \hcp supports the same protocols as \cp.
-\end{itemize}
-
-\begin{example}
-  \(
-  \seq[\cpCase{x}{(\piPar{P}{Q})}{(\piPar{P'}{Q'})}]{
-    \Gamma, \Delta, \tmty{x}{A \with B}}
-  \)
-\end{example}\noindent
-We define a translation from terms in \cp to terms in \hcp which breaks down the term constructs in \cp into their more atomic constructs in \hcp:
+\end{enumerate*}
+To facilitate this, we define a translation from terms in \cp to terms in \hcp
+which breaks down the term constructs in \cp into their more atomic constructs
+in \hcp.
 \begin{definition}\label{def:cp2hcp-terms}
   \[
     \begin{array}{lcllcl}
@@ -804,6 +800,12 @@ We define a translation from terms in \cp to terms in \hcp which breaks down the
     \end{array}
   \]
 \end{definition}\noindent
+First, we prove that each \cp process can be translated by this trivial
+translation to an \hcp process, and that this translation respects structural
+congruence and reduction.
+Reductions from \cp can be trivially translated to reductions in \hcp.
+However, as we took apart each $\kappa$-rule into two separate rules, the
+reduction relation of \hcp is a slight refinement over that of \cp.
 \begin{theorem}\label{thm:cp2hcp-typing}
   If $\seq[P]{\Gamma}$ in \cp, then $\seq[\mtf{P}]{\Gamma}$ in \hcp.
 \end{theorem}
@@ -938,7 +940,6 @@ We define a translation from terms in \cp to terms in \hcp which breaks down the
 %   \end{gather*}
 % \end{itemize}
 \end{proof}\noindent
-
 \begin{theorem}\label{hcp2cp-reduction}
   If $\reducesto{\mtf{P}}{R}$ in \hcp, then there is a $\tm{Q}$ such that
   $\reducesto{P}{Q}$ in \cp and $\tm{R}\Longrightarrow^\star\tm{\mtf{Q}}$ in \hcp.
@@ -950,11 +951,29 @@ We define a translation from terms in \cp to terms in \hcp which breaks down the
   and vice versa.
 \end{proof}\noindent
 
+It would be wonderful if each \hcp process could be translated back into a
+series of \cp processes.
+However, \hcp exhibits some behaviours which are impossible to directly
+translate back into \cp.
+For instance, in the process below, the choice sent on $\tm{x}$ will affect the
+choice between $\tm{P}$ and $\tm{P'}$, even though neither has access to the
+channel $\tm{x}$.
+\begin{example}
+  \(
+  \seq[\cpCase{x}{(\piPar{P}{Q})}{(\piPar{P'}{Q'})}]{
+    \Gamma, \Delta, \tmty{x}{A \with B}}
+  \)
+\end{example}\noindent
+Instead, we will define a new relation to characterise the relation between \hcp
+and \cp processes.
 \begin{definition}\label{def:hcp-gk}
   The relation $\tm{P}\equiv_{\gamma\kappa}\tm{Q}$ is the congruence closure of
   the $\gamma$- and $\kappa$-rules for \hcp.
 \end{definition}\noindent
-
+This relation allows us to apply $\kappa$-rules under arbitrary prefixes.
+We can show that, if we allow ourselves to do this, we can rewrite any process
+to a form in which all mixes are either attached to their respective cuts or
+tensors, or at the top-level.
 \begin{lemma}[Disentangle]\label{lem:hcp-disentangle}
   If $\seq[P]{\Gamma_1 \hsep \dots \hsep \Gamma_n}$ in \hcp,
   then there exist $\seq[P_1]{\Gamma_1}, \dots, \seq[P_n]{\Gamma_n}$ in \cp,
@@ -976,8 +995,17 @@ We define a translation from terms in \cp to terms in \hcp which breaks down the
   applications of $(\one)$ are now followed by an application of
   \textsc{H-Halt}, forming a \cp $(\one)$.
 \end{proof}\noindent
-We can interpret environments as types by collapsing them using a series of
-pars.
+
+Finally, we will prove that \hcp supports the same communication protocols as
+\cp.
+This is the same as saying that it inhabits the same session types, or that the
+associated logical systems derive the same theorems.
+We show this by proving that we can interpret the hyper-environments as formulas
+in the logic.
+This is a standard method for proving the soundness of a hypersequent calculus.
+
+We start out by showing that we can interpret environments as types by
+collapsing them using a series of pars.
 \begin{definition}\label{def:bigparr}
   \(
   \ty{\bigparr(\tmty{x_1}{A_1} , \dots , \tmty{x_n}{A_n})} =
@@ -993,9 +1021,10 @@ pars.
   If $\ty{\Gamma} = \ty{A, B, \Gamma'}$, then we apply $(\parr)$ to get $\seq{A
     \parr B, \Gamma'}$, and apply the induction hypothesis.
 \end{proof}\noindent
-We can interpret hyper-environments as types by collapsing them using a series
-of tensors. In the case of the empty hyper-environment
-$\ty{\emptyhypercontext}$, we interpret this as the unit of tensor.
+Then, using \cref{lem:hcp-disentangle}, we can show that we can interpret
+hyper-environments as types by collapsing them using a series of tensors.
+In the case of the empty hyper-environment $\ty{\emptyhypercontext}$, we
+interpret this as the unit of tensor.
 \begin{definition}\label{def:bigtens}
   \(
   \begin{array}{lcl}
