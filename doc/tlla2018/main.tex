@@ -10,7 +10,7 @@
 \usepackage{underscore} % Only needed if you use pdflatex.
 \usepackage{textcomp,textgreek,upgreek}
 \usepackage{nameref,hyperref}
-\usepackage[capitalise,nameinlink,noabbrev]{cleveref}
+\usepackage[nameinlink,noabbrev]{cleveref}
 \hypersetup{hidelinks,final}
 \newtheorem{definition}{Definition}
 \newtheorem{lemma}{Lemma}
@@ -18,9 +18,10 @@
 \newtheorem{corollary}{Corollary}
 \newtheorem{example}{Example}
 \input{preamble-typing}
-%\usepackage[parfill]{parskip}
 \usepackage{more-space}
 \usepackage[sectionbib,square,numbers,sort&compress]{natbib}
+\renewcommand*{\eg}{e.g.\@\xspace}
+\renewcommand*{\ie}{i.e.\@\xspace}
 
 \title{Taking Linear Logic Apart}
 \author{%
@@ -152,6 +153,7 @@ ourselves to the multiplicative-applicative subset of \cp.
 We foresee no problems in extending the proofs in \cref{sec:hcp} to cover the
 remaining features of \cp (polymophism and the exponentials).
 
+\paragraph{Terms}
 The term language of \cp is a variant of the \textpi-calculus.
 The variables $\tm{x}$, $\tm{y}$, and $\tm{z}$ range over channel names.
 The construct $\tm{\cpLink{x}{y}}$ links two
@@ -168,7 +170,8 @@ bind a new name.
 In $\tm{\cpRecv{x}{y}{P}}$ the new name $\tm{y}$ is bound in $\tm{P}$.
 In $\tm{\cpSend{x}{y}{P}{Q}}$, the new name $\tm{y}$ is only bound in $\tm{P}$,
 while $\tm{x}$ is only bound in $\tm{Q}$.
-\begin{definition}[Terms]\label{def:cp-terms}  Process terms are given by the following grammar:
+\begin{definition}[Terms]\label{def:cp-terms}
+  Process terms are given by the following grammar:
   \[
     \begin{array}{rllrll}
       \tm{P}, \tm{Q}, \tm{R}
@@ -185,7 +188,6 @@ while $\tm{x}$ is only bound in $\tm{Q}$.
     \end{array}
   \]
 \end{definition}\noindent
-
 Terms in \cp are identified up to structural congruence, which states that
 links are symmetric, and parallel compositions $\tm{\cpCut{x}{P}{Q}}$ are
 associative and commutative.
@@ -213,7 +215,6 @@ associative and commutative.
     \end{array}
   \]
 \end{definition}\noindent
-
 \begin{figure}
  \[
     \begin{array}{llcll}
@@ -302,14 +303,17 @@ associative and commutative.
   \caption{Classical Processes, reduction relation.}
   \label{fig:cp-reduction}
 \end{figure}
-
-Reductions relate processes with their reduced forms \eg, a reduction $\reducesto{P}{Q}$ denotes that the process $\tm{P}$ can reduce to the process $\tm{Q}$ in a single step.
+Reductions relate processes with their reduced forms \eg, a reduction
+$\reducesto{P}{Q}$ denotes that the process $\tm{P}$ can reduce to the process
+$\tm{Q}$ in a single step.
 \begin{definition}[Reduction]\label{def:cp-reduction}
-  Reductions are described by the smallest relation $\Longrightarrow$ on process terms closed under rules in \cref{fig:cp-reduction}.
+  Reductions are described by the smallest relation $\Longrightarrow$ on process
+  terms closed under rules in \cref{fig:cp-reduction}.
   The relation $\Longrightarrow^\star$ is the reflexive, transitive closure of 
   $\Longrightarrow$.
 \end{definition}\noindent
 
+\paragraph{Typing}
 Channels in \cp are typed using a session type system which corresponds to
 classical linear logic.
 A process communicating over a channel of type \ty{A \tens B} must be ready to
@@ -378,8 +382,7 @@ $\ty{\fv{\Gamma}} \cap \ty{\fv{\Delta}} = \varnothing$.
   \begin{center}\cpInfWith \cpInfNil \cpInfTop \end{center}
   \caption{Classical Processes, typing.}
   \label{fig:cp}
-\end{figure}
-\noindent
+\end{figure}\noindent
 Typing judgements associate processes with collections of typed channels.
 \begin{definition}[Typing judgements]\label{def:cp}
   A typing judgement $\seq[{ P }]{\tmty{x_1}{A_1}\dots\tmty{x_n}{A_n}}$ denotes
@@ -387,6 +390,8 @@ Typing judgements associate processes with collections of typed channels.
   following protocols $\ty{A_1}\dots\ty{A_n}$.
   Typing judgements are derived using rules in \cref{fig:cp}.
 \end{definition}\noindent
+
+\paragraph{Metatheory}
 \cp enjoys subject reduction, progress, and termination~\cite{wadler2012}.
 \begin{lemma}[Preservation for $\equiv$]\label{lem:cp-preservation-equiv}
   If $\tm{P}\equiv\tm{Q}$, then $\seq[P]{\Gamma}$ iff $\seq[Q]{\Gamma}$.
@@ -420,6 +425,19 @@ Typing judgements associate processes with collections of typed channels.
     than the cut formula, in which case we apply one of the $\kappa$-rules.
   \end{enumerate*}
 \end{proof}\noindent
+\begin{theorem}[Termination]\label{thm:cp-termination}
+  If $\seq[P]{\Gamma}$, then there are no infinite $\Longrightarrow$-reduction
+  sequences.
+\end{theorem}
+\begin{proof}
+  Every reduction reduces a single cut to zero, one or two cuts.
+  However, each of these cuts is smaller, in the sense that the type of the
+  channel on which the communication takes place is smaller.
+  Each reduction either eliminates a connective.
+  Furthermore, each instance of the structural congruence preserves the size of
+  the cut.
+  Therefore, there cannot be an infinite $\Longrightarrow$-reduction sequence.
+\end{proof}
 
 
 \section{Hypersequent Classical Processes}
@@ -430,8 +448,10 @@ of \cp which registers parallelism in the typing jugdgements using
 hypersequents, allowing us to take apart the monolithic term constructors of \cp
 (\eg $\tm{\cpSend{x}{y}{P}{Q}}$) into the corresponding \textpi-calculus term
 constructs.
-As expected, the term language of \hcp is a variant of \cp, where the term
-constructs have been taken apart into \textpi-calculus primitives.
+
+\paragraph{Terms}
+The term language of \hcp is a variant of \cp where the term constructs have
+been taken apart into \textpi-calculus primitives.
 \begin{definition}[Terms]\label{def:hcp-terms}
   \[
     \begin{array}{rllrll}
@@ -642,6 +662,13 @@ $\gamma$-rule all decompose as well.
   \label{fig:hcp-reduction}
 \end{figure}
 
+\paragraph{Typing}
+We use the same definitions for types and environments for \hcp as we used for \cp.
+However, on top of this, we add the definition of a hyper-environment.
+Hyper-environments are either empty, or consist of a series of typing
+environments, separated by vertical bars.
+A hyper-environment $\ty{\Gamma_1 \hsep \dots \hsep \Gamma_n}$ can be used to
+type a series of $n$ entangled, but independent processes.
 \begin{definition}[Hyper-environment]\label{def:hcp-hyper-environment}
   \(
   \ty{\mathcal{G}}, \ty{\mathcal{H}} :=
@@ -650,16 +677,26 @@ $\gamma$-rule all decompose as well.
   \ty{\Gamma_1 \hsep \dots \hsep \Gamma_n}
   \)
 \end{definition}\noindent
-
+Typing judgements in \hcp associate processes with hyper-environments.
+\textsc{H-Mix} composes two processes in parallel, but remembers that they are
+independent on in the sequent.
+\textsc{H-Cut} and $(\tens)$ take as their premise a process which consists of
+at least two unconnected processes, and connects them, eliminating the vertical
+bar.
+Note that each logical rule has the side condition that $\tm{x} \not\in
+\mathcal{G}$, which can be read as ``you cannot act on one end-point of $x$ if
+you are also holding its other end-point''.
+This prevents self-locking processes, \eg
+$\tm{\piBoundSend{x}{}{\piRecv{x}{}{\piHalt}}}$.
 \begin{definition}[Typing judgements]\label{def:hcp}
   A typing judgement $\seq[P]{\Gamma_1 \hsep \dots \hsep \Gamma_n}$ denotes
   that the process $\tm{P}$ consists of $n$ independent, but potentially
   entangled processes, each of which communicates according to its own
   protocol $\Gamma_i$.
   Typing judgements can be constructed using the inference rules in \cref{fig:hcp}.
-  Each logical rule has the side condition that $\tm{x} \not\in \ty{\mathcal{G}}$.
+  Furthermore, each logical rule has the side condition that $\tm{x} \not\in
+  \ty{\mathcal{G}}$.
 \end{definition}\noindent
-
 \begin{figure}
   \begin{center}\hccpInfAx \hccpInfCycle\end{center}
   \vspace*{-0.5\baselineskip}
@@ -674,20 +711,20 @@ $\gamma$-rule all decompose as well.
   \label{fig:hcp}
 \end{figure}
 
+\paragraph{Metatheory}
+Much like \cp, \hcp enjoys subject reduction, progress, and termination.
 \begin{lemma}[Preservation for $\equiv$]\label{lem:hcp-preservation-equiv}
   If $\tm{P}\equiv\tm{Q}$, then $\seq[P]{\mathcal{G}}$ iff $\seq[Q]{\mathcal{G}}$.
 \end{lemma}
 \begin{proof}
   By induction on the derivation of $\tm{P}\equiv\tm{Q}$.
 \end{proof}\noindent
-
 \begin{theorem}[Preservation]\label{thm:hcp-preservation}
   If $\seq[P]{\mathcal{G}}$ and $\reducesto{P}{Q}$, then $\seq[Q]{\mathcal{G}}$.
 \end{theorem}
 \begin{proof}
   By induction on the derivation of $\reducesto{P}{Q}$.
 \end{proof}\noindent
-
 \begin{theorem}[Progress]\label{thm:hcp-progress}
   If $\seq[P]{\mathcal{G}}$, then there exists a $\tm{Q}$ such that
   $\tm{P}\Longrightarrow^\star\tm{Q}$ and $\tm{Q}$ is not a cut or a mix.
@@ -715,6 +752,14 @@ $\gamma$-rule all decompose as well.
     $\kappa{\ppar}$-rules.
   \end{enumerate*}
 \end{proof}\noindent
+\begin{theorem}[Termination]\label{thm:hcp-termination}
+  If $\seq[P]{\mathcal{G}}$, then there are no infinite
+  $\Longrightarrow$-reduction sequences.
+\end{theorem}
+\begin{proof}
+  As \cref{thm:cp-termination}.
+\end{proof}
+
 
 \section{Relation between \cp and \hcp}
 \label{sec:cp2hcp}
@@ -759,7 +804,6 @@ We define a translation from terms in \cp to terms in \hcp which breaks down the
     \end{array}
   \]
 \end{definition}\noindent
-
 \begin{theorem}\label{thm:cp2hcp-typing}
   If $\seq[P]{\Gamma}$ in \cp, then $\seq[\mtf{P}]{\Gamma}$ in \hcp.
 \end{theorem}
@@ -811,7 +855,7 @@ We define a translation from terms in \cp to terms in \hcp which breaks down the
     \end{gather*}
   \item
     Case $(\one)$. We rewrite as follows:
-    \begin{flalign*}
+    \begin{gather*}
       \begin{array}{lcl}
         \AXC{}\SYM{\one}
         \UIC{$\seq[\cpHalt{x}]{\tmty{x}{\one}}$}
@@ -824,10 +868,9 @@ We define a translation from terms in \cp to terms in \hcp which breaks down the
           \UIC{$\seq[\piBoundSend{x}{}{\piHalt}]{\tmty{x}{\one}}$}
           \DisplayProof
       \end{array}
-    \end{flalign*}
+    \end{gather*}
   \end{itemize}
 \end{proof}\noindent
-
 \begin{theorem}\label{thm:cp2hcp-equiv}
   $\tm{P}\equiv\tm{Q}$ in \cp iff $\tm{\mtf{P}}\equiv\tm{\mtf{Q}}$ in \hcp.
 \end{theorem}
@@ -859,7 +902,6 @@ We define a translation from terms in \cp to terms in \hcp which breaks down the
 %   \end{gather*}
 % \end{itemize}
 \end{proof}\noindent
-
 \begin{theorem}\label{thm:cp2hcp-reduction}
   If $\reducesto{P}{Q}$ in \cp, then $\reducesto{\mtf{P}}{\mtf{Q}}$ in \hcp.
 \end{theorem}
@@ -942,7 +984,6 @@ pars.
   \ty{A_1 \parr \dots \parr A_n}
   \)
 \end{definition}\noindent
-
 \begin{lemma}\label{lem:cp-bigparr}
   If $\seq{\Gamma}$ in \cp, then $\seq{\bigparr\Gamma}$ in \cp.
 \end{lemma}
@@ -952,7 +993,6 @@ pars.
   If $\ty{\Gamma} = \ty{A, B, \Gamma'}$, then we apply $(\parr)$ to get $\seq{A
     \parr B, \Gamma'}$, and apply the induction hypothesis.
 \end{proof}\noindent
-
 We can interpret hyper-environments as types by collapsing them using a series
 of tensors. In the case of the empty hyper-environment
 $\ty{\emptyhypercontext}$, we interpret this as the unit of tensor.
