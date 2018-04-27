@@ -185,7 +185,7 @@ while $\tm{x}$ is only bound in $\tm{Q}$.
       &  \mid& \tm{\cpAbsurd{x}}        &\text{offer nullary choice}
     \end{array}
   \]
-\end{definition}
+\end{definition}\noindent
 
 Terms in \cp are identified up to structural congruence, which states that
 links are symmetric, and parallel compositions $\tm{\cpCut{x}{P}{Q}}$ are
@@ -213,7 +213,7 @@ associative and commutative.
       & \text{if }\notFreeIn{x}{R}\text{ and }\notFreeIn{y}{P}
     \end{array}
   \]
-\end{definition}
+\end{definition}\noindent
 
 \begin{figure}
  \[
@@ -309,7 +309,7 @@ Reductions relate processes with their reduced forms \eg, a reduction $\reducest
   Reductions are described by the smallest relation $\Longrightarrow$ on process terms closed under rules in \cref{fig:cp-reduction}.
   The relation $\Longrightarrow^\star$ is the reflexive, transitive closure of 
   $\Longrightarrow$.
-\end{definition}
+\end{definition}\noindent
 
 Channels in \cp are typed using a session type system which corresponds to
 classical linear logic.
@@ -337,7 +337,7 @@ channel of type \ty{A \with B} must be able to communicate either as \ty{A} or
       &  \mid& \ty{\top}      &\text{unit for} \; {\with}
     \end{array}
   \]
-\end{definition}
+\end{definition}\noindent
 Duality plays a crucial role in both linear logic and session types.
 In \cp, the two endpoints of a channel are assigned dual types.
 This ensures that, for instance, whenever a process \emph{sends} across a
@@ -359,7 +359,7 @@ Duality is an involutive function.
       &\qquad& \ty{\top^\bot}        & = & \ty{\nil}
     \end{array}
   \]
-\end{definition}
+\end{definition}\noindent
 Environments associate channels with types.
 Names in environments must be unique, and environments $\ty{\Gamma}$ and
 $\ty{\Delta}$ can only be combined as $\ty{\Gamma}, \ty{\Delta}$ if
@@ -368,7 +368,7 @@ $\ty{\fv{\Gamma}} \cap \ty{\fv{\Delta}} = \varnothing$.
   \(
     \ty{\Gamma}, \ty{\Delta}, \ty{\Theta} := \tmty{x_1}{A_1}\dots\tmty{x_n}{A_n}
   \) 
-\end{definition}
+\end{definition}\noindent
 \begin{figure}
 %  Structural Rules.
   \begin{center}\cpInfAx     \cpInfCut  \end{center}\vspace*{-.5\baselineskip}
@@ -389,20 +389,20 @@ Typing judgements associate processes with collections of typed channels.
   that the process \tm{P} communicates along channels $\tm{x_1}\dots\tm{x_n}$
   following protocols $\ty{A_1}\dots\ty{A_n}$.
   Typing judgements are derived using rules in \cref{fig:cp}.
-\end{definition}
+\end{definition}\noindent
 \cp enjoys subject reduction, progress, and termination~\cite{wadler2012}.
 \begin{lemma}[Preservation for $\equiv$]\label{lem:cp-preservation-equiv}
   If $\tm{P}\equiv\tm{Q}$, then $\seq[P]{\Gamma}$ iff $\seq[Q]{\Gamma}$.
 \end{lemma}
 \begin{proof}
   By induction on the derivation of $\tm{P}\equiv\tm{Q}$.
-\end{proof}
+\end{proof}\noindent
 \begin{theorem}[Preservation]\label{thm:cp-preservation}
   If $\seq[P]{\Gamma}$ and $\reducesto{P}{Q}$, then $\seq[Q]{\Gamma}$.
 \end{theorem}
 \begin{proof}
   By induction on the derivation of $\reducesto{P}{Q}$.
-\end{proof}
+\end{proof}\noindent
 \begin{theorem}[Progress]\label{thm:cp-progress}
   If $\seq[P]{\Gamma}$, then there exists a $\tm{Q}$ such that
   $\tm{P}\Longrightarrow^\star\tm{Q}$ and $\tm{Q}$ is not a cut.
@@ -422,7 +422,7 @@ Typing judgements associate processes with collections of typed channels.
     otherwise, at least one side is a logical rule acting on a formula other
     than the cut formula, in which case we apply one of the $\kappa$-rules.
   \end{enumerate*}
-\end{proof}
+\end{proof}\noindent
 
 
 \section{Hypersequent Classical Processes}
@@ -453,7 +453,7 @@ constructs have been taken apart into \textpi-calculus primitives.
       &  \mid& \tm{\cpAbsurd{x}}          &\text{offer nullary choice}
     \end{array}
   \]
-\end{definition}
+\end{definition}\noindent
 One side-effect of the changes on the term level is that our structural
 congruence is much more standard. It has associativity, commutativity, and a
 unit for parallel composition, commutativity of name restrictions, and scope
@@ -501,7 +501,7 @@ extrusion.
       & \text{if }\notFreeIn{x}{P}
     \end{array}
   \]
-\end{definition}
+\end{definition}\noindent
 There are two changes to the reduction system.
 First, because $\tm{\piBoundSend{x}{y}{P}}$ and $\tm{\piBoundSend{x}{}{P}}$ are
 now terms in their own right, the $\cpRedBetaTensParr$ and $\cpRedBetaOneBot$
@@ -512,7 +512,7 @@ $\gamma$-rule all decompose as well.
 \begin{definition}[Reduction]\label{def:hcp-reduction}
   Reductions are described by the smallest relation $\Longrightarrow$ on process
   terms closed under rules in \cref{fig:hcp-reduction}.
-\end{definition}
+\end{definition}\noindent
 \begin{figure}
   \[
     \begin{array}{llcll}
@@ -652,7 +652,7 @@ $\gamma$-rule all decompose as well.
   \; \mid \;
   \ty{\Gamma_1 \hsep \dots \hsep \Gamma_n}
   \)
-\end{definition}
+\end{definition}\noindent
 
 \begin{definition}[Typing judgements]\label{def:hcp}
   A typing judgement $\seq[P]{\Gamma_1 \hsep \dots \hsep \Gamma_n}$ denotes
@@ -673,21 +673,21 @@ $\gamma$-rule all decompose as well.
   \begin{center}\hccpInfWith                   \end{center}\vspace*{0.5\baselineskip}
   \begin{center}\hccpInfNil       \hccpInfTop  \end{center}\vspace*{0.5\baselineskip}
 
-\end{definition}
+\end{definition}\noindent
 
 \begin{lemma}[Preservation for $\equiv$]\label{lem:hcp-preservation-equiv}
   If $\tm{P}\equiv\tm{Q}$, then $\seq[P]{\mathcal{G}}$ iff $\seq[Q]{\mathcal{G}}$.
 \end{lemma}
 \begin{proof}
   By induction on the derivation of $\tm{P}\equiv\tm{Q}$.
-\end{proof}
+\end{proof}\noindent
 
 \begin{theorem}[Preservation]\label{thm:hcp-preservation}
   If $\seq[P]{\mathcal{G}}$ and $\reducesto{P}{Q}$, then $\seq[Q]{\mathcal{G}}$.
 \end{theorem}
 \begin{proof}
   By induction on the derivation of $\reducesto{P}{Q}$.
-\end{proof}
+\end{proof}\noindent
 
 \begin{theorem}[Progress]\label{thm:hcp-progress}
   If $\seq[P]{\mathcal{G}}$, then there exists a $\tm{Q}$ such that
@@ -715,7 +715,7 @@ $\gamma$-rule all decompose as well.
     if the rule under the mix is a logical rule, we apply one of the
     $\kappa{\ppar}$-rules.
   \end{enumerate*}
-\end{proof}
+\end{proof}\noindent
 
 \section{Relation between \cp and \hcp}
 \label{sec:cp2hcp}
@@ -760,14 +760,15 @@ We define a translation from terms in \cp to terms in \hcp which breaks down the
       &  := & \tm{\cpAbsurd{x}}
     \end{array}
   \]
-\end{definition}
+\end{definition}\noindent
 
 \begin{theorem}\label{thm:cp2hcp-typing}
   If $\seq[P]{\Gamma}$ in \cp, then $\seq[\mtf{P}]{\Gamma}$ in \hcp.
 \end{theorem}
 \begin{proof}
   By induction on the derivation of $\seq[P]{\Gamma}$.
-    \begin{itemize}
+  We show the interesting cases:
+  \begin{itemize}
   \item
     Case \textsc{Cut}. We rewrite to:
     \begin{gather*}
@@ -827,14 +828,14 @@ We define a translation from terms in \cp to terms in \hcp which breaks down the
       \end{array}
     \end{flalign*}
   \end{itemize}
-  The other cases are trivial.
-\end{proof}
+\end{proof}\noindent
 
 \begin{theorem}\label{thm:cp2hcp-equiv}
   $\tm{P}\equiv\tm{Q}$ in \cp iff $\tm{\mtf{P}}\equiv\tm{\mtf{Q}}$ in \hcp.
 \end{theorem}
 \begin{proof}
   By induction on the derivation of $\tm{P}\equiv\tm{Q}$.
+% We show the interesting cases:
 % \begin{itemize}
 % \item
 %   Case \cpEquivCutComm.
@@ -859,14 +860,14 @@ We define a translation from terms in \cp to terms in \hcp which breaks down the
 %   \end{array}
 %   \end{gather*}
 % \end{itemize}
-% The other cases are trivial.
-\end{proof}
+\end{proof}\noindent
 
 \begin{theorem}\label{thm:cp2hcp-reduction}
   If $\reducesto{P}{Q}$ in \cp, then $\reducesto{\mtf{P}}{\mtf{Q}}$ in \hcp.
 \end{theorem}
 \begin{proof}
   By induction on the the derivation of $\reducesto{P}{Q}$.
+% We show the interesting cases:
 % \begin{itemize}
 % \item
 %   Case \cpRedBetaTensParr.
@@ -896,8 +897,7 @@ We define a translation from terms in \cp to terms in \hcp which breaks down the
 %   \end{array}
 %   \end{gather*}
 % \end{itemize}
-% The other cases are trivial.
-\end{proof}
+\end{proof}\noindent
 
 \begin{theorem}\label{hcp2cp-reduction}
   If $\reducesto{\mtf{P}}{R}$ in \hcp, then there is a $\tm{Q}$ such that
@@ -908,12 +908,12 @@ We define a translation from terms in \cp to terms in \hcp which breaks down the
   The cases for \hccpRedAxCut1 and the $\beta$-rules are trivial.
   For the $\kappa\nu$-rules, we rewrite by the appropriate $\kappa{\ppar}$ rule,
   and vice versa.
-\end{proof}
+\end{proof}\noindent
 
 \begin{definition}\label{def:hcp-gk}
   The relation $\tm{P}\equiv_{\gamma\kappa}\tm{Q}$ is the congruence closure of
-  the $\gamma$- and $\kappa$-rules for \hcp (\cref{def:hcp-reduction}).
-\end{definition}
+  the $\gamma$- and $\kappa$-rules for \hcp.
+\end{definition}\noindent
 
 \begin{lemma}[Disentangle]\label{lem:hcp-disentangle}
   If $\seq[P]{\Gamma_1 \hsep \dots \hsep \Gamma_n}$ in \hcp,
@@ -935,69 +935,54 @@ We define a translation from terms in \cp to terms in \hcp which breaks down the
   Since the only way to continue after a $(\one)$ is by using a mix, all
   applications of $(\one)$ are now followed by an application of
   \textsc{H-Halt}, forming a \cp $(\one)$.
-\end{proof}
-
+\end{proof}\noindent
 We can interpret environments as types by collapsing them using a series of
 pars.
 \begin{definition}\label{def:bigparr}
-$\ty{\bigparr(\tmty{x_1}{A_1} , \dots , \tmty{x_n}{A_n})} =  \ty{A_1 \parr \dots \parr A_n}$.
-%  \begin{gather*}
-%  \begin{array}{lcl}
-%    \ty{\bigparr(\tmty{x_1}{A_1} , \dots , \tmty{x_n}{A_n})}
-%    & = & \ty{A_1 \parr \dots \parr A_n}
-%  \end{array}
-%  \end{gather*}
-\end{definition}
+  \(
+  \ty{\bigparr(\tmty{x_1}{A_1} , \dots , \tmty{x_n}{A_n})} =
+  \ty{A_1 \parr \dots \parr A_n}
+  \)
+\end{definition}\noindent
 
 \begin{lemma}\label{lem:cp-bigparr}
   If $\seq{\Gamma}$ in \cp, then $\seq{\bigparr\Gamma}$ in \cp.
 \end{lemma}
 \begin{proof}
   By induction on the structure of the environment $\Gamma$.
-%  \begin{itemize}
-%  \item
-    If $\ty{\Gamma} = \ty{A}$, then the statement is trivially true.
-%  \item
-    If $\ty{\Gamma} = \ty{A, B, \Gamma'}$,
-    then we apply $(\parr)$ to get $\seq{A \parr B, \Gamma'}$, and apply the induction hypothesis.
-%  \end{itemize}
-\end{proof}
+  If $\ty{\Gamma} = \ty{A}$, then the statement is trivially true.
+  If $\ty{\Gamma} = \ty{A, B, \Gamma'}$, then we apply $(\parr)$ to get $\seq{A
+    \parr B, \Gamma'}$, and apply the induction hypothesis.
+\end{proof}\noindent
 
 We can interpret hyper-environments as types by collapsing them using a series
 of tensors. In the case of the empty hyper-environment
 $\ty{\emptyhypercontext}$, we interpret this as the unit of tensor.
 \begin{definition}\label{def:bigtens}
-  $\ty{\bigtens(\emptyhypercontext)} = \ty{\one}$
-  and 
-  $\ty{\bigtens(\Gamma_1 \hsep \dots \hsep \Gamma_n)} = \ty{\bigparr\Gamma_1 \tens \dots \tens \bigparr\Gamma_n}$.
-%  \begin{gather*}
-%  \begin{array}{lcl}
-%    \ty{\bigtens(\emptyhypercontext)}
-%    & = & \ty{\one}
-%    \\
-%    \ty{\bigtens(\Gamma_1 \hsep \dots \hsep \Gamma_n)}
-%    & = & \ty{\bigparr\Gamma_1 \tens \dots \tens \bigparr\Gamma_n}
-%  \end{array}
-%  \end{gather*}
-\end{definition}
+  \(
+  \begin{array}{lcl}
+    \ty{\bigtens(\emptyhypercontext)}
+    & = & \ty{\one}
+    \\
+    \ty{\bigtens(\Gamma_1 \hsep \dots \hsep \Gamma_n)}
+    & = & \ty{\bigparr\Gamma_1 \tens \dots \tens \bigparr\Gamma_n}
+  \end{array}
+  \)
+\end{definition}\noindent
 
 \begin{theorem}\label{thm:hcp2cp-bigtens}
   If $\seq{\mathcal{G}}$ in \hcp, then $\seq{\bigtens\mathcal{G}}$ in \cp.
 \end{theorem}
 \begin{proof}
   By case analysis on the structure of the hyper-environment $\ty{\mathcal{G}}$.
-%  \begin{itemize}
-%  \item
-    If $\ty{\mathcal{G}} = \ty{\emptyhypercontext}$, we apply $(\one)$.
-%  \item
-    If $\ty{\mathcal{G}} = \ty{\Gamma_1 \hsep \dots \hsep \Gamma_n}$,
-    we apply \cref{lem:hcp-disentangle} to obtain proofs of $\seq{\Gamma_1}, \dots,
-    \seq{\Gamma_n}$ in \cp, then we apply \cref{lem:cp-bigparr} to each of
-    those proofs to obtain proofs of $\seq{\bigparr\Gamma_1}, \dots,
-    \seq{\bigparr\Gamma_n}$, and join them using $(\tens)$ to obtain a single
-    proof of $\seq{\bigtens\mathcal{G}}$ in \cp.
-%  \end{itemize}
-\end{proof}
+  If $\ty{\mathcal{G}} = \ty{\emptyhypercontext}$, we apply $(\one)$.
+  If $\ty{\mathcal{G}} = \ty{\Gamma_1 \hsep \dots \hsep \Gamma_n}$, we apply
+  \cref{lem:hcp-disentangle} to obtain proofs of $\seq{\Gamma_1}, \dots,
+  \seq{\Gamma_n}$ in \cp, then we apply \cref{lem:cp-bigparr} to each of those
+  proofs to obtain proofs of $\seq{\bigparr\Gamma_1}, \dots,
+  \seq{\bigparr\Gamma_n}$, and join them using $(\tens)$ to obtain a single
+  proof of $\seq{\bigtens\mathcal{G}}$ in \cp.
+\end{proof}\noindent
 
 \section{Related Work}
 \label{sec:related-work}
