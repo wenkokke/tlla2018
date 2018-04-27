@@ -147,6 +147,7 @@ Finally, we discuss related work and conclude
 \section{Classical Processes}
 \label{sec:cp}
 
+In this section, we introduce \cp.
 In order to keep the discussion of \hcp in \cref{sec:hcp} simple, we restrict
 ourselves to the multiplicative-applicative subset of \cp.
 We foresee no problems in extending the proofs in \cref{sec:hcp} to cover the
@@ -346,15 +347,16 @@ Each type $\ty{A}$ has a dual, written $\ty{A^\bot}$.
 Duality is an involutive function.
 \begin{definition}[Duality]\label{def:cp-negation}
   \[
-    \begin{array}{lcllcllcllcl}
-         \ty{(A \tens B)^\bot} &=& \ty{A^\bot \parr B^\bot}
-      &  \ty{\one^\bot}        &=& \ty{\bot}
-      &  \ty{(A \parr B)^\bot} &=& \ty{A^\bot \tens B^\bot}
-      &  \ty{\bot^\bot}        &=& \ty{\one}
-      \\ \ty{(A \plus B)^\bot} &=& \ty{A^\bot \with B^\bot}
-      &  \ty{\nil^\bot}        &=& \ty{\top}
-      &  \ty{(A \with B)^\bot} &=& \ty{A^\bot \plus B^\bot}
-      &  \ty{\top^\bot}        &=& \ty{\nil}
+    \setlength{\arraycolsep}{3pt}
+    \begin{array}{lclclclclclclcl}
+               \ty{(A \tens B)^\bot} & = & \ty{A^\bot \parr B^\bot}
+      &\qquad& \ty{\one^\bot}        & = & \ty{\bot}
+      &\qquad& \ty{(A \parr B)^\bot} & = & \ty{A^\bot \tens B^\bot}
+      &\qquad& \ty{\bot^\bot}        & = & \ty{\one}
+      \\       \ty{(A \plus B)^\bot} & = & \ty{A^\bot \with B^\bot}
+      &\qquad& \ty{\nil^\bot}        & = & \ty{\top}
+      &\qquad& \ty{(A \with B)^\bot} & = & \ty{A^\bot \plus B^\bot}
+      &\qquad& \ty{\top^\bot}        & = & \ty{\nil}
     \end{array}
   \]
 \end{definition}
@@ -426,6 +428,13 @@ Typing judgements associate processes with collections of typed channels.
 \section{Hypersequent Classical Processes}
 \label{sec:hcp}
 
+In this section, we introduce Hypersequent Classical Processes (\hcp), a variant
+of \cp which registers parallelism in the typing jugdgements using
+hypersequents, allowing us to take apart the monolithic term constructors of \cp
+(\eg $\tm{\cpSend{x}{y}{P}{Q}}$) into the corresponding \textpi-calculus term
+constructs.
+As expected, the term language of \hcp is a variant of \cp, where the term
+constructs have been taken apart into \textpi-calculus primitives.
 \begin{definition}[Terms]\label{def:hcp-terms}
   \[
     \begin{array}{rllrll}
@@ -445,7 +454,10 @@ Typing judgements associate processes with collections of typed channels.
     \end{array}
   \]
 \end{definition}
-
+One side-effect of the changes on the term level is that our structural
+congruence is much more standard. It has associativity, commutativity, and a
+unit for parallel composition, commutativity of name restrictions, and scope
+extrusion.
 \begin{definition}[Structural congruence]\label{def:hcp-equiv}
   The structural congruence $\equiv$ is the congruence closure over terms which
   satisfies the following additional axioms:
@@ -490,8 +502,19 @@ Typing judgements associate processes with collections of typed channels.
     \end{array}
   \]
 \end{definition}
-
-\begin{figure}[t]
+There are two changes to the reduction system.
+First, because $\tm{\piBoundSend{x}{y}{P}}$ and $\tm{\piBoundSend{x}{}{P}}$ are
+now terms in their own right, the $\cpRedBetaTensParr$ and $\cpRedBetaOneBot$
+rules become simpler.
+Secondly, because we have decomposed $\tm{\cpCut{x}{P}{Q}}$ into an independent
+name restriction and parallel composition, the $\kappa$-rules and the relevant
+$\gamma$-rule all decompose as well.
+\begin{definition}[Reduction]\label{def:hcp-reduction}
+  A reduction $\reducesto{P}{Q}$ denotes that the process $\tm{P}$ can reduce
+  to the process $\tm{Q}$ in a single step.
+  The relation $\Longrightarrow^\star$ is the reflexive, transitive closure of
+  $\Longrightarrow$.
+  Reductions can only be constructed as follows:
   \[
     \begin{array}{llcll}
       \hccpRedAxCut1
@@ -632,23 +655,34 @@ Typing judgements associate processes with collections of typed channels.
 %  Reductions can only be constructed as follows:
 \end{definition}
 
-\begin{figure}[t]
-%  Structural Rules.
-  \begin{center}\hccpInfAx        \hccpInfCycle\end{center}\vspace*{-.5\baselineskip}
-  \begin{center}\hccpInfMix       \hccpInfHalt \end{center}\vspace*{-.5\baselineskip}
-%  Logical Rules.
-  \begin{center}\hccpInfBoundTens \hccpInfParr \hccpInfOne \end{center}\vspace*{-.5\baselineskip}
-  \begin{center}\hccpInfBot \hccpInfPlus1 \hccpInfPlus2\end{center}\vspace*{-.5\baselineskip}
-  \begin{center}\hccpInfWith \quad \hccpInfNil \quad \hccpInfTop  \end{center} %\vspace*{.5\baselineskip}
-  \caption{Hypersequent Classical Processes, typing.}
-  \label{fig:hcp}
-\end{figure}
+\begin{definition}[Hyper-environment]\label{def:hcp-hyper-environment}
+  \(
+  \ty{\mathcal{G}}, \ty{\mathcal{H}} :=
+  \ty{\emptyhypercontext}
+  \; \mid \;
+  \ty{\Gamma_1 \hsep \dots \hsep \Gamma_n}
+  \)
+\end{definition}
 
 \begin{definition}[Typing judgements]\label{def:hcp}
   A typing judgement $\seq[P]{\Gamma_1 \hsep \dots \hsep \Gamma_n}$ denotes
   that the process $\tm{P}$ consists of $n$ independent, but potentially
-  interleaved processes, each of which communicates according to its own
-  protocol $\Gamma_i$. Typing judgements are derived using rules in \cref{fig:hcp}---each rule has the side condition that $\tm{x} \not\in    \ty{\mathcal{G}}$.
+  entangled processes, each of which communicates according to its own
+  protocol $\Gamma_i$.
+  Typing judgements can be constructed using the following inference rules.
+  Each logical rule has the side condition that $\tm{x} \not\in \ty{\mathcal{G}$.
+  \\[0.5\baselineskip]
+  Structural Rules.
+  \begin{center}\hccpInfAx        \hccpInfCycle\end{center}\vspace*{0.5\baselineskip}
+  \begin{center}\hccpInfMix       \hccpInfHalt \end{center}\vspace*{0.5\baselineskip}
+
+  Logical Rules.
+  \begin{center}\hccpInfBoundTens \hccpInfParr \end{center}\vspace*{0.5\baselineskip}
+  \begin{center}\hccpInfOne       \hccpInfBot  \end{center}\vspace*{0.5\baselineskip}
+  \begin{center}\hccpInfPlus1     \hccpInfPlus2\end{center}\vspace*{0.5\baselineskip}
+  \begin{center}\hccpInfWith                   \end{center}\vspace*{0.5\baselineskip}
+  \begin{center}\hccpInfNil       \hccpInfTop  \end{center}\vspace*{0.5\baselineskip}
+
 \end{definition}
 
 \begin{lemma}[Preservation for $\equiv$]\label{lem:hcp-preservation-equiv}
