@@ -313,7 +313,7 @@ $\tm{Q}$ in a single step.
   $\Longrightarrow$.
 \end{definition}\noindent
 
-\paragraph{Typing}
+\paragraph{Types}
 Channels in \cp are typed using a session type system which corresponds to
 classical linear logic.
 A process communicating over a channel of type \ty{A \tens B} must be ready to
@@ -395,20 +395,20 @@ Typing judgements associate processes with collections of typed channels.
 \cp enjoys subject reduction, progress, and termination~\cite{wadler2012}.
 \begin{lemma}[Preservation for $\equiv$]\label{lem:cp-preservation-equiv}
   If $\tm{P}\equiv\tm{Q}$, then $\seq[P]{\Gamma}$ iff $\seq[Q]{\Gamma}$.
-\end{lemma}
+\end{lemma}\vspace*{-0.75\baselineskip}%
 \begin{proof}
   By induction on the derivation of $\tm{P}\equiv\tm{Q}$.
-\end{proof}\noindent
+\end{proof}\vspace*{-0.75\baselineskip}%
 \begin{theorem}[Preservation]\label{thm:cp-preservation}
   If $\seq[P]{\Gamma}$ and $\reducesto{P}{Q}$, then $\seq[Q]{\Gamma}$.
-\end{theorem}
+\end{theorem}\vspace*{-0.75\baselineskip}%
 \begin{proof}
   By induction on the derivation of $\reducesto{P}{Q}$.
-\end{proof}\noindent
+\end{proof}\vspace*{-0.75\baselineskip}%
 \begin{theorem}[Progress]\label{thm:cp-progress}
   If $\seq[P]{\Gamma}$, then there exists a $\tm{Q}$ such that
   $\tm{P}\Longrightarrow^\star\tm{Q}$ and $\tm{Q}$ is not a cut.
-\end{theorem}
+\end{theorem}\vspace*{-0.75\baselineskip}%
 \begin{proof}
   By induction on the derivation of $\seq[P]{\Gamma}$.
   If the last rule is \textsc{Cut}, there are four cases:
@@ -424,11 +424,11 @@ Typing judgements associate processes with collections of typed channels.
     otherwise, at least one side is a logical rule acting on a formula other
     than the cut formula, in which case we apply one of the $\kappa$-rules.
   \end{enumerate*}
-\end{proof}\noindent
+\end{proof}\vspace*{-0.75\baselineskip}%
 \begin{theorem}[Termination]\label{thm:cp-termination}
   If $\seq[P]{\Gamma}$, then there are no infinite $\Longrightarrow$-reduction
   sequences.
-\end{theorem}
+\end{theorem}\vspace*{-0.75\baselineskip}%
 \begin{proof}
   Every reduction reduces a single cut to zero, one or two cuts.
   However, each of these cuts is smaller, in the sense that the type of the
@@ -662,7 +662,7 @@ $\gamma$-rule all decompose as well.
   \label{fig:hcp-reduction}
 \end{figure}
 
-\paragraph{Typing}
+\paragraph{Types}
 We use the same definitions for types and environments for \hcp as we used for \cp.
 However, on top of this, we add the definition of a hyper-environment.
 Hyper-environments are either empty, or consist of a series of typing
@@ -715,20 +715,20 @@ $\tm{\piBoundSend{x}{}{\piRecv{x}{}{\piHalt}}}$.
 \hcp enjoys subject reduction, progress, and termination.
 \begin{lemma}[Preservation for $\equiv$]\label{lem:hcp-preservation-equiv}
   If $\tm{P}\equiv\tm{Q}$, then $\seq[P]{\mathcal{G}}$ iff $\seq[Q]{\mathcal{G}}$.
-\end{lemma}
+\end{lemma}\vspace*{-0.75\baselineskip}%
 \begin{proof}
   By induction on the derivation of $\tm{P}\equiv\tm{Q}$.
-\end{proof}\noindent
+\end{proof}\vspace*{-0.75\baselineskip}%
 \begin{theorem}[Preservation]\label{thm:hcp-preservation}
   If $\seq[P]{\mathcal{G}}$ and $\reducesto{P}{Q}$, then $\seq[Q]{\mathcal{G}}$.
-\end{theorem}
+\end{theorem}\vspace*{-0.75\baselineskip}%
 \begin{proof}
   By induction on the derivation of $\reducesto{P}{Q}$.
-\end{proof}\noindent
+\end{proof}\vspace*{-0.75\baselineskip}%
 \begin{theorem}[Progress]\label{thm:hcp-progress}
   If $\seq[P]{\mathcal{G}}$, then there exists a $\tm{Q}$ such that
   $\tm{P}\Longrightarrow^\star\tm{Q}$ and $\tm{Q}$ is not a cut or a mix.
-\end{theorem}
+\end{theorem}\vspace*{-0.75\baselineskip}%
 \begin{proof}
   By induction on the derivation of $\seq[P]{\mathcal{G}}$.
   If the last rule is a cut, there are three cases:
@@ -751,11 +751,11 @@ $\tm{\piBoundSend{x}{}{\piRecv{x}{}{\piHalt}}}$.
     if the rule under the mix is a logical rule, we apply one of the
     $\kappa{\ppar}$-rules.
   \end{enumerate*}
-\end{proof}\noindent
+\end{proof}\vspace*{-0.75\baselineskip}%
 \begin{theorem}[Termination]\label{thm:hcp-termination}
   If $\seq[P]{\mathcal{G}}$, then there are no infinite
   $\Longrightarrow$-reduction sequences.
-\end{theorem}
+\end{theorem}\vspace*{-0.75\baselineskip}%
 \begin{proof}
   As \cref{thm:cp-termination}.
 \end{proof}
@@ -808,13 +808,13 @@ However, as we took apart each $\kappa$-rule into two separate rules, the
 reduction relation of \hcp is a slight refinement over that of \cp.
 \begin{theorem}\label{thm:cp2hcp-typing}
   If $\seq[P]{\Gamma}$ in \cp, then $\seq[\mtf{P}]{\Gamma}$ in \hcp.
-\end{theorem}
+\end{theorem}\vspace*{-0.75\baselineskip}%
 \begin{proof}
   By induction on the derivation of $\seq[P]{\Gamma}$.
   We show the interesting cases:
   \begin{itemize}
   \item
-    Case \textsc{Cut}. We rewrite to:
+    Case \textsc{Cut}. We rewrite as follows:
     \begin{gather*}
       \begin{array}{lcl}
         \AXC{$\seq[P]{\Gamma, \tmty{x}{A}}$}
@@ -872,10 +872,10 @@ reduction relation of \hcp is a slight refinement over that of \cp.
       \end{array}
     \end{gather*}
   \end{itemize}
-\end{proof}\noindent
+\end{proof}\vspace*{-0.75\baselineskip}%
 \begin{theorem}\label{thm:cp2hcp-equiv}
   $\tm{P}\equiv\tm{Q}$ in \cp iff $\tm{\mtf{P}}\equiv\tm{\mtf{Q}}$ in \hcp.
-\end{theorem}
+\end{theorem}\vspace*{-0.75\baselineskip}%
 \begin{proof}
   By induction on the derivation of $\tm{P}\equiv\tm{Q}$.
 % We show the interesting cases:
@@ -903,10 +903,10 @@ reduction relation of \hcp is a slight refinement over that of \cp.
 %   \end{array}
 %   \end{gather*}
 % \end{itemize}
-\end{proof}\noindent
+\end{proof}\vspace*{-0.75\baselineskip}%
 \begin{theorem}\label{thm:cp2hcp-reduction}
   If $\reducesto{P}{Q}$ in \cp, then $\reducesto{\mtf{P}}{\mtf{Q}}$ in \hcp.
-\end{theorem}
+\end{theorem}\vspace*{-0.75\baselineskip}%
 \begin{proof}
   By induction on the the derivation of $\reducesto{P}{Q}$.
 % We show the interesting cases:
@@ -939,11 +939,11 @@ reduction relation of \hcp is a slight refinement over that of \cp.
 %   \end{array}
 %   \end{gather*}
 % \end{itemize}
-\end{proof}\noindent
+\end{proof}\vspace*{-0.75\baselineskip}%
 \begin{theorem}\label{hcp2cp-reduction}
   If $\reducesto{\mtf{P}}{R}$ in \hcp, then there is a $\tm{Q}$ such that
   $\reducesto{P}{Q}$ in \cp and $\tm{R}\Longrightarrow^\star\tm{\mtf{Q}}$ in \hcp.
-\end{theorem}
+\end{theorem}\vspace*{-0.75\baselineskip}%
 \begin{proof}
   By induction on the derivation of $\reducesto{\mtf{P}}{R}$.
   The cases for \hccpRedAxCut1 and the $\beta$-rules are trivial.
@@ -979,7 +979,7 @@ tensors, or at the top-level.
   then there exist $\seq[P_1]{\Gamma_1}, \dots, \seq[P_n]{\Gamma_n}$ in \cp,
   such that
   $\tm{P}\equiv_{\gamma\kappa}\tm{(\mtf{P_1}\ppar\dots\ppar\mtf{P_n})}$.
-\end{lemma}
+\end{lemma}\vspace*{-0.75\baselineskip}%
 \begin{proof}
   We repeatedly apply the $\kappa{\ppar}$-rules to move the mixes upwards.
   There are three cases:
@@ -1014,7 +1014,7 @@ collapsing them using a series of pars.
 \end{definition}\noindent
 \begin{lemma}\label{lem:cp-bigparr}
   If $\seq{\Gamma}$ in \cp, then $\seq{\bigparr\Gamma}$ in \cp.
-\end{lemma}
+\end{lemma}\vspace*{-0.75\baselineskip}%
 \begin{proof}
   By induction on the structure of the environment $\Gamma$.
   If $\ty{\Gamma} = \ty{A}$, then the statement is trivially true.
@@ -1039,7 +1039,7 @@ interpret this as the unit of tensor.
 
 \begin{theorem}\label{thm:hcp2cp-bigtens}
   If $\seq{\mathcal{G}}$ in \hcp, then $\seq{\bigtens\mathcal{G}}$ in \cp.
-\end{theorem}
+\end{theorem}\vspace*{-0.75\baselineskip}%
 \begin{proof}
   By case analysis on the structure of the hyper-environment $\ty{\mathcal{G}}$.
   If $\ty{\mathcal{G}} = \ty{\emptyhypercontext}$, we apply $(\one)$.
