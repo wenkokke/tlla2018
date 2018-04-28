@@ -19,8 +19,6 @@
 \newtheorem{example}{Example}
 \input{preamble-typing}
 \usepackage[sectionbib,square,numbers,sort&compress]{natbib}
-\renewcommand*{\eg}{e.g.\@\xspace}
-\renewcommand*{\ie}{i.e.\@\xspace}
 \usepackage{more-space}
 \usepackage{setspace}
 \everypar{\looseness=-1}
@@ -64,47 +62,11 @@
 \section{Introduction}
 \label{sec:introduction}
 
-Classical Processes (\cp) \cite{wadler2012} is a process calculus inspired by the
-correspondence between the session-typed \textpi-calculus and linear logic
-\cite{caires2010}, where processes correspond to proofs, session types
-(communication protocols) to propositions, and communication to cut elimination.
-Bridging process languages to linear logic paves the way for applying methods
-developed in one field to the other.
-For instance, the proof theory of linear logic can be used to guarantee progress
-for processes~\cite{caires2010,wadler2012}.
+Classical Processes (\cp) \cite{wadler2012} is a process calculus inspired by the correspondence between the session-typed \textpi-calculus and linear logic \cite{caires2010}, where processes correspond to proofs, session types (communication protocols) to propositions, and communication to cut elimination. Bridging process languages to linear logic paves the way for applying methods developed in one field to the other. For instance, the proof theory of linear logic can be used to guarantee progress for processes~\cite{caires2010,wadler2012}.
 
-The main attraction of \cp is that its semantics are \emph{prescribed} by the
-cut elimination procedure of Classical Linear Logic (CLL).
-This permits us to reuse the metatheory of linear logic ``as is'' to reason about
-the behaviour of processes.
-However, there is a mismatch between the structure of the proof terms of CLL and
-the term constructs of the standard \textpi-calculus~\cite{milner1992a,milner1992b}.
-For instance, the term for output of a linear name is
-$\tm{\cpSend{x}{y}{P}{Q}}$, which is read ``send $y$ over $x$ and proceed as $P$
-in parallel to $Q$''.
-Note that this is a single term constructor, which takes all four arguments at
-the same time.
-This is caused by directly adopting the $(\tens)$-rule from CLL as the process
-calculus construct for sending: the $(\tens)$-rule has two premises
-(corresponding to $\tm P$ and $\tm Q$ in the output term), and checks that they
-share no resources (in the output term, $\tm x$ can be used only by $\tm P$, and
-$\tm y$ can be used only by $\tm Q$).
+The main attraction of \cp is that its semantics are \emph{prescribed} by the cut elimination procedure of Classical Linear Logic (CLL). This permits us to reuse the metatheory of linear logic ``as is'' to reason about the behaviour of processes. However, there is a mismatch between the structure of the proof terms of CLL and the term constructs of the standard \textpi-calculus~\cite{milner1992a,milner1992b}. For instance, the term for output of a linear name is $\tm{\cpSend{x}{y}{P}{Q}}$, which is read ``send $y$ over $x$ and proceed as $P$ in parallel to $Q$''. Note that this is a single term constructor, which takes all four arguments at the same time. This is caused by directly adopting the $(\tens)$-rule from CLL as the process calculus construct for sending: the $(\tens)$-rule has two premises (corresponding to $\tm P$ and $\tm Q$ in the output term), and checks that they share no resources (in the output term, $\tm x$ can be used only by $\tm P$, and $\tm y$ can be used only by $\tm Q$).
 
-There is no independent parallel term $\tm{(\piPar{P}{Q})}$ in the grammar of
-\cp terms.
-Instead, the parallel composition shows up in any term which corresponds to a
-binary rule.
-Even if we were to add an independent parallel composition via the
-\textsc{Mix}-rule, as suggested in the original presentation of
-\cp~\cite{wadler2012}, there would be no way to allow the composed process
-$\tm{P}$ and $\tm{Q}$ to communicate as in the standard \textpi-calculus, as
-there is no independent name restriction either!
-Instead, synchronisation is governed by the ``cut'' operator
-$\tm{\piNew{x}{(\piPar{P}{Q})}}$, which composes $\tm{P}$ and $\tm{Q}$, enabling
-them to communicate along $\tm{x}$.
-Worse, if we naively added an independent parallel composition as well as a
-name restriction, using the rules shown below, we would lose cut elimination,
-and therefore deadlock-freedom!
+There is no independent parallel term $\tm{(\piPar{P}{Q})}$ in the grammar of \cp terms. Instead, the parallel composition shows up in any term which corresponds to a binary rule. Even if we were to add an independent parallel composition via the \textsc{Mix}-rule, as suggested in the original presentation of \cp~\cite{wadler2012}, there would be no way to allow the composed process $\tm{P}$ and $\tm{Q}$ to communicate as in the standard \textpi-calculus, as there is no independent name restriction either! Instead, synchronisation is governed by the ``cut'' operator $\tm{\piNew{x}{(\piPar{P}{Q})}}$, which composes $\tm{P}$ and $\tm{Q}$, enabling them to communicate along $\tm{x}$. Worse, if we naively added an independent parallel composition as well as a name restriction, using the rules shown below, we would lose cut elimination, and therefore deadlock-freedom!
 \begin{center}
   \begin{prooftree*}
     \AXC{$\seq[ P ]{ \Gamma }$}
@@ -119,62 +81,18 @@ and therefore deadlock-freedom!
   \end{prooftree*}
 \end{center}
 
-This syntactic mismatch has an effect on the semantics as well.
-For instance, the $\beta$-reduction for output and input in \cp is
-\(
-\reducesto
-{\cpCut{x}{\cpSend{x}{y}{P}{Q}}{\cpRecv{x}{y}{R}}}
-{\cpCut{y}{P}{\cpCut{x}{Q}{R}}}
-\).
-Here, the parallel composition $\tm{(\piPar{P}{Q})}$ is of no relevance to this
-communication, yet the rule needs to inspect it to be able to nest the name
-restrictions appropriately in the resulting term.
+This syntactic mismatch has an effect on the semantics as well. For instance, the $\beta$-reduction for output and input in \cp is \(\reducesto {\cpCut{x}{\cpSend{x}{y}{P}{Q}}{\cpRecv{x}{y}{R}}} {\cpCut{y}{P}{\cpCut{x}{Q}{R}}}\). Here, the parallel composition $\tm{(\piPar{P}{Q})}$ is of no relevance to this communication, yet the rule needs to inspect it to be able to nest the name restrictions appropriately in the resulting term.
 
-In this paper, we introduce the Hypersequent Classical Processes (\hcp), which
-addresses this mismatch.
-The key insight is to register parallelism in the typing judgements using
-hypersequents~\cite{avron1991}, a technique from logic which generalises
-judgements from one sequent to many.
-This allows us to take apart the term constructs used in Classical Processes
-(\cp) to more closely match those of the standard \textpi-calculus.
-We proceed as follows.
-We start by introducing \cp (\cref{sec:cp}).
-Then, we introduce \hcp and prove it enjoys subject reduction and progress
-(\cref{sec:hcp}).
-We prove several properties relating the two.
-Specifically, we prove that every \cp process is an \hcp process, that every
-\hcp process corresponds to several entangled \cp processes, and that \hcp
-supports the same communication protocols as \cp, and no more
-(\cref{sec:cp2hcp}).
-Finally, we discuss related work (\cref{sec:related-work}).
+In this paper, we introduce the Hypersequent Classical Processes (\hcp), which addresses this mismatch. The key insight is to register parallelism in the typing judgements using hypersequents~\cite{avron1991}, a technique from logic which generalises judgements from one sequent to many. This allows us to take apart the term constructs used in Classical Processes (\cp) to more closely match those of the standard \textpi-calculus. We proceed as follows. We start by introducing \cp (\cref{sec:cp}). Then, we introduce \hcp and prove it enjoys subject reduction and progress (\cref{sec:hcp}). We prove several properties relating the two. Specifically, we prove that every \cp process is an \hcp process, that every \hcp process corresponds to several entangled \cp processes, and that \hcp supports the same communication protocols as \cp, and no more (\cref{sec:cp2hcp}). Finally, we discuss related work (\cref{sec:related-work}).
 
 
 \section{Classical Processes}
 \label{sec:cp}
 
-In this section, we introduce \cp.
-In order to keep the discussion of \hcp in \cref{sec:hcp} simple, we restrict
-ourselves to the multiplicative-applicative subset of \cp.
-We foresee no problems in extending the proofs in \cref{sec:hcp} to cover the
-remaining features of \cp (polymophism and the exponentials).
+In this section, we introduce \cp. In order to keep the discussion of \hcp in \cref{sec:hcp} simple, we restrict ourselves to the multiplicative-applicative subset of \cp. We foresee no problems in extending the proofs in \cref{sec:hcp} to cover the remaining features of \cp (polymophism and the exponentials). 
 
 \paragraph{Terms}
-The term language of \cp is a variant of the \textpi-calculus.
-The variables $\tm{x}$, $\tm{y}$, and $\tm{z}$ range over channel names.
-The construct $\tm{\cpLink{x}{y}}$ links two
-channels~\cite{sangiorgi1996,boreale1998}, forwarding messages received on
-$\tm{x}$ to $\tm{y}$ and vice versa.
-The construct $\tm{\cpCut{x}{P}{Q}}$ creates a new channel $\tm{x}$, and composes
-two processes, $\tm{P}$ and $\tm{Q}$, which communicate on $\tm{x}$, in parallel.
-Therefore, in $\tm{\cpCut{x}{P}{Q}}$ the name $\tm{x}$ is bound in both $\tm{P}$
-and $\tm{Q}$.
-In $\tm{\cpRecv{x}{y}{P}}$ and $\tm{\cpSend{x}{y}{P}{Q}}$, round brackets denote
-input, square brackets denote output.
-We use bound output~\cite{sangiorgi1996}, meaning that both input and output
-bind a new name.
-In $\tm{\cpRecv{x}{y}{P}}$ the new name $\tm{y}$ is bound in $\tm{P}$.
-In $\tm{\cpSend{x}{y}{P}{Q}}$, the new name $\tm{y}$ is only bound in $\tm{P}$,
-while $\tm{x}$ is only bound in $\tm{Q}$.
+The term language of \cp is a variant of the \textpi-calculus. The variables $\tm{x}$, $\tm{y}$, and $\tm{z}$ range over channel names. The construct $\tm{\cpLink{x}{y}}$ links two channels~\cite{sangiorgi1996,boreale1998}, forwarding messages received on $\tm{x}$ to $\tm{y}$ and vice versa. The construct $\tm{\cpCut{x}{P}{Q}}$ creates a new channel $\tm{x}$, and composes two processes, $\tm{P}$ and $\tm{Q}$, which communicate on $\tm{x}$, in parallel. Therefore, in $\tm{\cpCut{x}{P}{Q}}$ the name $\tm{x}$ is bound in both $\tm{P}$ and $\tm{Q}$. In $\tm{\cpRecv{x}{y}{P}}$ and $\tm{\cpSend{x}{y}{P}{Q}}$, round brackets denote input, square brackets denote output. We use bound output~\cite{sangiorgi1996}, meaning that both input and output bind a new name. In $\tm{\cpRecv{x}{y}{P}}$ the new name $\tm{y}$ is bound in $\tm{P}$. In $\tm{\cpSend{x}{y}{P}{Q}}$, the new name $\tm{y}$ is only bound in $\tm{P}$, while $\tm{x}$ is only bound in $\tm{Q}$.
 \begin{definition}[Terms]\label{def:cp-terms}
   Process terms are given by the following grammar:
   \[
@@ -193,9 +111,7 @@ while $\tm{x}$ is only bound in $\tm{Q}$.
     \end{array}
   \]
 \end{definition}\noindent
-Terms in \cp are identified up to structural congruence, which states that
-links are symmetric, and parallel compositions $\tm{\cpCut{x}{P}{Q}}$ are
-associative and commutative.
+Terms in \cp are identified up to structural congruence, which states that links are symmetric, and parallel compositions $\tm{\cpCut{x}{P}{Q}}$ are associative and commutative.
 \begin{definition}[Structural congruence]\label{def:cp-equiv}
   The structural congruence $\equiv$ is the congruence closure over terms which
   satisfies the following additional axioms:
@@ -308,29 +224,14 @@ associative and commutative.
   \caption{Classical Processes, reduction relation.}
   \label{fig:cp-reduction}
 \end{figure}
-Reductions relate processes with their reduced forms \eg, a reduction
-$\reducesto{P}{Q}$ denotes that the process $\tm{P}$ can reduce to the process
-$\tm{Q}$ in a single step.
+Reductions relate processes with their reduced forms \eg a reduction $\reducesto{P}{Q}$ denotes that the process $\tm{P}$ can reduce to the process $\tm{Q}$ in a single step.
 \begin{definition}[Reduction]\label{def:cp-reduction}
-  Reductions are described by the smallest relation $\Longrightarrow$ on process
-  terms closed under rules in \cref{fig:cp-reduction}.
-  The relation $\Longrightarrow^\star$ is the reflexive, transitive closure of 
+  Reductions are described by the smallest relation $\Longrightarrow$ on process terms closed under rules in \cref{fig:cp-reduction}. The relation $\Longrightarrow^\star$ is the reflexive, transitive closure of 
   $\Longrightarrow$.
 \end{definition}
 
 \paragraph{Types}
-Channels in \cp are typed using a session type system which corresponds to
-classical linear logic.
-A process communicating over a channel of type \ty{A \tens B} must be ready to
-split into two independent processes (two processes which share no
-channels), ready to communicate over a channel of type \ty{A} and \ty{B},
-respectively, and process communicating over a channel of type \ty{A \parr B} is
-dual to this, and therefore must be ready to start communicating concurrently
-with two independent processes.
-A process communicating over a channel of type \ty{A \plus B} can choose to
-communicate either as \ty{A} or \ty{B}, and a process communicating over a
-channel of type \ty{A \with B} must be able to communicate either as \ty{A} or
-\ty{B}.
+Channels in \cp are typed using a session type system which corresponds to classical linear logic. A process communicating over a channel of type \ty{A \tens B} must be ready to split into two independent processes (two processes which share no channels), ready to communicate over a channel of type \ty{A} and \ty{B}, respectively, and process communicating over a channel of type \ty{A \parr B} is dual to this, and therefore must be ready to start communicating concurrently with two independent processes. A process communicating over a channel of type \ty{A \plus B} can choose to communicate either as \ty{A} or \ty{B}, and a process communicating over a channel of type \ty{A \with B} must be able to communicate either as \ty{A} or \ty{B}.
 \begin{definition}[Types]\label{def:cp-types}
   \[
     \begin{array}{rclrcl}
@@ -346,13 +247,7 @@ channel of type \ty{A \with B} must be able to communicate either as \ty{A} or
     \end{array}
   \]
 \end{definition}\noindent
-Duality plays a crucial role in both linear logic and session types.
-In \cp, the two endpoints of a channel are assigned dual types.
-This ensures that, for instance, whenever a process \emph{sends} across a
-channel, the process on the other end of that channel is waiting to
-\emph{receive}.
-Each type $\ty{A}$ has a dual, written $\ty{A^\bot}$.
-Duality is an involutive function.
+Duality plays a crucial role in both linear logic and session types. In \cp, the two endpoints of a channel are assigned dual types. This ensures that, for instance, whenever a process \emph{sends} across a channel, the process on the other end of that channel is waiting to \emph{receive}. Each type $\ty{A}$ has a dual, written $\ty{A^\bot}$. Duality is an involutive function.
 \begin{definition}[Duality]\label{def:cp-negation}
   \[
     \setlength{\arraycolsep}{3pt}
@@ -368,10 +263,7 @@ Duality is an involutive function.
     \end{array}
   \]
 \end{definition}\noindent
-Environments associate channels with types.
-Names in environments must be unique, and environments $\ty{\Gamma}$ and
-$\ty{\Delta}$ can only be combined as $\ty{\Gamma}, \ty{\Delta}$ if
-$\ty{\fv{\Gamma}} \cap \ty{\fv{\Delta}} = \varnothing$.
+Environments associate channels with types. Names in environments must be unique, and environments $\ty{\Gamma}$ and $\ty{\Delta}$ can only be combined as $\ty{\Gamma}, \ty{\Delta}$ if $\ty{\fv{\Gamma}} \cap \ty{\fv{\Delta}} = \varnothing$.
 \begin{definition}[Environments]\label{def:cp-environments}
   \(
     \ty{\Gamma}, \ty{\Delta}, \ty{\Theta} := \tmty{x_1}{A_1}\dots\tmty{x_n}{A_n}
@@ -415,8 +307,7 @@ Typing judgements associate processes with collections of typed channels.
   $\tm{P}\Longrightarrow^\star\tm{Q}$ and $\tm{Q}$ is not a cut.
 \end{theorem}\vspace*{-0.75\baselineskip}%
 \begin{proof}
-  By induction on the derivation of $\seq[P]{\Gamma}$.
-  If the last rule is \textsc{Cut}, there are four cases:
+  By induction on the derivation of $\seq[P]{\Gamma}$. If the last rule is \textsc{Cut}, there are four cases:
   \begin{enumerate*}[label={\alph*)}]
   \item
     if either side of the cut is an axiom, we apply \cpRedAxCut1;
@@ -431,32 +322,20 @@ Typing judgements associate processes with collections of typed channels.
   \end{enumerate*}
 \end{proof}\vspace*{-0.75\baselineskip}%
 \begin{theorem}[Termination]\label{thm:cp-termination}
-  If $\seq[P]{\Gamma}$, then there are no infinite $\Longrightarrow$-reduction
-  sequences.
+  If $\seq[P]{\Gamma}$, then there are no infinite $\Longrightarrow$-reduction sequences.
 \end{theorem}\vspace*{-0.75\baselineskip}%
 \begin{proof}
-  Every reduction reduces a single cut to zero, one or two cuts.
-  However, each of these cuts is smaller, in the sense that the type of the
-  channel on which the communication takes place is smaller.
-  Each reduction either eliminates a connective.
-  Furthermore, each instance of the structural congruence preserves the size of
-  the cut.
-  Therefore, there cannot be an infinite $\Longrightarrow$-reduction sequence.
+  Every reduction reduces a single cut to zero, one or two cuts. However, each of these cuts is smaller, in the sense that the type of the channel on which the communication takes place is smaller. Each reduction either eliminates a connective. Furthermore, each instance of the structural congruence preserves the size of the cut. Therefore, there cannot be an infinite $\Longrightarrow$-reduction sequence.
 \end{proof}
 
 
 \section{Hypersequent Classical Processes}
 \label{sec:hcp}
 
-In this section, we introduce Hypersequent Classical Processes (\hcp), a variant
-of \cp which registers parallelism in the typing jugdgements using
-hypersequents, allowing us to take apart the monolithic term constructors of \cp
-(\eg $\tm{\cpSend{x}{y}{P}{Q}}$) into the corresponding \textpi-calculus term
-constructs. 
+In this section, we introduce Hypersequent Classical Processes (\hcp), a variant of \cp which registers parallelism in the typing judgements using hypersequents, allowing us to take apart the monolithic term constructors of \cp (\eg $\tm{\cpSend{x}{y}{P}{Q}}$) into the corresponding \textpi-calculus term constructs. 
 
 \paragraph{Terms}
-The term language of \hcp is a variant of \cp where the term constructs have
-been taken apart into \textpi-calculus primitives.
+The term language of \hcp is a variant of \cp where the term constructs have been taken apart into \textpi-calculus primitives.
 \begin{definition}[Terms]\label{def:hcp-terms}
   \[
     \begin{array}{rllrll}
@@ -476,13 +355,9 @@ been taken apart into \textpi-calculus primitives.
     \end{array}
   \]
 \end{definition}\noindent
-One side-effect of the changes on the term level is that our structural
-congruence is much more standard. It has associativity, commutativity, and a
-unit for parallel composition, commutativity of name restrictions, and scope
-extrusion.
+One side-effect of the changes on the term level is that our structural congruence is much more standard. It has associativity, commutativity, and a unit for parallel composition, commutativity of name restrictions, and scope extrusion.
 \begin{definition}[Structural congruence]\label{def:hcp-equiv}
-  The structural congruence $\equiv$ is the congruence closure over terms which
-  satisfies the following additional axioms:
+  The structural congruence $\equiv$ is the congruence closure over terms which satisfies the following additional axioms:
   \[
     \setlength{\arraycolsep}{3pt}
     \begin{array}{llcllllcll}
@@ -524,16 +399,9 @@ extrusion.
     \end{array}
   \]
 \end{definition}\noindent
-There are two changes to the reduction system.
-First, because $\tm{\piBoundSend{x}{y}{P}}$ and $\tm{\piBoundSend{x}{}{P}}$ are
-now terms in their own right, the $\cpRedBetaTensParr$ and $\cpRedBetaOneBot$
-rules become simpler.
-Secondly, because we have decomposed $\tm{\cpCut{x}{P}{Q}}$ into an independent
-name restriction and parallel composition, the $\kappa$-rules and the relevant
-$\gamma$-rule all decompose as well.
+There are two changes to the reduction system. First, because $\tm{\piBoundSend{x}{y}{P}}$ and $\tm{\piBoundSend{x}{}{P}}$ are now terms in their own right, the $\cpRedBetaTensParr$ and $\cpRedBetaOneBot$ rules become simpler. Secondly, because we have decomposed $\tm{\cpCut{x}{P}{Q}}$ into an independent name restriction and parallel composition, the $\kappa$-rules and the relevant $\gamma$-rule all decompose as well.
 \begin{definition}[Reduction]\label{def:hcp-reduction}
-  Reductions are described by the smallest relation $\Longrightarrow$ on process
-  terms closed under rules in \cref{fig:hcp-reduction}.
+  Reductions are described by the smallest relation $\Longrightarrow$ on process terms closed under rules in \cref{fig:hcp-reduction}.
 \end{definition}\noindent
 \begin{figure}[htb]
   \[
@@ -668,47 +536,13 @@ $\gamma$-rule all decompose as well.
 \end{figure}
 
 \paragraph{Types}
-We use the same definitions for types and environments for \hcp as we used for \cp.
-However, we introduce a new layer on top of sequents: hypersequents.
-As \cp is a one-sided logic, and it uses the left-hand side of the
-turnstile to write the process, the traditional hypersequent notation can look
-confusing: ``$\seq[P]{\Gamma_1}\hsep\dots\hsep\seq{\Gamma_n}$'' seems to claim
-that $\tm{P}$ acts according to protocol $\ty{\Gamma_1}$.
-What are all the other $\Gamma$s doing there? Are they typing empty processes?
-Therefore, we opt to leave out the repeated turnstile, and instead work with the
-notion of ``hyper-environments''. However, we will still refer to our system as a
-hypersequent system.
-Hyper-environments are either empty, or consist of a series of typing
-environments, separated by vertical bars.
-A hyper-environment $\ty{\Gamma_1 \hsep \dots \hsep \Gamma_n}$ types a series of
-$n$ entangled, but independent processes.
+We use the same definitions for types and environments for \hcp as we used for \cp. However, we introduce a new layer on top of sequents: hypersequents. As \cp is a one-sided logic, and it uses the left-hand side of the turnstile to write the process, the traditional hypersequent notation can look confusing: ``$\seq[P]{\Gamma_1}\hsep\dots\hsep\seq{\Gamma_n}$'' seems to claim that $\tm{P}$ acts according to protocol $\ty{\Gamma_1}$. What are all the other $\Gamma$s doing there? Are they typing empty processes? Therefore, we opt to leave out the repeated turnstile, and instead work with the notion of ``hyper-environments''. However, we will still refer to our system as a hypersequent system. Hyper-environments are either empty, or consist of a series of typing environments, separated by vertical bars. A hyper-environment $\ty{\Gamma_1 \hsep \dots \hsep \Gamma_n}$ types a series of $n$ entangled, but independent processes.
 \begin{definition}[Hyper-environment]\label{def:hcp-hyper-environment}
-  \(
-  \ty{\mathcal{G}}, \ty{\mathcal{H}} :=
-  \ty{\emptyhypercontext}
-  \; \mid \;
-  \ty{\Gamma_1 \hsep \dots \hsep \Gamma_n}
-  \)
+  $\ty{\mathcal{G}}, \ty{\mathcal{H}} := \ty{\emptyhypercontext} \; \mid \; \ty{\Gamma_1 \hsep \dots \hsep \Gamma_n}$
 \end{definition}\noindent
-Typing judgements in \hcp associate processes with hyper-environments.
-\textsc{H-Mix} composes two processes in parallel, but remembers that they are
-independent in the sequent.
-\textsc{H-Cut} and $(\tens)$ take as their premise a process which consists of
-at least two independent processes, and connects them, eliminating the vertical
-bar.
-Note that each logical rule has the side condition that $\tm{x} \not\in
-\ty{\mathcal{G}}$, which can be read as ``you cannot act on one end-point of $x$
-if you are also holding its other end-point''.
-This prevents self-locking processes, \eg
-$\tm{\piBoundSend{x}{}{\piRecv{x}{}{\piHalt}}}$.
+Typing judgements in \hcp associate processes with hyper-environments. \textsc{H-Mix} composes two processes in parallel, but remembers that they are independent in the sequent. \textsc{H-Cut} and $(\tens)$ take as their premise a process which consists of at least two independent processes, and connects them, eliminating the vertical bar. Note that each logical rule has the side condition that $\tm{x} \not\in \ty{\mathcal{G}}$, which can be read as ``you cannot act on one end-point of $x$ if you are also holding its other end-point''. This prevents self-locking processes \eg $\tm{\piBoundSend{x}{}{\piRecv{x}{}{\piHalt}}}$.
 \begin{definition}[Typing judgements]\label{def:hcp}
-  A typing judgement $\seq[P]{\Gamma_1 \hsep \dots \hsep \Gamma_n}$ denotes
-  that the process $\tm{P}$ consists of $n$ independent, but potentially
-  entangled processes, each of which communicates according to its own
-  protocol $\Gamma_i$.
-  Typing judgements can be constructed using the inference rules in \cref{fig:hcp}.
-  Furthermore, each logical rule has the side condition that $\tm{x} \not\in
-  \ty{\mathcal{G}}$.
+  A typing judgement $\seq[P]{\Gamma_1 \hsep \dots \hsep \Gamma_n}$ denotes that the process $\tm{P}$ consists of $n$ independent, but potentially entangled processes, each of which communicates according to its own protocol $\Gamma_i$. Typing judgements can be constructed using the inference rules in \cref{fig:hcp}. Furthermore, each logical rule has the side condition that $\tm{x} \not\in \ty{\mathcal{G}}$.
 \end{definition}\noindent
 \begin{figure}[htb]
   \begin{center}\hccpInfAx \hccpInfCycle\end{center}
@@ -743,18 +577,15 @@ $\tm{\piBoundSend{x}{}{\piRecv{x}{}{\piHalt}}}$.
   $\tm{P}\Longrightarrow^\star\tm{Q}$ and $\tm{Q}$ is not a cut or a mix.
 \end{theorem}\vspace*{-0.75\baselineskip}%
 \begin{proof}
-  By induction on the derivation of $\seq[P]{\mathcal{G}}$.
-  If the last rule is a cut, there are three cases:
+  By induction on the derivation of $\seq[P]{\mathcal{G}}$. If the last rule is a cut, there are three cases:
   \begin{enumerate*}[label={\alph*)}]
   \item
     if the rule under the cut is the corresponding mix, we eliminate both as in
     \cref{thm:cp-progress};
   \item
-    if the rule under the cut is an unrelated mix, we rewrite by
-    \hccpEquivScopeExt{}, and recursively eliminate the cut;
+    if the rule under the cut is an unrelated mix, we rewrite by \hccpEquivScopeExt{}, and recursively eliminate the cut;
   \item
-    if the rule under the cut is a logical rule, we apply one of the
-    $\kappa\nu$-rules.
+    if the rule under the cut is a logical rule, we apply one of the $\kappa\nu$-rules.
   \end{enumerate*}
   If the last rule is mix, there are two cases:
   \begin{enumerate*}[label={\alph*)}]
@@ -766,8 +597,7 @@ $\tm{\piBoundSend{x}{}{\piRecv{x}{}{\piHalt}}}$.
   \end{enumerate*}
 \end{proof}\vspace*{-0.75\baselineskip}%
 \begin{theorem}[Termination]\label{thm:hcp-termination}
-  If $\seq[P]{\mathcal{G}}$, then there are no infinite
-  $\Longrightarrow$-reduction sequences.
+  If $\seq[P]{\mathcal{G}}$, then there are no infinite $\Longrightarrow$-reduction sequences.
 \end{theorem}\vspace*{-0.75\baselineskip}%
 \begin{proof}
   As \cref{thm:cp-termination}.
@@ -777,16 +607,13 @@ $\tm{\piBoundSend{x}{}{\piRecv{x}{}{\piHalt}}}$.
 \section{Relation between \cp and \hcp}
 \label{sec:cp2hcp}
 
-In this section, we discuss the relation between \cp and \hcp.
-We will prove three important theorems:
+In this section, we discuss the relation between \cp and \hcp. We will prove three important theorems:
 \begin{enumerate*}[label={\alph*)}]
 \item every \cp process is an \hcp process;
 \item \hcp processes represent multiple entangled \cp processes; and
 \item \hcp supports the same protocols as \cp.
 \end{enumerate*}
-To facilitate this, we define a translation from terms in \cp to terms in \hcp
-which breaks down the term constructs in \cp into their more atomic constructs
-in \hcp.
+To facilitate this, we define a translation from terms in \cp to terms in \hcp which breaks down the term constructs in \cp into their more atomic constructs in \hcp.
 \begin{definition}\label{def:cp2hcp-terms}
   \[
     \begin{array}{lcllcl}
@@ -813,18 +640,12 @@ in \hcp.
     \end{array}
   \]
 \end{definition}\noindent
-First, we prove that each \cp process can be translated by this trivial
-translation to an \hcp process, and that this translation respects structural
-congruence and reduction.
-Reductions from \cp can be trivially translated to reductions in \hcp.
-However, as we took apart each $\kappa$-rule into two separate rules, the
-reduction relation of \hcp is a slight refinement over that of \cp.
+First, we prove that each \cp process can be translated by this trivial translation to an \hcp process, and that this translation respects structural congruence and reduction. Reductions from \cp can be trivially translated to reductions in \hcp. However, as we took apart each $\kappa$-rule into two separate rules, the reduction relation of \hcp is a slight refinement over that of \cp.
 \begin{theorem}\label{thm:cp2hcp-typing}
   If $\seq[P]{\Gamma}$ in \cp, then $\seq[\mtf{P}]{\Gamma}$ in \hcp.
 \end{theorem}\vspace*{-0.75\baselineskip}%
 \begin{proof}
-  By induction on the derivation of $\seq[P]{\Gamma}$.
-  We show the interesting cases:
+  By induction on the derivation of $\seq[P]{\Gamma}$. We show the interesting cases:
   \begin{itemize}
   \item
     Case \textsc{Cut}. We rewrite as follows:
@@ -955,48 +776,29 @@ reduction relation of \hcp is a slight refinement over that of \cp.
 % \end{itemize}
 \end{proof}\vspace*{-0.75\baselineskip}%
 \begin{theorem}\label{hcp2cp-reduction}
-  If $\reducesto{\mtf{P}}{R}$ in \hcp, then there is a $\tm{Q}$ such that
-  $\reducesto{P}{Q}$ in \cp and $\tm{R}\Longrightarrow^\star\tm{\mtf{Q}}$ in \hcp.
+  If $\reducesto{\mtf{P}}{R}$ in \hcp, then there is a $\tm{Q}$ such that $\reducesto{P}{Q}$ in \cp and $\tm{R}\Longrightarrow^\star\tm{\mtf{Q}}$ in \hcp.
 \end{theorem}\vspace*{-0.75\baselineskip}%
 \begin{proof}
-  By induction on the derivation of $\reducesto{\mtf{P}}{R}$.
-  The cases for \hccpRedAxCut1 and the $\beta$-rules are trivial.
-  For the $\kappa\nu$-rules, we rewrite by the appropriate $\kappa{\ppar}$ rule,
-  and vice versa.
+  By induction on the derivation of $\reducesto{\mtf{P}}{R}$. The cases for \hccpRedAxCut1 and the $\beta$-rules are trivial. For the $\kappa\nu$-rules, we rewrite by the appropriate $\kappa{\ppar}$ rule, and vice versa.
 \end{proof}\noindent
 
-It would be wonderful if each \hcp process could be translated back into a
-series of \cp processes.
-However, \hcp exhibits some behaviours which are impossible to directly
-translate back into \cp.
-For instance, in the process below, the choice sent on $\tm{x}$ will affect the
-choice between $\tm{P}$ and $\tm{P'}$, even though neither has access to the
-channel $\tm{x}$.
+It would be wonderful if each \hcp process could be translated back into a series of \cp processes. However, \hcp exhibits some behaviours which are impossible to directly translate back into \cp. For instance, in the process below, the choice sent on $\tm{x}$ will affect the choice between $\tm{P}$ and $\tm{P'}$, even though neither has access to the channel $\tm{x}$.
 \begin{example}
   \(
   \seq[\cpCase{x}{(\piPar{P}{Q})}{(\piPar{P'}{Q''})}]{
     \Gamma, \Delta, \tmty{x}{A \with B}}
   \)
 \end{example}\noindent
-Instead, we will define a new relation to characterise the relation between \hcp
-and \cp processes.
+Instead, we will define a new relation to characterise the relation between \hcp and \cp processes.
 \begin{definition}\label{def:hcp-gk}
-  The relation $\tm{P}\equiv_{\gamma\kappa}\tm{Q}$ is the congruence closure of
-  the $\gamma$- and $\kappa$-rules for \hcp.
+  The relation $\tm{P}\equiv_{\gamma\kappa}\tm{Q}$ is the congruence closure of the $\gamma$- and $\kappa$-rules for \hcp.
 \end{definition}\noindent
-This relation allows us to apply $\kappa$-rules under arbitrary prefixes.
-We can show that, if we allow ourselves to do this, we can rewrite any process
-to a form in which all mixes are either attached to their respective cuts or
-tensors, or at the top-level.
+This relation allows us to apply $\kappa$-rules under arbitrary prefixes. We can show that, if we allow ourselves to do this, we can rewrite any process to a form in which all mixes are either attached to their respective cuts or tensors, or at the top-level.
 \begin{lemma}[Disentangle]\label{lem:hcp-disentangle}
-  If $\seq[P]{\Gamma_1 \hsep \dots \hsep \Gamma_n}$ in \hcp,
-  then there exist $\seq[P_1]{\Gamma_1}, \dots, \seq[P_n]{\Gamma_n}$ in \cp,
-  such that
-  $\tm{P}\equiv_{\gamma\kappa}\tm{(\mtf{P_1}\ppar\dots\ppar\mtf{P_n})}$.
+  If $\seq[P]{\Gamma_1 \hsep \dots \hsep \Gamma_n}$ in \hcp, then there exist $\seq[P_1]{\Gamma_1}, \dots, \seq[P_n]{\Gamma_n}$ in \cp, such that $\tm{P}\equiv_{\gamma\kappa}\tm{(\mtf{P_1}\ppar\dots\ppar\mtf{P_n})}$.
 \end{lemma}\vspace*{-0.75\baselineskip}%
 \begin{proof}
-  We repeatedly apply the $\kappa{\ppar}$-rules to move the mixes upwards.
-  There are three cases:
+  We repeatedly apply the $\kappa{\ppar}$-rules to move the mixes upwards. There are three cases:
   \begin{enumerate*}[label={\alph*)}]
   \item
     if a mix gets stuck under a cut, it forms a \cp cut;
@@ -1005,21 +807,12 @@ tensors, or at the top-level.
   \item
     otherwise, it moves all the way to the top.
   \end{enumerate*}
-  Since the only way to continue after a $(\one)$ is by using a mix, all
-  applications of $(\one)$ are now followed by an application of
-  \textsc{H-Halt}, forming a \cp $(\one)$.
+  Since the only way to continue after a $(\one)$ is by using a mix, all applications of $(\one)$ are now followed by an application of \textsc{H-Halt}, forming a \cp $(\one)$.
 \end{proof}\noindent
 
-Finally, we will prove that \hcp supports the same communication protocols as
-\cp.
-This is the same as saying that it inhabits the same session types, or that the
-associated logical systems derive the same theorems.
-We show this by proving that we can interpret the hyper-environments as formulas
-in the logic.
-This is a standard method for proving the soundness of a hypersequent calculus.
+Finally, we will prove that \hcp supports the same communication protocols as \cp. This is the same as saying that it inhabits the same session types, or that the associated logical systems derive the same theorems. We show this by proving that we can interpret the hyper-environments as formulas in the logic. This is a standard method for proving the soundness of a hypersequent calculus. 
 
-We start out by showing that we can interpret environments as types by
-collapsing them using a series of pars.
+We start out by showing that we can interpret environments as types by collapsing them using a series of pars.
 \begin{definition}\label{def:bigparr}
   \(
   \ty{\bigparr(\tmty{x_1}{A_1} , \dots , \tmty{x_n}{A_n})} =
@@ -1035,10 +828,7 @@ collapsing them using a series of pars.
   If $\ty{\Gamma} = \ty{A, B, \Gamma'}$, then we apply $(\parr)$ to get $\seq{A
     \parr B, \Gamma'}$, and apply the induction hypothesis.
 \end{proof}\noindent
-Then, using \cref{lem:hcp-disentangle}, we can show that we can interpret
-hyper-environments as types by collapsing them using a series of tensors.
-In the case of the empty hyper-environment $\ty{\emptyhypercontext}$, we
-interpret this as the unit of tensor.
+Then, using \cref{lem:hcp-disentangle}, we can show that we can interpret hyper-environments as types by collapsing them using a series of tensors. In the case of the empty hyper-environment $\ty{\emptyhypercontext}$, we interpret this as the unit of tensor.
 \begin{definition}\label{def:bigtens}
   \(
   \begin{array}{lcl}
@@ -1057,42 +847,17 @@ interpret this as the unit of tensor.
 \begin{proof}
   By case analysis on the structure of the hyper-environment $\ty{\mathcal{G}}$.
   If $\ty{\mathcal{G}} = \ty{\emptyhypercontext}$, we apply $(\one)$.
-  If $\ty{\mathcal{G}} = \ty{\Gamma_1 \hsep \dots \hsep \Gamma_n}$, we apply
-  \cref{lem:hcp-disentangle} to obtain proofs of $\seq{\Gamma_1}, \dots,
-  \seq{\Gamma_n}$ in \cp, then we apply \cref{lem:cp-bigparr} to each of those
-  proofs to obtain proofs of $\seq{\bigparr\Gamma_1}, \dots,
-  \seq{\bigparr\Gamma_n}$, and join them using $(\tens)$ to obtain a single
-  proof of $\seq{\bigtens\mathcal{G}}$ in \cp.
+  If $\ty{\mathcal{G}} = \ty{\Gamma_1 \hsep \dots \hsep \Gamma_n}$, we apply \cref{lem:hcp-disentangle} to obtain proofs of $\seq{\Gamma_1}, \dots, \seq{\Gamma_n}$ in \cp, then we apply \cref{lem:cp-bigparr} to each of those proofs to obtain proofs of $\seq{\bigparr\Gamma_1}, \dots, \seq{\bigparr\Gamma_n}$, and join them using $(\tens)$ to obtain a single proof of $\seq{\bigtens\mathcal{G}}$ in \cp.
 \end{proof}\noindent
 
 \section{Related Work}
 \label{sec:related-work}
 
-Since its inception, linear logic has been described as the logic of
-concurrency \cite{girard1987}.
-Correspondences between the proof theory of linear logic and variants of the
-\textpi-calculus emerged soon afterwards \cite{abramsky1994,bellin1994}, by
-interpreting linear logic propositions as types for channels.
-Later, linearity inspired also the seminal theories of linear types for the
-\textpi-calculus \cite{kobayashi1999} and session types \cite{honda1998}.
-Even though the two theories do not have a direct correspondence with linear
-logic, the link is still strong enough that session types
-can be encoded into linear types \cite{dardha2017}.
+Since its inception, linear logic has been described as the logic of concurrency \cite{girard1987}. Correspondences between the proof theory of linear logic and variants of the \textpi-calculus emerged soon afterwards \cite{abramsky1994,bellin1994}, by interpreting linear logic propositions as types for channels. Later, linearity inspired also the seminal theories of linear types for the \textpi-calculus \cite{kobayashi1999} and session types \cite{honda1998}. Even though the two theories do not have a direct correspondence with linear logic, the link is still strong enough that session types can be encoded into linear types \cite{dardha2017}.
 
-It took more than ten years for a formal correspondence between linear logic and
-(a variant of) session types to emerge, with the seminal paper by \citet{caires2010}.
-This inspired the development of Classical Processes by \citet{wadler2012}.
+It took more than ten years for a formal correspondence between linear logic and (a variant of) session types to emerge, with the seminal paper by \citet{caires2010}. This inspired the development of Classical Processes by \citet{wadler2012}.
 
-The idea of using hypersequents to capture parallelism in linear logic
-judgements is not novel: \citet{carbone2018} extended the
-multiplicative-additive fragment of intuitionistic linear logic with
-hypersequents to type global descriptions of process communications known as
-choreographies.
-This work is distinct from our approach in that \hcp is based on classical
-linear logic and manipulates hypersequents differently: in \citet{carbone2018},
-hypersequents can be formed only when sequents share resources (\cf
-\textsc{H-Mix}), and resource sharing is then explicitly tracked using an
-additional connection modality (which is not present in \hcp).
+The idea of using hypersequents to capture parallelism in linear logic judgements is not novel: \citet{carbone2018} extended the multiplicative-additive fragment of intuitionistic linear logic with hypersequents to type global descriptions of process communications known as choreographies. This work is distinct from our approach in that \hcp is based on classical linear logic and manipulates hypersequents differently: in \citet{carbone2018}, hypersequents can be formed only when sequents share resources (\cf \textsc{H-Mix}), and resource sharing is then explicitly tracked using an additional connection modality (which is not present in \hcp). 
 
 \section{Conclusions}
 \label{sec:conclusions}
