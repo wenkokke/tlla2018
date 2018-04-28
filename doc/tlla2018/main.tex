@@ -1,7 +1,7 @@
 \documentclass[draft,submission,copyright,creativecommons]{eptcs}
 \providecommand{\event}{Linearity and TLLA 2018}
 \usepackage[british]{babel}
-\usepackage[all]{foreign}
+%\usepackage[all]{foreign}
 \usepackage[fleqn]{amsmath}
 \usepackage{amsthm}
 \allowdisplaybreaks
@@ -19,8 +19,8 @@
 \newtheorem{example}{Example}
 \input{preamble-typing}
 \usepackage[sectionbib,square,numbers,sort&compress]{natbib}
-\renewcommand*{\eg}{e.g.\@\xspace}
-\renewcommand*{\ie}{i.e.\@\xspace}
+%\renewcommand*{\eg}{e.g.\@\xspace}
+%\renewcommand*{\ie}{i.e.\@\xspace}
 \usepackage{more-space}
 \usepackage{setspace}
 \renewcommand{\baselinestretch}{0.925} 
@@ -305,7 +305,7 @@ associative and commutative.
   \caption{Classical Processes, reduction relation.}
   \label{fig:cp-reduction}
 \end{figure}
-Reductions relate processes with their reduced forms \eg, a reduction
+Reductions relate processes with their reduced forms e.g., a reduction
 $\reducesto{P}{Q}$ denotes that the process $\tm{P}$ can reduce to the process
 $\tm{Q}$ in a single step.
 \begin{definition}[Reduction]\label{def:cp-reduction}
@@ -374,7 +374,23 @@ $\ty{\fv{\Gamma}} \cap \ty{\fv{\Delta}} = \varnothing$.
     \ty{\Gamma}, \ty{\Delta}, \ty{\Theta} := \tmty{x_1}{A_1}\dots\tmty{x_n}{A_n}
   \) 
 \end{definition}\noindent
-\begin{figure}[htb]
+%\begin{figure}[htb]
+%  \begin{center}\cpInfAx \cpInfCut \end{center}
+%  \vspace*{-.5\baselineskip}
+%  \begin{center}\cpInfTens \cpInfParr \cpInfOne \end{center}
+%  \vspace*{-.5\baselineskip}
+%  \begin{center}\cpInfBot \cpInfPlus1 \cpInfPlus2\end{center}
+%  \vspace*{-.5\baselineskip}
+%  \begin{center}\cpInfWith \cpInfNil \cpInfTop \end{center}
+%  \caption{Classical Processes, typing.}
+%  \label{fig:cp}
+%\end{figure}\noindent
+Typing judgements associate processes with collections of typed channels.
+\begin{definition}[Typing judgements]\label{def:cp}
+  A typing judgement $\seq[{ P }]{\tmty{x_1}{A_1}\dots\tmty{x_n}{A_n}}$ denotes
+  that the process \tm{P} communicates along channels $\tm{x_1}\dots\tm{x_n}$
+  following protocols $\ty{A_1}\dots\ty{A_n}$.
+  Typing judgements are derived using the rules below.%rules in \cref{fig:cp}.
   \begin{center}\cpInfAx \cpInfCut \end{center}
   \vspace*{-.5\baselineskip}
   \begin{center}\cpInfTens \cpInfParr \cpInfOne \end{center}
@@ -382,15 +398,6 @@ $\ty{\fv{\Gamma}} \cap \ty{\fv{\Delta}} = \varnothing$.
   \begin{center}\cpInfBot \cpInfPlus1 \cpInfPlus2\end{center}
   \vspace*{-.5\baselineskip}
   \begin{center}\cpInfWith \cpInfNil \cpInfTop \end{center}
-  \caption{Classical Processes, typing.}
-  \label{fig:cp}
-\end{figure}\noindent
-Typing judgements associate processes with collections of typed channels.
-\begin{definition}[Typing judgements]\label{def:cp}
-  A typing judgement $\seq[{ P }]{\tmty{x_1}{A_1}\dots\tmty{x_n}{A_n}}$ denotes
-  that the process \tm{P} communicates along channels $\tm{x_1}\dots\tm{x_n}$
-  following protocols $\ty{A_1}\dots\ty{A_n}$.
-  Typing judgements are derived using rules in \cref{fig:cp}.
 \end{definition}\noindent
 
 \paragraph{Metatheory}
@@ -448,7 +455,7 @@ Typing judgements associate processes with collections of typed channels.
 In this section, we introduce Hypersequent Classical Processes (\hcp), a variant
 of \cp which registers parallelism in the typing jugdgements using
 hypersequents, allowing us to take apart the monolithic term constructors of \cp
-(\eg $\tm{\cpSend{x}{y}{P}{Q}}$) into the corresponding \textpi-calculus term
+(e.g.~$\tm{\cpSend{x}{y}{P}{Q}}$) into the corresponding \textpi-calculus term
 constructs. 
 
 \paragraph{Terms}
@@ -696,8 +703,7 @@ bar.
 Note that each logical rule has the side condition that $\tm{x} \not\in
 \mathcal{G}$, which can be read as ``you cannot act on one end-point of $x$ if
 you are also holding its other end-point''.
-This prevents self-locking processes, \eg
-$\tm{\piBoundSend{x}{}{\piRecv{x}{}{\piHalt}}}$.
+This prevents self-locking processes, e.g.~$\tm{\piBoundSend{x}{}{\piRecv{x}{}{\piHalt}}}$.
 \begin{definition}[Typing judgements]\label{def:hcp}
   A typing judgement $\seq[P]{\Gamma_1 \hsep \dots \hsep \Gamma_n}$ denotes
   that the process $\tm{P}$ consists of $n$ independent, but potentially
@@ -715,7 +721,7 @@ $\tm{\piBoundSend{x}{}{\piRecv{x}{}{\piHalt}}}$.
   \begin{center}\hccpInfBoundTens \hccpInfParr \hccpInfOne\end{center}
   \vspace*{-0.5\baselineskip}
   \begin{center}\hccpInfBot \hccpInfPlus1 \hccpInfPlus2\end{center}
-  \vspace*{0.5\baselineskip}
+  \vspace*{-0.5\baselineskip}
   \begin{center}\hccpInfWith \hccpInfNil \hccpInfTop\end{center}
   \caption{Hypersequent Classical Processes, typing.}
   \label{fig:hcp}
@@ -1015,8 +1021,8 @@ We show this by proving that we can interpret the hyper-environments as formulas
 in the logic.
 This is a standard method for proving the soundness of a hypersequent calculus.
 
-We start out by showing that we can interpret environments as types by
-collapsing them using a series of pars.
+Environments can be interpreted as types by
+collapsing them as series of pars.
 \begin{definition}\label{def:bigparr}
   \(
   \ty{\bigparr(\tmty{x_1}{A_1} , \dots , \tmty{x_n}{A_n})} =
@@ -1032,10 +1038,7 @@ collapsing them using a series of pars.
   If $\ty{\Gamma} = \ty{A, B, \Gamma'}$, then we apply $(\parr)$ to get $\seq{A
     \parr B, \Gamma'}$, and apply the induction hypothesis.
 \end{proof}\noindent
-Then, using \cref{lem:hcp-disentangle}, we can show that we can interpret
-hyper-environments as types by collapsing them using a series of tensors.
-In the case of the empty hyper-environment $\ty{\emptyhypercontext}$, we
-interpret this as the unit of tensor.
+Furthermore, hyper-environments can be interpreted as types by collapsing them as series of tensors where environments are handled using \cref{lem:hcp-disentangle}. The empty hyper-environment $\ty{\emptyhypercontext}$ (that is the unit of $\hsep$) is interpreted as the unit of tensor.
 \begin{definition}\label{def:bigtens}
   \(
   \begin{array}{lcl}
@@ -1081,13 +1084,8 @@ It took more than ten years for a formal correspondence between linear logic and
 This inspired the development of Classical Processes by \citet{wadler2012}.
 
 \looseness=-1
-The idea of using hypersequents to capture parallelism in linear logic judgements is not
-novel: \citet{carbone2018} extended the multiplicative-additive fragment
-of intuitionistic linear logic with hypersequents to type global descriptions of
-process communications known as choreographies.
-This work is distinct from our approach in that \hcp is based on classical linear
-logic and manipulates hypersequents differently: in \citet{carbone2018}, hypersequents can be formed only when sequents share
-resources (\cf \textsc{H-Mix}), and resource sharing is then explicitly tracked
+The idea of using hypersequents to capture parallelism in linear logic judgements is not novel: \citet{carbone2018} extended the multiplicative-additive fragment of intuitionistic linear logic with hypersequents to type global descriptions of process communications known as choreographies.
+This work is distinct from our approach in that \hcp is based on classical linear logic and manipulates hypersequents differently: in \citet{carbone2018}, hypersequents can be formed only when sequents share resources (cf.~\textsc{H-Mix}), and resource sharing is explicitly tracked
 using an additional connection modality (which is not present in \hcp).
 
 %\section{Conclusions}
