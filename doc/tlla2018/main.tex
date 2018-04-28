@@ -18,10 +18,12 @@
 \newtheorem{corollary}{Corollary}
 \newtheorem{example}{Example}
 \input{preamble-typing}
-\usepackage{more-space}
 \usepackage[sectionbib,square,numbers,sort&compress]{natbib}
 \renewcommand*{\eg}{e.g.\@\xspace}
 \renewcommand*{\ie}{i.e.\@\xspace}
+\usepackage{more-space}
+\usepackage{setspace}
+\renewcommand{\baselinestretch}{0.925} 
 
 \title{Taking Linear Logic Apart}
 \author{%
@@ -128,8 +130,8 @@ restrictions appropriately in the resulting term.
 In this paper, we introduce the Hypersequent Classical Processes (\hcp), which
 addresses this mismatch.
 The key insight is to register parallelism in the typing judgements using
-hypersequents, a technique from logic which generalises judgements from one
-sequent to many.
+hypersequents~\cite{avron1991}, a technique from logic which generalises
+judgements from one sequent to many.
 This allows us to take apart the term constructs used in Classical Processes
 (\cp) to more closely match those of the standard \textpi-calculus.
 We proceed as follows.
@@ -215,7 +217,7 @@ associative and commutative.
     \end{array}
   \]
 \end{definition}\noindent
-\begin{figure}
+\begin{figure}[htb]
  \[
     \begin{array}{llcll}
       \cpRedAxCut1
@@ -311,7 +313,7 @@ $\tm{Q}$ in a single step.
   terms closed under rules in \cref{fig:cp-reduction}.
   The relation $\Longrightarrow^\star$ is the reflexive, transitive closure of 
   $\Longrightarrow$.
-\end{definition}\noindent
+\end{definition}
 
 \paragraph{Types}
 Channels in \cp are typed using a session type system which corresponds to
@@ -372,7 +374,7 @@ $\ty{\fv{\Gamma}} \cap \ty{\fv{\Delta}} = \varnothing$.
     \ty{\Gamma}, \ty{\Delta}, \ty{\Theta} := \tmty{x_1}{A_1}\dots\tmty{x_n}{A_n}
   \) 
 \end{definition}\noindent
-\begin{figure}
+\begin{figure}[htb]
   \begin{center}\cpInfAx \cpInfCut \end{center}
   \vspace*{-.5\baselineskip}
   \begin{center}\cpInfTens \cpInfParr \cpInfOne \end{center}
@@ -447,7 +449,7 @@ In this section, we introduce Hypersequent Classical Processes (\hcp), a variant
 of \cp which registers parallelism in the typing jugdgements using
 hypersequents, allowing us to take apart the monolithic term constructors of \cp
 (\eg $\tm{\cpSend{x}{y}{P}{Q}}$) into the corresponding \textpi-calculus term
-constructs.
+constructs. 
 
 \paragraph{Terms}
 The term language of \hcp is a variant of \cp where the term constructs have
@@ -530,7 +532,7 @@ $\gamma$-rule all decompose as well.
   Reductions are described by the smallest relation $\Longrightarrow$ on process
   terms closed under rules in \cref{fig:hcp-reduction}.
 \end{definition}\noindent
-\begin{figure}
+\begin{figure}[htb]
   \[
     \begin{array}{llcll}
       \hccpRedAxCut1
@@ -664,11 +666,19 @@ $\gamma$-rule all decompose as well.
 
 \paragraph{Types}
 We use the same definitions for types and environments for \hcp as we used for \cp.
-However, on top of this, we add the definition of a hyper-environment.
+However, we introduce a new layer on top of sequents: hypersequents.
+As \cp is a one-sided logic, and it uses the left-hand side of the
+turnstile to write the process, the traditional hypersequent notation can look
+confusing: ``$\seq[P]{\Gamma_1}\hsep\dots\hsep\seq{\Gamma_n}$'' seems to claim
+that $\tm{P}$ acts according to protocol $\ty{\Gamma_1}$.
+What are all the other $\Gamma$s doing there? Are they typing empty processes?
+Therefore, we opt to leave out the repeated turnstile, and instead work with the
+notion of ``hyper-environments''. However, we will still refer to our system as a
+hypersequent system.
 Hyper-environments are either empty, or consist of a series of typing
 environments, separated by vertical bars.
-A hyper-environment $\ty{\Gamma_1 \hsep \dots \hsep \Gamma_n}$ can be used to
-type a series of $n$ entangled, but independent processes.
+A hyper-environment $\ty{\Gamma_1 \hsep \dots \hsep \Gamma_n}$ types a series of
+$n$ entangled, but independent processes.
 \begin{definition}[Hyper-environment]\label{def:hcp-hyper-environment}
   \(
   \ty{\mathcal{G}}, \ty{\mathcal{H}} :=
@@ -697,7 +707,7 @@ $\tm{\piBoundSend{x}{}{\piRecv{x}{}{\piHalt}}}$.
   Furthermore, each logical rule has the side condition that $\tm{x} \not\in
   \ty{\mathcal{G}}$.
 \end{definition}\noindent
-\begin{figure}
+\begin{figure}[htb]
   \begin{center}\hccpInfAx \hccpInfCycle\end{center}
   \vspace*{-0.5\baselineskip}
   \begin{center}\hccpInfMix \hccpInfHalt\end{center}
@@ -872,6 +882,7 @@ reduction relation of \hcp is a slight refinement over that of \cp.
       \end{array}
     \end{gather*}
   \end{itemize}
+  \vspace*{-\baselineskip}%
 \end{proof}\vspace*{-0.75\baselineskip}%
 \begin{theorem}\label{thm:cp2hcp-equiv}
   $\tm{P}\equiv\tm{Q}$ in \cp iff $\tm{\mtf{P}}\equiv\tm{\mtf{Q}}$ in \hcp.
@@ -960,7 +971,7 @@ choice between $\tm{P}$ and $\tm{P'}$, even though neither has access to the
 channel $\tm{x}$.
 \begin{example}
   \(
-  \seq[\cpCase{x}{(\piPar{P}{Q})}{(\piPar{P'}{Q'})}]{
+  \seq[\cpCase{x}{(\piPar{P}{Q})}{(\piPar{P'}{Q''})}]{
     \Gamma, \Delta, \tmty{x}{A \with B}}
   \)
 \end{example}\noindent
