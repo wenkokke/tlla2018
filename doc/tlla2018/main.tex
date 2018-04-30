@@ -45,7 +45,9 @@
 
 \begin{abstract}
   Process calculi based in logic, such as \piDILL and \cp, provide a foundation
-  for deadlock-free concurrent programming. However, there is a mismatch between the structures of operators used as proof terms in previous work, and the term constructs of the standard \textpi-calculus. We introduce the Hypersequent Classical Processes (\hcp), which addresses this mismatch. The key insight is to register parallelism in the typing judgements using hypersequents, a technique from logic which generalises judgements from one sequent to many. This allows us to take apart the term constructs used in Classical Processes (\cp) to more closely match those of the standard \textpi-calculus. We prove that \hcp enjoys subject reduction and progress, and prove several properties relating it back to \cp.
+  for deadlock-free concurrent programming. However, in previous work, there is a mismatch between the rules for constructing proofs and the term constructors of the \textpi-calculus. We introduce the Hypersequent Classical Processes (\hcp), which addresses this mismatch by using hypersequents (collections of sequents) to register parallelism in the typing judgements.
+	% This allows us to take apart the term constructs used in Classical Processes (\cp) to more closely match those of the \textpi-calculus.
+	We prove that \hcp enjoys deadlock-freedom and a series of properties that relate it back to \cp.
 \end{abstract}
 
 \section{Introduction}
@@ -78,7 +80,7 @@ In this paper, we introduce the Hypersequent Classical Processes (\hcp), which a
 \section{Classical Processes}
 \label{sec:cp}
 
-In this section, we introduce \cp. In order to keep the discussion of \hcp in \cref{sec:hcp} simple, we restrict ourselves to the multiplicative-applicative subset of \cp. We foresee no problems in extending the proofs in \cref{sec:hcp} to cover the remaining features of \cp (polymophism and the exponentials). 
+In this section, we introduce \cp. In order to keep the discussion of \hcp in \cref{sec:hcp} simple, we restrict ourselves to the multiplicative-applicative subset of \cp. We foresee no problems in extending the proofs in \cref{sec:hcp} to cover the remaining features of \cp (polymophism and the exponentials).
 
 \paragraph{Terms}
 The term language of \cp is a variant of the \textpi-calculus. The variables $\tm{x}$, $\tm{y}$, and $\tm{z}$ range over channel names. The construct $\tm{\cpLink{x}{y}}$ links two channels~\citep{sangiorgi1996,boreale1998}, forwarding messages received on $\tm{x}$ to $\tm{y}$ and vice versa. The construct $\tm{\cpCut{x}{P}{Q}}$ creates a new channel $\tm{x}$, and composes two processes, $\tm{P}$ and $\tm{Q}$, which communicate on $\tm{x}$, in parallel. Therefore, in $\tm{\cpCut{x}{P}{Q}}$ the name $\tm{x}$ is bound in both $\tm{P}$ and $\tm{Q}$. In $\tm{\cpRecv{x}{y}{P}}$ and $\tm{\cpSend{x}{y}{P}{Q}}$, round brackets denote input, square brackets denote output. We use bound output~\citep{sangiorgi1996}, meaning that both input and output bind a new name. In $\tm{\cpRecv{x}{y}{P}}$ the new name $\tm{y}$ is bound in $\tm{P}$. In $\tm{\cpSend{x}{y}{P}{Q}}$, the new name $\tm{y}$ is only bound in $\tm{P}$, while $\tm{x}$ is only bound in $\tm{Q}$.
@@ -131,7 +133,7 @@ Terms in \cp are identified up to structural congruence, which states that links
       \cpRedAxCut1
       & \tm{\cpCut{x}{\cpLink{w}{x}}{P}}
       & \Longrightarrow
-      & \tm{\cpSub{w}{x}{P}} 
+      & \tm{\cpSub{w}{x}{P}}
       \\
       \cpRedBetaTensParr
       & \tm{\cpCut{x}{\cpSend{x}{y}{P}{Q}}{\cpRecv{x}{y}{R}}}
@@ -215,7 +217,7 @@ Terms in \cp are identified up to structural congruence, which states that links
 \end{figure}
 Reductions relate processes with their reduced forms \eg a reduction $\reducesto{P}{Q}$ denotes that the process $\tm{P}$ can reduce to the process $\tm{Q}$ in a single step.
 \begin{definition}[Reduction]\label{def:cp-reduction}
-  Reductions are described by the smallest relation $\Longrightarrow$ on process terms closed under rules in \cref{fig:cp-reduction}. The relation $\Longrightarrow^\star$ is the reflexive, transitive closure of 
+  Reductions are described by the smallest relation $\Longrightarrow$ on process terms closed under rules in \cref{fig:cp-reduction}. The relation $\Longrightarrow^\star$ is the reflexive, transitive closure of
   $\Longrightarrow$.
 \end{definition}
 
@@ -256,7 +258,7 @@ Environments associate channels with types. Names in environments must be unique
 \begin{definition}[Environments]\label{def:cp-environments}
   \(
     \ty{\Gamma}, \ty{\Delta}, \ty{\Theta} := \tmty{x_1}{A_1}\dots\tmty{x_n}{A_n}
-  \) 
+  \)
 \end{definition}\noindent
 \begin{figure}[htb]
   \begin{center}\cpInfAx \cpInfCut \end{center}
@@ -321,7 +323,7 @@ Typing judgements associate processes with collections of typed channels.
 \section{Hypersequent Classical Processes}
 \label{sec:hcp}
 
-In this section, we introduce Hypersequent Classical Processes (\hcp), a variant of \cp which registers parallelism in the typing judgements using hypersequents, allowing us to take apart the monolithic term constructors of \cp (\eg $\tm{\cpSend{x}{y}{P}{Q}}$) into the corresponding \textpi-calculus term constructs. 
+In this section, we introduce Hypersequent Classical Processes (\hcp), a variant of \cp which registers parallelism in the typing judgements using hypersequents, allowing us to take apart the monolithic term constructors of \cp (\eg $\tm{\cpSend{x}{y}{P}{Q}}$) into the corresponding \textpi-calculus term constructs.
 
 \paragraph{Terms}
 The term language of \hcp is a variant of \cp where the term constructs have been taken apart into \textpi-calculus primitives.
@@ -799,7 +801,7 @@ This relation allows us to apply $\kappa$-rules under arbitrary prefixes. We can
   Since the only way to continue after a $(\one)$ is by using a mix, all applications of $(\one)$ are now followed by an application of \textsc{H-Halt}, forming a \cp $(\one)$.
 \end{proof}\noindent
 
-Finally, we will prove that \hcp supports the same communication protocols as \cp. This is the same as saying that it inhabits the same session types, or that the associated logical systems derive the same theorems. We show this by proving that we can interpret the hyper-environments as formulas in the logic. This is a standard method for proving the soundness of a hypersequent calculus. 
+Finally, we will prove that \hcp supports the same communication protocols as \cp. This is the same as saying that it inhabits the same session types, or that the associated logical systems derive the same theorems. We show this by proving that we can interpret the hyper-environments as formulas in the logic. This is a standard method for proving the soundness of a hypersequent calculus.
 
 We start out by showing that we can interpret environments as types by collapsing them using a series of pars.
 \begin{definition}\label{def:bigparr}
@@ -846,7 +848,7 @@ Since its inception, linear logic has been described as the logic of concurrency
 
 It took more than ten years for a formal correspondence between linear logic and (a variant of) session types to emerge, with the seminal paper by \citet{caires2010}. This inspired the development of Classical Processes by \citet{wadler2012}.
 
-The idea of using hypersequents to capture parallelism in linear logic judgements is not novel: \citet{carbone2018} extended the multiplicative-additive fragment of intuitionistic linear logic with hypersequents to type global descriptions of process communications known as choreographies. This work is distinct from our approach in that \hcp is based on classical linear logic and manipulates hypersequents differently: in \citet{carbone2018}, hypersequents can be formed only when sequents share resources (\cf \textsc{H-Mix}), and resource sharing is then explicitly tracked using an additional connection modality (which is not present in \hcp). 
+The idea of using hypersequents to capture parallelism in linear logic judgements is not novel: \citet{carbone2018} extended the multiplicative-additive fragment of intuitionistic linear logic with hypersequents to type global descriptions of process communications known as choreographies. This work is distinct from our approach in that \hcp is based on classical linear logic and manipulates hypersequents differently: in \citet{carbone2018}, hypersequents can be formed only when sequents share resources (\cf \textsc{H-Mix}), and resource sharing is then explicitly tracked using an additional connection modality (which is not present in \hcp).
 
 \section{Conclusions}
 \label{sec:conclusions}
