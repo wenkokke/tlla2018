@@ -386,9 +386,9 @@ A pleasant effect of our updated syntax is that it makes our structural congruen
 \end{definition}\noindent
 There are two changes to the reduction system. First, since $\tm{\piBoundSend{x}{y}{P}}$ and $\tm{\piBoundSend{x}{}{P}}$ are now terms in their own right, the $\cpRedBetaTensParr$ and $\cpRedBetaOneBot$ rules are simpler. Second, since we decomposed $\tm{\cpCut{x}{P}{Q}}$ into an independent name restriction and parallel composition, the $\kappa$-rules and the relevant $\gamma$-rule all decompose as well.
 \begin{definition}[Reduction]\label{def:hcp-reduction}
-  Reductions are described by the smallest relation $\Longrightarrow$ on process terms closed under rules in \cref{fig:hcp-reduction}.
-\end{definition}\noindent
-\begin{figure}[htb]
+  Reductions are described by the smallest relation $\Longrightarrow$ on process terms closed under the rules below. %rules in \cref{fig:hcp-reduction}.
+%\end{definition}\noindent
+%\begin{figure}[htb]
   \[
     \begin{array}{llcll}
       \hccpRedAxCut1
@@ -516,9 +516,10 @@ There are two changes to the reduction system. First, since $\tm{\piBoundSend{x}
       \TIC{$\reducesto{P}{P^\prime}$}
     \end{prooftree*}
   \end{center}
-  \caption{Hypersequent Classical Processes, reduction relation.}
-  \label{fig:hcp-reduction}
-\end{figure}
+\end{definition}
+%  \caption{Hypersequent Classical Processes, reduction relation.}
+%  \label{fig:hcp-reduction}
+%\end{figure}
 
 \paragraph{Types}
 We use the same definitions for types and environments for \hcp as we used for \cp. However, we introduce a new layer on top of sequents: hypersequents. As \cp is a one-sided logic, and it uses the left-hand side of the turnstile to write the process, the traditional hypersequent notation can look confusing: ``$\seq[P]{\Gamma_1}\hsep\dots\hsep\seq{\Gamma_n}$'' seems to claim that $\tm{P}$ acts according to protocol $\ty{\Gamma_1}$. What are all the other $\Gamma$s doing there? Are they typing empty processes? Therefore, we opt to leave out the repeated turnstile, and instead work with the notion of ``hyper-environments''. However, we will still refer to our system as a hypersequent system. Hyper-environments are either empty, or consist of a series of typing environments, separated by vertical bars. A hyper-environment $\ty{\Gamma_1 \hsep \dots \hsep \Gamma_n}$ types a series of $n$ entangled, but independent processes.
@@ -528,9 +529,11 @@ We use the same definitions for types and environments for \hcp as we used for \
 We write $\ty{\emptyhypercontext}$ for the empty hyper-environment.
 Typing judgements in \hcp associate processes with hyper-environments. \textsc{H-Mix} composes two processes in parallel, but remembers that they are independent in the sequent. \textsc{H-Cut} and $(\tens)$ take as their premise a process which consists of at least two independent processes, and connects them, eliminating the vertical bar. Note that each logical rule has the side condition that $\tm{x} \not\in \ty{\mathcal{G}}$, which can be read as ``you cannot act on one end-point of $x$ if you are also holding its other end-point''. This prevents self-locking processes, \eg $\tm{\piBoundSend{x}{}{\piRecv{x}{}{\piHalt}}}$.
 \begin{definition}[Typing judgements]\label{def:hcp}
-  A typing judgement $\seq[P]{\Gamma_1 \hsep \dots \hsep \Gamma_n}$ denotes that the process $\tm{P}$ consists of $n$ independent, but potentially entangled processes, each of which communicates according to its own protocol $\Gamma_i$. Typing judgements can be constructed using the inference rules in \cref{fig:hcp}. Furthermore, each logical rule has the side condition that $\tm{x} \not\in \ty{\mathcal{G}}$.
-\end{definition}\noindent
-\begin{figure}[htb]
+  A typing judgement $\seq[P]{\Gamma_1 \hsep \dots \hsep \Gamma_n}$ denotes that the process $\tm{P}$ consists of $n$ independent, but potentially entangled processes, each of which communicates according to its own protocol $\Gamma_i$. 
+  Typing judgements can be constructed using the inference rules below.
+%  in \cref{fig:hcp}. Furthermore, each logical rule has the side condition that $\tm{x} \not\in \ty{\mathcal{G}}$.
+%\end{definition}\noindent
+%\begin{figure}[htb]
   \begin{center}\hccpInfAx \hccpInfCycle\end{center}
   \vspace*{-0.5\baselineskip}
   \begin{center}\hccpInfMix \hccpInfHalt\end{center}
@@ -538,11 +541,13 @@ Typing judgements in \hcp associate processes with hyper-environments. \textsc{H
   \begin{center}\hccpInfBoundTens \hccpInfParr \hccpInfOne\end{center}
   \vspace*{-0.5\baselineskip}
   \begin{center}\hccpInfBot \hccpInfPlus1 \hccpInfPlus2\end{center}
-  \vspace*{0.5\baselineskip}
+  \vspace*{-0.5\baselineskip}
   \begin{center}\hccpInfWith \hccpInfNil \hccpInfTop\end{center}
-  \caption{Hypersequent Classical Processes, typing.}
-  \label{fig:hcp}
-\end{figure}
+%  \caption{Hypersequent Classical Processes, typing.}
+%  \label{fig:hcp}
+%\end{figure}
+Each logical rule has the side condition that $\tm{x} \not\in \ty{\mathcal{G}}$.
+\end{definition}
 
 \paragraph{Metatheory}
 \hcp enjoys subject reduction, progress, and termination.
@@ -796,7 +801,7 @@ This relation allows us to apply $\kappa$-rules under arbitrary prefixes. We can
 
 Finally, we will prove that \hcp supports the same communication protocols as \cp. This is the same as saying that it inhabits the same session types, or that the associated logical systems derive the same theorems. We show this by proving that we can interpret the hyper-environments as formulas in the logic. This is a standard method for proving the soundness of a hypersequent calculus.
 
-We start out by showing that we can interpret environments as types by collapsing them using a series of pars.
+Environments can be interpreted as types by collapsing them as series of pars.
 \begin{definition}\label{def:bigparr}
   \(
   \ty{\bigparr(\tmty{x_1}{A_1} , \dots , \tmty{x_n}{A_n})} =
@@ -813,7 +818,7 @@ We start out by showing that we can interpret environments as types by collapsin
 % If $\ty{\Gamma} = \ty{A, B, \Gamma'}$, then we apply $(\parr)$ to get $\seq{A
 %   \parr B, \Gamma'}$, and apply the induction hypothesis.
 \end{proof}\noindent
-Then, using \cref{lem:hcp-disentangle}, we can show that we can interpret hyper-environments as types by collapsing them using a series of tensors. In the case of the empty hyper-environment $\ty{\emptyhypercontext}$, we interpret this as the unit of tensor.
+Furthermore, hyper-environments can be interpreted as types by collapsing them as series of tensors where environments are handled using \cref{lem:hcp-disentangle}. The empty hyper-environment $\ty{\emptyhypercontext}$ (that is the unit of $\hsep$) is interpreted as the unit of tensor.
 \begin{definition}\label{def:bigtens}
   \(
   \begin{array}{lcl}
