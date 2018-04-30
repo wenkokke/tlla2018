@@ -9,7 +9,7 @@ pdfs/:
 	mkdir -p pdfs/
 
 define DOC_template
-pdfs/$(1).pdf: pdfs/
+pdfs/$(1).pdf: pdfs/ doc/$(1)/main.tex
 	cd doc/$(1);\
 		$(TEXLIVEONFLY)                             \
 			-c latexmk                                \
