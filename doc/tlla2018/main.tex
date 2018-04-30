@@ -770,7 +770,7 @@ First, we prove that each \cp process can be translated by this trivial translat
 
 \hcp exhibits some behaviours which are impossible to directly translate back into \cp. For instance, in the process below, the choice sent on $\tm{x}$ will affect the choice between $\tm{P}$ and $\tm{P'}$, even though neither has access to the channel $\tm{x}$.
 \[
-  \seq[\cpCase{x}{(\piPar{P}{Q})}{(\piPar{P'}{Q''})}]{
+  \seq[\cpCase{x}{(\piPar{P}{Q})}{(\piPar{P'}{Q'})}]{
     \Gamma, \Delta, \tmty{x}{A \with B}}
 \]
 Instead, we define a new relation to characterise the relation between \hcp and \cp processes.
