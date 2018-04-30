@@ -44,10 +44,7 @@
 \maketitle
 
 \begin{abstract}
-  Process calculi based in logic, such as \piDILL and \cp, provide a foundation
-  for deadlock-free concurrent programming. However, in previous work, there is a mismatch between the rules for constructing proofs and the term constructors of the \textpi-calculus. We introduce the Hypersequent Classical Processes (\hcp), which addresses this mismatch by using hypersequents (collections of sequents) to register parallelism in the typing judgements.
-	% This allows us to take apart the term constructs used in Classical Processes (\cp) to more closely match those of the \textpi-calculus.
-	We prove that \hcp enjoys deadlock-freedom and a series of properties that relate it back to \cp.
+  Process calculi based in logic, such as \piDILL and \cp, provide a foundation for deadlock-free concurrent programming. However, in previous work, there is a mismatch between the rules for constructing proofs and the term constructors of the \textpi-calculus. We introduce the Hypersequent Classical Processes (\hcp), which addresses this mismatch by using hypersequents (collections of sequents) to register parallelism in the typing judgements. We prove that \hcp enjoys deadlock-freedom and a series of properties that relate it back to \cp.
 \end{abstract}
 
 \section{Introduction}
@@ -283,41 +280,41 @@ Typing judgements associate processes with collections of typed channels.
 \cp enjoys subject reduction, progress, and termination~\citep{wadler2012}.
 \begin{lemma}[Preservation for $\equiv$]\label{lem:cp-preservation-equiv}
   If $\tm{P}\equiv\tm{Q}$, then $\seq[P]{\Gamma}$ iff $\seq[Q]{\Gamma}$.
-\end{lemma}%\vspace*{-0.75\baselineskip}%
-% \begin{proof}
-%   By induction on the derivation of $\tm{P}\equiv\tm{Q}$.
-% \end{proof}\vspace*{-0.75\baselineskip}%
+\end{lemma}\vspace*{-0.75\baselineskip}%
+\begin{proof}
+  By induction on the derivation of $\tm{P}\equiv\tm{Q}$.
+\end{proof}\vspace*{-0.75\baselineskip}%
 \begin{theorem}[Preservation]\label{thm:cp-preservation}
   If $\seq[P]{\Gamma}$ and $\reducesto{P}{Q}$, then $\seq[Q]{\Gamma}$.
-\end{theorem}%\vspace*{-0.75\baselineskip}%
-% \begin{proof}
-%   By induction on the derivation of $\reducesto{P}{Q}$.
-% \end{proof}\vspace*{-0.75\baselineskip}%
+\end{theorem}\vspace*{-0.75\baselineskip}%
+\begin{proof}
+  By induction on the derivation of $\reducesto{P}{Q}$.
+\end{proof}\vspace*{-0.75\baselineskip}%
 \begin{theorem}[Progress]\label{thm:cp-progress}
   If $\seq[P]{\Gamma}$, then there exists a $\tm{Q}$ such that
   $\tm{P}\Longrightarrow^\star\tm{Q}$ and $\tm{Q}$ is not a cut.
-\end{theorem}%\vspace*{-0.75\baselineskip}%
-% \begin{proof}
-%   By induction on the derivation of $\seq[P]{\Gamma}$. If the last rule is \textsc{Cut}, there are four cases:
-%   \begin{enumerate*}[label={\alph*)}]
-%   \item
-%     if either side of the cut is an axiom, we apply \cpRedAxCut1;
-%   \item
-%     if either side of the cut is itself a cut, we recursively eliminate the cut;
-%   \item
-%     if both sides are logical rules acting on the cut formula, we apply
-%     one of the $\beta$-rules;
-%   \item
-%     otherwise, at least one side is a logical rule acting on a formula other
-%     than the cut formula, in which case we apply one of the $\kappa$-rules.
-%   \end{enumerate*}
-% \end{proof}\vspace*{-0.75\baselineskip}%
+\end{theorem}\vspace*{-0.75\baselineskip}%
+\begin{proof}
+  By induction on the derivation of $\seq[P]{\Gamma}$. If the last rule is \textsc{Cut}, there are four cases:
+  \begin{enumerate*}[label={\alph*)}]
+  \item
+    if either side of the cut is an axiom, we apply \cpRedAxCut1;
+  \item
+    if either side of the cut is itself a cut, we recursively eliminate the cut;
+  \item
+    if both sides are logical rules acting on the cut formula, we apply
+    one of the $\beta$-rules;
+  \item
+    otherwise, at least one side is a logical rule acting on a formula other
+    than the cut formula, in which case we apply one of the $\kappa$-rules.
+  \end{enumerate*}
+\end{proof}\vspace*{-0.75\baselineskip}%
 \begin{theorem}[Termination]\label{thm:cp-termination}
   If $\seq[P]{\Gamma}$, then there are no infinite $\Longrightarrow$-reduction sequences.
-\end{theorem}%\vspace*{-0.75\baselineskip}%
-% \begin{proof}
-%   Every reduction reduces a single cut to zero, one or two cuts. However, each of these cuts is smaller, in the sense that the type of the channel on which the communication takes place is smaller. Each reduction either eliminates a connective. Furthermore, each instance of the structural congruence preserves the size of the cut. Therefore, there cannot be an infinite $\Longrightarrow$-reduction sequence.
-% \end{proof}
+\end{theorem}\vspace*{-0.75\baselineskip}%
+\begin{proof}
+  Every reduction reduces a single cut to zero, one or two cuts. However, each of these cuts is smaller, in the sense that the type of the channel on which the communication takes place is smaller. Each reduction either eliminates a connective. Furthermore, each instance of the structural congruence preserves the size of the cut. Therefore, there cannot be an infinite $\Longrightarrow$-reduction sequence.
+\end{proof}
 
 
 \section{Hypersequent Classical Processes}
@@ -774,14 +771,12 @@ First, we prove that each \cp process can be translated by this trivial translat
   By induction on the derivation of $\reducesto{\mtf{P}}{R}$. The cases for \hccpRedAxCut1 and the $\beta$-rules are trivial. For the $\kappa\nu$-rules, we rewrite by the appropriate $\kappa{\ppar}$ rule, and vice versa.
 \end{proof}\noindent
 
-It would be wonderful if each \hcp process could be translated back into a series of \cp processes. However, \hcp exhibits some behaviours which are impossible to directly translate back into \cp. For instance, in the process below, the choice sent on $\tm{x}$ will affect the choice between $\tm{P}$ and $\tm{P'}$, even though neither has access to the channel $\tm{x}$.
-\begin{example}
-  \(
+\hcp exhibits some behaviours which are impossible to directly translate back into \cp. For instance, in the process below, the choice sent on $\tm{x}$ will affect the choice between $\tm{P}$ and $\tm{P'}$, even though neither has access to the channel $\tm{x}$.
+\[
   \seq[\cpCase{x}{(\piPar{P}{Q})}{(\piPar{P'}{Q''})}]{
     \Gamma, \Delta, \tmty{x}{A \with B}}
-  \)
-\end{example}\noindent
-Instead, we will define a new relation to characterise the relation between \hcp and \cp processes.
+\]
+Instead, we define a new relation to characterise the relation between \hcp and \cp processes.
 \begin{definition}\label{def:hcp-gk}
   The relation $\tm{P}\equiv_{\gamma\kappa}\tm{Q}$ is the congruence closure of the $\gamma$- and $\kappa$-rules for \hcp.
 \end{definition}\noindent
@@ -815,10 +810,11 @@ We start out by showing that we can interpret environments as types by collapsin
   If $\seq{\Gamma}$ in \cp, then $\seq{\bigparr\Gamma}$ in \cp.
 \end{lemma}\vspace*{-0.75\baselineskip}%
 \begin{proof}
-  By induction on the structure of the environment $\Gamma$.
-  If $\ty{\Gamma} = \ty{A}$, then the statement is trivially true.
-  If $\ty{\Gamma} = \ty{A, B, \Gamma'}$, then we apply $(\parr)$ to get $\seq{A
-    \parr B, \Gamma'}$, and apply the induction hypothesis.
+  By repeated application of $(\parr)$.
+% By induction on the structure of the environment $\Gamma$.
+% If $\ty{\Gamma} = \ty{A}$, then the statement is trivially true.
+% If $\ty{\Gamma} = \ty{A, B, \Gamma'}$, then we apply $(\parr)$ to get $\seq{A
+%   \parr B, \Gamma'}$, and apply the induction hypothesis.
 \end{proof}\noindent
 Then, using \cref{lem:hcp-disentangle}, we can show that we can interpret hyper-environments as types by collapsing them using a series of tensors. In the case of the empty hyper-environment $\ty{\emptyhypercontext}$, we interpret this as the unit of tensor.
 \begin{definition}\label{def:bigtens}
