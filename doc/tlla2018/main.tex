@@ -254,6 +254,7 @@ Environments associate channels with types. Names in environments must be unique
     \ty{\Gamma}, \ty{\Delta}, \ty{\Theta} := \tmty{x_1}{A_1}\dots\tmty{x_n}{A_n}
   \)
 \end{definition}\noindent
+We write $\ty{\cdot}$ for the empty environment.
 \begin{figure}[htb]
   \begin{center}\cpInfAx \cpInfCut \end{center}
   \vspace*{-.5\baselineskip}
@@ -804,8 +805,15 @@ Finally, we will prove that \hcp supports the same communication protocols as \c
 Environments can be interpreted as types by collapsing them as series of pars.
 \begin{definition}\label{def:bigparr}
   \(
-  \ty{\bigparr(\tmty{x_1}{A_1} , \dots , \tmty{x_n}{A_n})} =
-  \ty{A_1 \parr \dots \parr A_n}
+  \begin{array}{lcll}
+    \ty{\bigparr(\emptycontext)}
+    & = & \ty{\bot}
+    \\
+    \ty{\bigparr(\tmty{x_1}{A_1} , \dots , \tmty{x_n}{A_n})} 
+     & = & \ty{A_1 \parr \dots \parr A_n}
+     & \text{ if } n \geq 1
+    \\
+  \end{array}
   \)
 \end{definition}\noindent
 \begin{lemma}\label{lem:cp-bigparr}
@@ -821,12 +829,13 @@ Environments can be interpreted as types by collapsing them as series of pars.
 Furthermore, hyper-environments can be interpreted as types by collapsing them as series of tensors where environments are handled using \cref{lem:hcp-disentangle}. The empty hyper-environment $\ty{\emptyhypercontext}$ (that is the unit of $\hsep$) is interpreted as the unit of tensor.
 \begin{definition}\label{def:bigtens}
   \(
-  \begin{array}{lcl}
+  \begin{array}{lcll}
     \ty{\bigtens(\emptyhypercontext)}
     & = & \ty{\one}
     \\
     \ty{\bigtens(\Gamma_1 \hsep \dots \hsep \Gamma_n)}
     & = & \ty{\bigparr\Gamma_1 \tens \dots \tens \bigparr\Gamma_n}
+    & \text{ if } n \geq 1
   \end{array}
   \)
 \end{definition}\noindent
