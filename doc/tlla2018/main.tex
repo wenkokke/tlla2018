@@ -1,4 +1,4 @@
-\documentclass[draft,submission,copyright,creativecommons]{eptcs}
+\documentclass[submission,copyright,creativecommons]{eptcs}
 \providecommand{\event}{Linearity and TLLA 2018}
 \usepackage[british]{babel}
 \usepackage[all]{foreign}
@@ -248,13 +248,12 @@ Duality plays a crucial role in both linear logic and session types. In \cp, the
     \end{array}
   \]
 \end{definition}\noindent
-Environments associate channels with types. Names in environments must be unique, and environments $\ty{\Gamma}$ and $\ty{\Delta}$ can only be combined as $\ty{\Gamma}, \ty{\Delta}$ if $\ty{\fv{\Gamma}} \cap \ty{\fv{\Delta}} = \varnothing$.
+Environments associate channels with types. Names in environments must be unique, and environments $\ty{\Gamma}$ and $\ty{\Delta}$ can only be combined as $\ty{\Gamma}, \ty{\Delta}$ if $\ty{\fv{\Gamma}} \cap \ty{\fv{\Delta}} = \varnothing$. We write $\ty{\cdot}$ for the empty environment.
 \begin{definition}[Environments]\label{def:cp-environments}
   \(
     \ty{\Gamma}, \ty{\Delta}, \ty{\Theta} := \tmty{x_1}{A_1}\dots\tmty{x_n}{A_n}
   \)
 \end{definition}\noindent
-We write $\ty{\cdot}$ for the empty environment.
 \begin{figure}[htb]
   \begin{center}\cpInfAx \cpInfCut \end{center}
   \vspace*{-.5\baselineskip}
@@ -265,7 +264,8 @@ We write $\ty{\cdot}$ for the empty environment.
   \begin{center}\cpInfWith \cpInfNil \cpInfTop \end{center}
   \caption{Classical Processes, typing.}
   \label{fig:cp}
-\end{figure}\noindent
+\end{figure}
+
 Typing judgements associate processes with collections of typed channels.
 \begin{definition}[Typing judgements]\label{def:cp}
   A typing judgement $\seq[{ P }]{\tmty{x_1}{A_1}\dots\tmty{x_n}{A_n}}$ denotes
@@ -523,11 +523,10 @@ There are two changes to the reduction system. First, since $\tm{\piBoundSend{x}
 %\end{figure}
 
 \paragraph{Types}
-We use the same definitions for types and environments for \hcp as we used for \cp. However, we introduce a new layer on top of sequents: hypersequents. As \cp is a one-sided logic, and it uses the left-hand side of the turnstile to write the process, the traditional hypersequent notation can look confusing: ``$\seq[P]{\Gamma_1}\hsep\dots\hsep\seq{\Gamma_n}$'' seems to claim that $\tm{P}$ acts according to protocol $\ty{\Gamma_1}$. What are all the other $\Gamma$s doing there? Are they typing empty processes? Therefore, we opt to leave out the repeated turnstile, and instead work with the notion of ``hyper-environments''. However, we will still refer to our system as a hypersequent system. Hyper-environments are either empty, or consist of a series of typing environments, separated by vertical bars. A hyper-environment $\ty{\Gamma_1 \hsep \dots \hsep \Gamma_n}$ types a series of $n$ entangled, but independent processes.
+We use the same definitions for types and environments for \hcp as we used for \cp. However, we introduce a new layer on top of sequents: hypersequents. As \cp is a one-sided logic, and it uses the left-hand side of the turnstile to write the process, the traditional hypersequent notation can look confusing: ``$\seq[P]{\Gamma_1}\hsep\dots\hsep\seq{\Gamma_n}$'' seems to claim that $\tm{P}$ acts according to protocol $\ty{\Gamma_1}$. What are all the other $\Gamma$s doing there? Are they typing empty processes? Therefore, we opt to leave out the repeated turnstile, and instead work with the notion of ``hyper-environments''. However, we will still refer to our system as a hypersequent system. Hyper-environments are either empty, or consist of a series of typing environments, separated by vertical bars. A hyper-environment $\ty{\Gamma_1 \hsep \dots \hsep \Gamma_n}$ types a series of $n$ entangled, but independent processes. We write $\ty{\emptyhypercontext}$ for the empty hyper-environment.
 \begin{definition}[Hyper-environments]\label{def:hcp-hyper-environment}
   $\ty{\mathcal{G}}, \ty{\mathcal{H}} := \ty{\Gamma_1 \hsep \dots \hsep \Gamma_n}$
 \end{definition}\noindent
-We write $\ty{\emptyhypercontext}$ for the empty hyper-environment.
 Typing judgements in \hcp associate processes with hyper-environments. \textsc{H-Mix} composes two processes in parallel, but remembers that they are independent in the sequent. \textsc{H-Cut} and $(\tens)$ take as their premise a process which consists of at least two independent processes, and connects them, eliminating the vertical bar. Note that each logical rule has the side condition that $\tm{x} \not\in \ty{\mathcal{G}}$, which can be read as ``you cannot act on one end-point of $x$ if you are also holding its other end-point''. This prevents self-locking processes, \eg $\tm{\piBoundSend{x}{}{\piRecv{x}{}{\piHalt}}}$.
 \begin{definition}[Typing judgements]\label{def:hcp}
   A typing judgement $\seq[P]{\Gamma_1 \hsep \dots \hsep \Gamma_n}$ denotes that the process $\tm{P}$ consists of $n$ independent, but potentially entangled processes, each of which communicates according to its own protocol $\Gamma_i$. 
