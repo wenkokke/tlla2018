@@ -795,7 +795,7 @@ This relation allows us to apply $\kappa$-rules under arbitrary prefixes. We can
   \item
     otherwise, it moves all the way to the top.
   \end{enumerate*}
-  Since the only way to continue after a $(\one)$ is by using a mix, all applications of $(\one)$ are now followed by an application of \textsc{H-Halt}, forming a \cp $(\one)$.
+  All applications of $(\one)$ are followed by an application of \textsc{H-Halt}, forming a \cp $(\one)$.
 \end{proof}\noindent
 
 Finally, we will prove that \hcp supports the same communication protocols as \cp. This is the same as saying that it inhabits the same session types, or that the associated logical systems derive the same theorems. We show this by proving that we can interpret the hyper-environments as formulas in the logic. This is a standard method for proving the soundness of a hypersequent calculus.
@@ -855,11 +855,6 @@ Since its inception, linear logic has been described as the logic of concurrency
 It took more than ten years for a formal correspondence between linear logic and (a variant of) session types to emerge, with the seminal paper by \citet{caires2010}. This inspired the development of Classical Processes by \citet{wadler2012}.
 
 The idea of using hypersequents to capture parallelism in linear logic judgements is not novel: \citet{carbone2018} extended the multiplicative-additive fragment of intuitionistic linear logic with hypersequents to type global descriptions of process communications known as choreographies. This work is distinct from our approach in that \hcp is based on classical linear logic and manipulates hypersequents differently: in \citet{carbone2018}, hypersequents can be formed only when sequents share resources (\cf \textsc{H-Mix}), and resource sharing is then tracked using an additional connection modality (which is not present in \hcp).
-
-%\section{Conclusions}
-%\label{sec:conclusions}
-%
-%We introduced Hypersequent Classical Processes, a process calculus which addresses the mismatch between proof terms and \textpi-calculus terms which exists in Classical Processes~\citep{wadler2012}. We showed that \hcp enjoys preservation, progress and termination, and described its relation to \cp.
 
 \clearpage
 \bibliographystyle{apalike}

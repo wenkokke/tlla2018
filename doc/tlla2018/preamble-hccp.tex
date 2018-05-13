@@ -4,41 +4,65 @@
 
 
 %% Names of rules
-\providecommand{\hccpEquivMixComm}{\ensuremath{({\ppar}\text{-comm})}\xspace}
+\providecommand{\hccpEquivMixComm}{%
+  \ensuremath{({\ppar}\text{-comm})}\xspace}
 \providecommand{\hccpEquivMixAssNoParen}[1]{%
   \ensuremath{{\ppar}\text{-assoc}}\xspace}
 \providecommand{\hccpEquivMixAss}[1]{%
   \ensuremath{(\hcpEquivMixAssNoParen{#1})}\xspace}
-\providecommand{\hccpEquivScopeExtNoParen}[1]{\ensuremath{\text{scope-ext}\xspace}}
+\providecommand{\hccpEquivScopeExtNoParen}[1]{%
+  \ensuremath{\text{scope-ext}\xspace}}
 \providecommand{\hccpEquivScopeExt}[1]{%
   \ensuremath{(\hccpEquivScopeExtNoParen{#1})}\xspace}
-\providecommand{\hccpEquivMixHaltNoParen}[1]{\hcpEquivMixHaltNoParen{#1}}
-\providecommand{\hccpEquivMixHalt}[1]{\hcpEquivMixHalt{#1}}
-\providecommand{\hccpEquivNewComm}{\ensuremath{(\nu\text{-comm})}\xspace}
+\providecommand{\hccpEquivMixHaltNoParen}[1]{%
+  \hcpEquivMixHaltNoParen{#1}}
+\providecommand{\hccpEquivMixHalt}[1]{%
+  \hcpEquivMixHalt{#1}}
+\providecommand{\hccpEquivNewComm}{%
+  \ensuremath{(\nu\text{-comm})}\xspace}
 
-\providecommand{\hccpRedAxCut}[1]{\ensuremath{(\cpLink{}{})}\xspace}
-\providecommand{\hccpRedBetaTensParr}{\ensuremath{(\beta{\tens}{\parr})}\xspace}
-\providecommand{\hccpRedBetaOneBot}{\ensuremath{(\beta{\one}{\bot})}\xspace}
+\providecommand{\hccpRedAxCut}[1]{%
+  \ensuremath{(\cpLink{}{})}\xspace}
+\providecommand{\hccpRedBetaTensParr}{%
+  \ensuremath{(\beta{\tens}{\parr})}\xspace}
+\providecommand{\hccpRedBetaOneBot}{%
+  \ensuremath{(\beta{\one}{\bot})}\xspace}
 \providecommand{\hccpRedBetaPlusWith}[1]{%
   \ensuremath{(\beta{\plus}{\with}_{#1})}\xspace}
-\providecommand{\hccpRedKappaNuTens}{\ensuremath{(\kappa\nu\tens)}\xspace}
-\providecommand{\hccpRedKappaNuParr}{\ensuremath{(\kappa\nu\parr)}\xspace}
-\providecommand{\hccpRedKappaNuOne}{\ensuremath{(\kappa\nu\one)}\xspace}
-\providecommand{\hccpRedKappaNuBot}{\ensuremath{(\kappa\nu\bot)}\xspace}
-\providecommand{\hccpRedKappaNuPlus}[1]{\ensuremath{(\kappa\nu\plus_{#1})}\xspace}
-\providecommand{\hccpRedKappaNuWith}{\ensuremath{(\kappa\nu\with)}\xspace}
-\providecommand{\hccpRedKappaNuTop}{\ensuremath{(\kappa\nu\top)}\xspace}
-\providecommand{\hccpRedKappaMixTens}{\ensuremath{(\kappa{\ppar}\tens)}\xspace}
-\providecommand{\hccpRedKappaMixParr}{\ensuremath{(\kappa{\ppar}\parr)}\xspace}
-\providecommand{\hccpRedKappaMixOne}{\ensuremath{(\kappa{\ppar}\one)}\xspace}
-\providecommand{\hccpRedKappaMixBot}{\ensuremath{(\kappa{\ppar}\bot)}\xspace}
-\providecommand{\hccpRedKappaMixPlus}[1]{\ensuremath{(\kappa{\ppar}\plus_{#1})}\xspace}
-\providecommand{\hccpRedKappaMixWith}{\ensuremath{(\kappa{\ppar}\with)}\xspace}
-\providecommand{\hccpRedKappaMixTop}{\ensuremath{(\kappa{\ppar}\top)}\xspace}
-\providecommand{\hccpRedGammaNew}{\ensuremath{\gamma{\nu}}\xspace}
-\providecommand{\hccpRedGammaMix}{\ensuremath{\gamma{\ppar}}\xspace}
-\providecommand{\hccpRedGammaEquiv}{\ensuremath{\gamma{\equiv}}\xspace}
-
+\providecommand{\hccpRedKappaNuTens}{%
+  \ensuremath{(\kappa\nu\tens)}\xspace}
+\providecommand{\hccpRedKappaNuParr}{%
+  \ensuremath{(\kappa\nu\parr)}\xspace}
+\providecommand{\hccpRedKappaNuOne}{%
+  \ensuremath{(\kappa\nu\one)}\xspace}
+\providecommand{\hccpRedKappaNuBot}{%
+  \ensuremath{(\kappa\nu\bot)}\xspace}
+\providecommand{\hccpRedKappaNuPlus}[1]{%
+  \ensuremath{(\kappa\nu\plus_{#1})}\xspace}
+\providecommand{\hccpRedKappaNuWith}{%
+  \ensuremath{(\kappa\nu\with)}\xspace}
+\providecommand{\hccpRedKappaNuTop}{%
+  \ensuremath{(\kappa\nu\top)}\xspace}
+\providecommand{\hccpRedKappaMixTens}{%
+  \ensuremath{(\kappa{\ppar}\tens)}\xspace}
+\providecommand{\hccpRedKappaMixParr}{%
+  \ensuremath{(\kappa{\ppar}\parr)}\xspace}
+\providecommand{\hccpRedKappaMixOne}{%
+  \ensuremath{(\kappa{\ppar}\one)}\xspace}
+\providecommand{\hccpRedKappaMixBot}{%
+  \ensuremath{(\kappa{\ppar}\bot)}\xspace}
+\providecommand{\hccpRedKappaMixPlus}[1]{%
+  \ensuremath{(\kappa{\ppar}\plus_{#1})}\xspace}
+\providecommand{\hccpRedKappaMixWith}{%
+  \ensuremath{(\kappa{\ppar}\with)}\xspace}
+\providecommand{\hccpRedKappaMixTop}{%
+  \ensuremath{(\kappa{\ppar}\top)}\xspace}
+\providecommand{\hccpRedGammaNew}{%
+  \ensuremath{\gamma{\nu}}\xspace}
+\providecommand{\hccpRedGammaMix}{%
+  \ensuremath{\gamma{\ppar}}\xspace}
+\providecommand{\hccpRedGammaEquiv}{%
+  \ensuremath{\gamma{\equiv}}\xspace}
 
 %% Structural rules
 \providecommand{\hccpInfAx}{\hcpInfAx}
@@ -86,12 +110,9 @@
 \providecommand{\hccpInfParr}{\hcpInfParr}
 \providecommand{\hccpInfOne}{%
   \begin{prooftree*}
-    \AXC{$\seq[{ P }]{
-        \mathcal{G}
-      }$}
+    \AXC{$\seq[{ P }]{\emptyhypercontext}$}
     \SYM{\one}
     \UIC{$\seq[{ \piBoundSend{x}{}{P} }]{
-        \mathcal{G} \hsep
         \tmty{x}{\one}
       }$}
   \end{prooftree*}}
