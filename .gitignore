@@ -219,3 +219,8 @@ auto/
 
 # expex forward references with \gathertags
 *-tags.tex
+
+# jekyll site
+_site/
+.sass-cache/
+Gemfile.lock
