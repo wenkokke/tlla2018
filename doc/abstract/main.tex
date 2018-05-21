@@ -8,7 +8,7 @@
 \usepackage[inline]{enumitem}
 \usepackage{breakurl} % Not needed if you use pdflatex only.
 \usepackage{underscore} % Only needed if you use pdflatex.
-\usepackage{parskip}
+%\usepackage{parskip}
 \usepackage{textcomp,textgreek,upgreek}
 \usepackage{nameref,hyperref}
 \usepackage[nameinlink,noabbrev]{cleveref}
@@ -718,11 +718,11 @@ First, we prove that each \cp process can be translated by this trivial translat
 \]
 Instead, we define a new relation to characterise the relation between proofs in \hcp and \cp.
 \begin{definition}\label{def:hcp-gk}
-  Disentanglement is described by the smallest relation $\moveMixDown$ on proof derivations closed under the rules below.
-  The relation $\moveMixDown^\star$ is the reflexive, transitive closure of $\moveMixDown$.
+  Disentanglement is described by the smallest relation $\moveMixDown$ on proof derivations closed under the rules below, plus the associativity and commutativity of mixes. The relation $\moveMixDown^\star$ is the reflexive, transitive closure of $\moveMixDown$.
   \begin{center}
     \resizebox{\textwidth}{!}{
     \(
+    \setlength{\arraycolsep}{2pt}
     \begin{array}{lcr}
       \pvar{$\rho_1$}\UIC{$\seq{\mathcal{G}_1 \hsep {A}, \Gamma}$}
       \pvar{$\rho_2$}\UIC{$\seq{\mathcal{G}_2}$}
@@ -811,7 +811,6 @@ Instead, we define a new relation to characterise the relation between proofs in
         \BIC{$\seq{\mathcal{G}_1 \hsep \mathcal{G}_2 \hsep {A \plus B}, \Gamma}$}
         \DisplayProof
       \\\\
-      \multicolumn{3}{l}{%
       \pvar{$\rho_1$}\UIC{$\seq{\mathcal{G}_1 \hsep {A}, \Gamma}$}
       \pvar{$\rho_2$}\UIC{$\seq{\mathcal{G}_2}$}
       \NOM{H-Mix}
@@ -823,8 +822,6 @@ Instead, we define a new relation to characterise the relation between proofs in
       \SYM{\with}
       \BIC{$\seq{\mathcal{G}_1 \hsep \mathcal{G}_2 \hsep {A \with B}, \Gamma}$}
       \DisplayProof
-      }
-      \\\\
       & \moveMixDown
       & \pvar{$\rho_1$}\UIC{$\seq{\mathcal{G}_1 \hsep {A}, \Gamma}$}
         \pvar{$\rho_3$}\UIC{$\seq{\mathcal{G}_1 \hsep {B}, \Gamma}$}
