@@ -19,7 +19,6 @@
 \newtheorem{example}{Example}
 \input{preamble-typing}
 \usepackage[sectionbib,sort&compress]{natbib}
-\usepackage{more-space}
 
 \title{Taking Linear Logic Apart}
 \author{%
@@ -255,13 +254,12 @@ Environments associate channels with types. Names in environments must be unique
   \)
 \end{definition}\noindent
 \begin{figure}[htb]
-  \begin{center}\cpInfAx \cpInfCut \end{center}
-  \vspace*{-.5\baselineskip}
-  \begin{center}\cpInfTens \cpInfParr \cpInfOne \end{center}
-  \vspace*{-.5\baselineskip}
-  \begin{center}\cpInfBot \cpInfPlus1 \cpInfPlus2\end{center}
-  \vspace*{-.5\baselineskip}
-  \begin{center}\cpInfWith \cpInfNil \cpInfTop \end{center}
+  \begin{center}\cpInfAx    \cpInfCut   \end{center}
+  \begin{center}\cpInfTens  \cpInfParr  \end{center}
+  \begin{center}\cpInfBot   \cpInfOne   \end{center}
+  \begin{center}\cpInfPlus1 \cpInfPlus2 \end{center}
+  \begin{center}\cpInfWith              \end{center}
+  \begin{center}\cpInfNil   \cpInfTop   \end{center}
   \caption{Classical Processes, typing.}
   \label{fig:cp}
 \end{figure}\noindent
@@ -529,24 +527,21 @@ We use the same definitions for types and environments for \hcp as we used for \
 Typing judgements in \hcp associate processes with hyper-environments. \textsc{H-Mix} composes two processes in parallel, but remembers that they are independent in the sequent. \textsc{H-Cut} and $(\tens)$ take as their premise a process which consists of at least two independent processes, and connects them, eliminating the vertical bar. Note that each logical rule has the side condition that $\tm{x} \not\in \ty{\mathcal{G}}$, which can be read as ``you cannot act on one end-point of $x$ if you are also holding its other end-point''. This prevents self-locking processes, \eg $\tm{\piBoundSend{x}{}{\piRecv{x}{}{\piHalt}}}$.
 \begin{definition}[Typing judgements]\label{def:hcp}
   A typing judgement $\seq[P]{\Gamma_1 \hsep \dots \hsep \Gamma_n}$ denotes that the process $\tm{P}$ consists of $n$ independent, but potentially entangled processes, each of which communicates according to its own protocol $\Gamma_i$. 
-  Typing judgements can be constructed using the inference rules below.
-%  in \cref{fig:hcp}. Furthermore, each logical rule has the side condition that $\tm{x} \not\in \ty{\mathcal{G}}$.
-%\end{definition}\noindent
-%\begin{figure}[htb]
-  \begin{center}\hccpInfAx \hccpInfCycle\end{center}
-  \vspace*{-0.5\baselineskip}
-  \begin{center}\hccpInfMix \hccpInfHalt\end{center}
-  \vspace*{-0.5\baselineskip}
-  \begin{center}\hccpInfBoundTens \hccpInfParr \hccpInfOne\end{center}
-  \vspace*{-0.5\baselineskip}
-  \begin{center}\hccpInfBot \hccpInfPlus1 \hccpInfPlus2\end{center}
-  \vspace*{-0.5\baselineskip}
-  \begin{center}\hccpInfWith \hccpInfNil \hccpInfTop\end{center}
-%  \caption{Hypersequent Classical Processes, typing.}
-%  \label{fig:hcp}
-%\end{figure}
-Each logical rule has the side condition that $\tm{x} \not\in \ty{\mathcal{G}}$.
-\end{definition}
+  Typing judgements can be constructed using the inference rules in
+  \cref{fig:hcp}.
+  Furthermore, each logical rule has the side condition that $\tm{x} \not\in \ty{\mathcal{G}}$.
+\end{definition}\noindent
+\begin{figure}[htb]
+  \begin{center}\hccpInfAx        \hccpInfCycle \end{center}
+  \begin{center}\hccpInfMix       \hccpInfHalt  \end{center}
+  \begin{center}\hccpInfBoundTens \hccpInfParr  \end{center}
+  \begin{center}\hccpInfOne       \hccpInfBot   \end{center}
+  \begin{center}\hccpInfPlus1     \hccpInfPlus2 \end{center}
+  \begin{center}\hccpInfWith                    \end{center}
+  \begin{center}\hccpInfNil       \hccpInfTop   \end{center}
+  \caption{Hypersequent Classical Processes, typing.}
+  \label{fig:hcp}
+\end{figure}
 
 \paragraph{Metatheory}
 \hcp enjoys subject reduction, progress, and termination.
