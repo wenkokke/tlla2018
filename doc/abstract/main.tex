@@ -8,15 +8,15 @@
 \usepackage[inline]{enumitem}
 \usepackage{breakurl} % Not needed if you use pdflatex only.
 \usepackage{underscore} % Only needed if you use pdflatex.
+\usepackage{parskip}
 \usepackage{textcomp,textgreek,upgreek}
 \usepackage{nameref,hyperref}
 \usepackage[nameinlink,noabbrev]{cleveref}
 \hypersetup{hidelinks,final}
-\newtheorem{definition}{Definition}
 \newtheorem{lemma}{Lemma}
-\newtheorem{theorem}{Theorem}
-\newtheorem{corollary}{Corollary}
-\newtheorem{example}{Example}
+\newtheorem{theorem}[lemma]{Theorem}
+\newtheorem{corollary}[lemma]{Corollary}
+\newtheorem{definition}[lemma]{Definition}
 \input{preamble-typing}
 \usepackage[sectionbib,sort&compress]{natbib}
 
@@ -75,7 +75,7 @@ In this paper, we introduce the Hypersequent Classical Processes (\hcp), which a
 
 In this section, we introduce \cp. In order to keep the discussion of \hcp in \cref{sec:hcp} simple, we restrict ourselves to the multiplicative-applicative subset of \cp. We foresee no problems in extending the proofs in \cref{sec:hcp} to cover the remaining features of \cp (polymophism and the exponentials).
 
-\paragraph{Terms}
+\subsection{Terms}
 The term language of \cp is a variant of the \textpi-calculus. The variables $\tm{x}$, $\tm{y}$, and $\tm{z}$ range over channel names. The construct $\tm{\cpLink{x}{y}}$ links two channels~\citep{sangiorgi1996,boreale1998}, forwarding messages received on $\tm{x}$ to $\tm{y}$ and vice versa. The construct $\tm{\cpCut{x}{P}{Q}}$ creates a new channel $\tm{x}$, and composes two processes, $\tm{P}$ and $\tm{Q}$, which communicate on $\tm{x}$, in parallel. Therefore, in $\tm{\cpCut{x}{P}{Q}}$ the name $\tm{x}$ is bound in both $\tm{P}$ and $\tm{Q}$. In $\tm{\cpRecv{x}{y}{P}}$ and $\tm{\cpSend{x}{y}{P}{Q}}$, round brackets denote input, square brackets denote output. We use bound output~\citep{sangiorgi1996}, meaning that both input and output bind a new name. In $\tm{\cpRecv{x}{y}{P}}$ the new name $\tm{y}$ is bound in $\tm{P}$. In $\tm{\cpSend{x}{y}{P}{Q}}$, the new name $\tm{y}$ is only bound in $\tm{P}$, while $\tm{x}$ is only bound in $\tm{Q}$.
 \begin{definition}[Terms]\label{def:cp-terms}
   Process terms are given by the following grammar:
@@ -214,7 +214,7 @@ Reductions relate processes with their reduced forms \eg a reduction $\reducesto
   $\Longrightarrow$.
 \end{definition}
 
-\paragraph{Types}
+\subsection{Types}
 Channels in \cp are typed using a session type system which corresponds to classical linear logic. A process communicating over a channel of type \ty{A \tens B} must be ready to split into two independent processes (two processes which share no channels), ready to communicate over a channel of type \ty{A} and \ty{B}, respectively, and process communicating over a channel of type \ty{A \parr B} is dual to this, and therefore must be ready to start communicating concurrently with two independent processes. A process communicating over a channel of type \ty{A \plus B} can choose to communicate either as \ty{A} or \ty{B}, and a process communicating over a channel of type \ty{A \with B} must be able to communicate either as \ty{A} or \ty{B}.
 \begin{definition}[Types]\label{def:cp-types}
   \[
@@ -271,20 +271,20 @@ Typing judgements associate processes with collections of typed channels.
   Typing judgements are derived using rules in \cref{fig:cp}.
 \end{definition}\noindent
 
-\paragraph{Metatheory}
+\subsection{Metatheory}
 \cp enjoys subject reduction, progress, and termination~\citep{wadler2012}.
 \begin{lemma}[Preservation for $\equiv$]\label{lem:cp-preservation-equiv}
   If $\tm{P}\equiv\tm{Q}$, then $\seq[P]{\Gamma}$ iff $\seq[Q]{\Gamma}$.
 \end{lemma}\vspace*{-0.75\baselineskip}%
 \begin{proof}
   By induction on the derivation of $\tm{P}\equiv\tm{Q}$.
-\end{proof}\vspace*{-0.75\baselineskip}%
+\end{proof}
 \begin{theorem}[Preservation]\label{thm:cp-preservation}
   If $\seq[P]{\Gamma}$ and $\reducesto{P}{Q}$, then $\seq[Q]{\Gamma}$.
 \end{theorem}\vspace*{-0.75\baselineskip}%
 \begin{proof}
   By induction on the derivation of $\reducesto{P}{Q}$.
-\end{proof}\vspace*{-0.75\baselineskip}%
+\end{proof}%
 \begin{theorem}[Progress]\label{thm:cp-progress}
   If $\seq[P]{\Gamma}$, then there exists a $\tm{Q}$ such that
   $\tm{P}\Longrightarrow^\star\tm{Q}$ and $\tm{Q}$ is not a cut.
@@ -303,7 +303,7 @@ Typing judgements associate processes with collections of typed channels.
     otherwise, at least one side is a logical rule acting on a formula other
     than the cut formula, in which case we apply one of the $\kappa$-rules.
   \end{enumerate*}
-\end{proof}\vspace*{-0.75\baselineskip}%
+\end{proof}%
 \begin{theorem}[Termination]\label{thm:cp-termination}
   If $\seq[P]{\Gamma}$, then there are no infinite $\Longrightarrow$-reduction sequences.
 \end{theorem}\vspace*{-0.75\baselineskip}%
@@ -317,7 +317,7 @@ Typing judgements associate processes with collections of typed channels.
 
 In this section, we introduce Hypersequent Classical Processes (\hcp), a variant of \cp which registers parallelism in the typing judgements using hypersequents, allowing us to take apart the monolithic term constructors of \cp (\eg $\tm{\cpSend{x}{y}{P}{Q}}$) into the corresponding \textpi-calculus term constructs.
 
-\paragraph{Terms}
+\subsection{Terms}
 The term language of \hcp is a variant of \cp where the term constructs have been taken apart into \textpi-calculus primitives.
 \begin{definition}[Terms]\label{def:hcp-terms}
   \[
@@ -384,9 +384,9 @@ A pleasant effect of our updated syntax is that it makes our structural congruen
 \end{definition}\noindent
 There are two changes to the reduction system. First, since $\tm{\piBoundSend{x}{y}{P}}$ and $\tm{\piBoundSend{x}{}{P}}$ are now terms in their own right, the $\cpRedBetaTensParr$ and $\cpRedBetaOneBot$ rules are simpler. Second, since we decomposed $\tm{\cpCut{x}{P}{Q}}$ into an independent name restriction and parallel composition, the $\kappa$-rules and the relevant $\gamma$-rule all decompose as well.
 \begin{definition}[Reduction]\label{def:hcp-reduction}
-  Reductions are described by the smallest relation $\Longrightarrow$ on process terms closed under the rules below. %rules in \cref{fig:hcp-reduction}.
-%\end{definition}\noindent
-%\begin{figure}[htb]
+  Reductions are described by the smallest relation $\Longrightarrow$ on process terms closed under the rules in \cref{fig:hcp-reduction}. The relation $\Longrightarrow^\star$ is the reflexive, transitive closure of $\Longrightarrow$.
+\end{definition}
+\begin{figure}[htb]
   \[
     \begin{array}{llcll}
       \hccpRedAxCut1
@@ -400,7 +400,7 @@ There are two changes to the reduction system. First, since $\tm{\piBoundSend{x}
       & \tm{\piNew{x}{\piNew{y}{(\piPar{P}{R})}}}
       \\
       \hccpRedBetaOneBot
-      & \tm{\cpCut{x}{\piBoundSend{x}{}{P}}{\piRecv{x}{}{P}}}
+      & \tm{\cpCut{x}{\piBoundSend{x}{}{P}}{\piRecv{x}{}{Q}}}
       & \Longrightarrow
       & \tm{\piPar{P}{Q}}
       \\
@@ -514,12 +514,11 @@ There are two changes to the reduction system. First, since $\tm{\piBoundSend{x}
       \TIC{$\reducesto{P}{P^\prime}$}
     \end{prooftree*}
   \end{center}
-\end{definition}
-%  \caption{Hypersequent Classical Processes, reduction relation.}
-%  \label{fig:hcp-reduction}
-%\end{figure}
+  \label{fig:hcp-reduction}
+  \caption{Hypersequent Classical Processes, reduction relation.}
+\end{figure}
 
-\paragraph{Types}
+\subsection{Types}
 We use the same definitions for types and environments for \hcp as we used for \cp. However, we introduce a new layer on top of sequents: hypersequents. As \cp is a one-sided logic, and it uses the left-hand side of the turnstile to write the process, the traditional hypersequent notation can look confusing: ``$\seq[P]{\Gamma_1}\hsep\dots\hsep\seq{\Gamma_n}$'' seems to claim that $\tm{P}$ acts according to protocol $\ty{\Gamma_1}$. What are all the other $\Gamma$s doing there? Are they typing empty processes? Therefore, we opt to leave out the repeated turnstile, and instead work with the notion of ``hyper-environments''. However, we will still refer to our system as a hypersequent system. Hyper-environments are either empty, or consist of a series of typing environments, separated by vertical bars. A hyper-environment $\ty{\Gamma_1 \hsep \dots \hsep \Gamma_n}$ types a series of $n$ entangled, but independent processes. We write $\ty{\emptyhypercontext}$ for the empty hyper-environment.
 \begin{definition}[Hyper-environments]\label{def:hcp-hyper-environment}
   $\ty{\mathcal{G}}, \ty{\mathcal{H}} := \ty{\Gamma_1 \hsep \dots \hsep \Gamma_n}$
@@ -543,20 +542,20 @@ Typing judgements in \hcp associate processes with hyper-environments. \textsc{H
   \label{fig:hcp}
 \end{figure}
 
-\paragraph{Metatheory}
+\subsection{Metatheory}
 \hcp enjoys subject reduction, progress, and termination.
 \begin{lemma}[Preservation for $\equiv$]\label{lem:hcp-preservation-equiv}
   If $\tm{P}\equiv\tm{Q}$, then $\seq[P]{\mathcal{G}}$ iff $\seq[Q]{\mathcal{G}}$.
 \end{lemma}\vspace*{-0.75\baselineskip}%
 \begin{proof}
   By induction on the derivation of $\tm{P}\equiv\tm{Q}$.
-\end{proof}\vspace*{-0.75\baselineskip}%
+\end{proof}%
 \begin{theorem}[Preservation]\label{thm:hcp-preservation}
   If $\seq[P]{\mathcal{G}}$ and $\reducesto{P}{Q}$, then $\seq[Q]{\mathcal{G}}$.
 \end{theorem}\vspace*{-0.75\baselineskip}%
 \begin{proof}
   By induction on the derivation of $\reducesto{P}{Q}$.
-\end{proof}\vspace*{-0.75\baselineskip}%
+\end{proof}%
 \begin{theorem}[Progress]\label{thm:hcp-progress}
   If $\seq[P]{\mathcal{G}}$, then there exists a $\tm{Q}$ such that
   $\tm{P}\Longrightarrow^\star\tm{Q}$ and $\tm{Q}$ is not a cut or a mix.
@@ -580,7 +579,7 @@ Typing judgements in \hcp associate processes with hyper-environments. \textsc{H
     if the rule under the mix is a logical rule, we apply one of the
     $\kappa{\ppar}$-rules.
   \end{enumerate*}
-\end{proof}\vspace*{-0.75\baselineskip}%
+\end{proof}%
 \begin{theorem}[Termination]\label{thm:hcp-termination}
   If $\seq[P]{\mathcal{G}}$, then there are no infinite $\Longrightarrow$-reduction sequences.
 \end{theorem}\vspace*{-0.75\baselineskip}%
@@ -692,74 +691,19 @@ First, we prove that each \cp process can be translated by this trivial translat
     \end{gather*}
   \end{itemize}
   \vspace*{-\baselineskip}%
-\end{proof}\vspace*{-0.75\baselineskip}%
+\end{proof}%
 \begin{theorem}\label{thm:cp2hcp-equiv}
   $\tm{P}\equiv\tm{Q}$ in \cp iff $\tm{\mtf{P}}\equiv\tm{\mtf{Q}}$ in \hcp.
 \end{theorem}\vspace*{-0.75\baselineskip}%
 \begin{proof}
   By induction on the derivation of $\tm{P}\equiv\tm{Q}$.
-% We show the interesting cases:
-% \begin{itemize}
-% \item
-%   Case \cpEquivCutComm.
-%   \begin{gather*}
-%   \begin{array}{lcl}
-%     \tm{\piNew{x}{(\piPar{\mtf{P}}{\mtf{Q}})}}
-%     & \equiv & \text{by \hccpEquivMixComm}
-%     \\
-%     \tm{\piNew{x}{(\piPar{\mtf{Q}}{\mtf{P}})}}
-%   \end{array}
-%   \end{gather*}
-% \item
-%   Case \cpEquivCutAss1.
-%   \begin{gather*}
-%   \begin{array}{lcl}
-%     \tm{\piNew{x}{(\piPar{\mtf{P}}{\piNew{y}{(\piPar{\mtf{Q}}{\mtf{R}})}})}}
-%     & \equiv & \text{%
-%                by \hccpEquivNewComm, \hccpEquivMixAss1, \hccpEquivMixComm,
-%                and \hccpEquivScopeExt{}}
-%     \\
-%     \tm{\piNew{y}{(\piPar{\piNew{x}{(\piPar{\mtf{P}}{\mtf{Q}})}}{\mtf{R}})}}
-%   \end{array}
-%   \end{gather*}
-% \end{itemize}
-\end{proof}\vspace*{-0.75\baselineskip}%
+\end{proof}%
 \begin{theorem}\label{thm:cp2hcp-reduction}
-  If $\reducesto{P}{Q}$ in \cp, then $\reducesto{\mtf{P}}{\mtf{Q}}$ in \hcp.
+  If $\reducesto{P}{Q}$ in \cp, then $\tm{\mtf{P}}\Longrightarrow^\star\tm{\mtf{Q}}$ in \hcp.
 \end{theorem}\vspace*{-0.75\baselineskip}%
 \begin{proof}
   By induction on the the derivation of $\reducesto{P}{Q}$.
-% We show the interesting cases:
-% \begin{itemize}
-% \item
-%   Case \cpRedBetaTensParr.
-%   \begin{gather*}
-%   \begin{array}{lcl}
-%     \tm{\piNew{x}{(\piPar{\piBoundSend{x}{y}{(\piPar{P}{Q})}}{\piRecv{x}{z}{R}})}}
-%     & \Longrightarrow & \text{by \hccpRedBetaTensParr}
-%     \\
-%     \tm{\piNew{x}{\piNew{y}{(\piPar{(\piPar{P}{Q})}{\cpSub{y}{z}{R}})}}}
-%     & \equiv & \text{%
-%                by \hccpEquivNewComm, \hccpEquivMixAss1, and \hccpEquivScopeExt1}
-%     \\
-%     \tm{\piNew{y}{(\piPar{P}{\piNew{x}{(\piPar{Q}{\cpSub{y}{z}{R}})}})}}
-%   \end{array}
-%   \end{gather*}
-% \item
-%   Case \cpRedBetaOneBot.
-%   \begin{gather*}
-%   \begin{array}{lcl}
-%     \tm{\piNew{x}{(\piPar{\piBoundSend{x}{}{\piHalt}}{\piRecv{x}{}{\mtf{Q}}})}}
-%     & \Longrightarrow & \text{by \hccpRedBetaOneBot}
-%     \\
-%     \tm{(\piPar{\piHalt}{\mtf{Q}})}
-%     & \equiv & \text{by \hccpEquivMixHalt1}
-%     \\
-%     \tm{\mtf{Q}}
-%   \end{array}
-%   \end{gather*}
-% \end{itemize}
-\end{proof}\vspace*{-0.75\baselineskip}%
+\end{proof}%
 \begin{theorem}\label{hcp2cp-reduction}
   If $\reducesto{\mtf{P}}{R}$ in \hcp, then there is a $\tm{Q}$ such that $\reducesto{P}{Q}$ in \cp and $\tm{R}\Longrightarrow^\star\tm{\mtf{Q}}$ in \hcp.
 \end{theorem}\vspace*{-0.75\baselineskip}%
@@ -772,16 +716,146 @@ First, we prove that each \cp process can be translated by this trivial translat
   \seq[\cpCase{x}{(\piPar{P}{Q})}{(\piPar{P'}{Q'})}]{
     \Gamma, \Delta, \tmty{x}{A \with B}}
 \]
-Instead, we define a new relation to characterise the relation between \hcp and \cp processes.
+Instead, we define a new relation to characterise the relation between proofs in \hcp and \cp.
 \begin{definition}\label{def:hcp-gk}
-  The relation $\tm{P}\equiv_{\gamma\kappa}\tm{Q}$ is the congruence closure of the $\gamma$- and $\kappa$-rules for \hcp.
+  Disentanglement is described by the smallest relation $\moveMixDown$ on proof derivations closed under the rules below.
+  The relation $\moveMixDown^\star$ is the reflexive, transitive closure of $\moveMixDown$.
+  \begin{center}
+    \resizebox{\textwidth}{!}{
+    \(
+    \begin{array}{lcr}
+      \pvar{$\rho_1$}\UIC{$\seq{\mathcal{G}_1 \hsep {A}, \Gamma}$}
+      \pvar{$\rho_2$}\UIC{$\seq{\mathcal{G}_2}$}
+      \NOM{H-Mix}
+      \BIC{$\seq{\mathcal{G}_1 \hsep \mathcal{G}_2}$}
+      \pvar{$\rho_3$}\UIC{$\seq{\mathcal{G}_3 \hsep {A^\bot}, \Delta}$}
+      \NOM{H-Cut}
+      \BIC{$\seq{\mathcal{G}_1 \hsep \mathcal{G}_2 \hsep \mathcal{G}_3 \hsep \Gamma, \Delta}$}
+      \DisplayProof
+      & \moveMixDown
+      & \pvar{$\rho_1$}\UIC{$\seq{\mathcal{G}_1 \hsep {A}, \Gamma}$}
+        \pvar{$\rho_3$}\UIC{$\seq{\mathcal{G}_3 \hsep {A^\bot}, \Delta}$}
+        \NOM{H-Cut}
+        \BIC{$\seq{\mathcal{G}_1 \hsep \mathcal{G}_3 \hsep \Gamma, \Delta}$}
+        \pvar{$\rho_2$}\UIC{$\seq{\mathcal{G}_2}$}
+        \NOM{H-Mix}
+        \BIC{$\seq{\mathcal{G}_1 \hsep \mathcal{G}_2 \hsep \mathcal{G}_3 \hsep \Gamma, \Delta}$}
+        \DisplayProof
+      \\\\
+      \pvar{$\rho_1$}\UIC{$\seq{\mathcal{G}_1 \hsep {A}, \Gamma}$}
+      \pvar{$\rho_2$}\UIC{$\seq{\mathcal{G}_2}$}
+      \NOM{H-Mix}
+      \BIC{$\seq{\mathcal{G}_1 \hsep \mathcal{G}_2 \hsep {A}, \Gamma}$}
+      \pvar{$\rho_3$}\UIC{$\seq{\mathcal{G}_3 \hsep {B}, \Delta}$}
+      \SYM{\tens}
+      \BIC{$\seq{\mathcal{G}_1 \hsep \mathcal{G}_2 \hsep \mathcal{G}_3
+      \hsep {A \tens B}, \Gamma, \Delta}$}
+      \DisplayProof
+      & \moveMixDown
+      & \pvar{$\rho_1$}\UIC{$\seq{\mathcal{G}_1 \hsep {A}, \Gamma}$}
+        \pvar{$\rho_3$}\UIC{$\seq{\mathcal{G}_3 \hsep {B}, \Delta}$}
+        \SYM{\tens}
+        \BIC{$\seq{\mathcal{G}_1 \hsep \mathcal{G}_2 \hsep {A \tens B},
+        \Gamma, \Delta}$}
+        \pvar{$\rho_2$}\UIC{$\seq{\mathcal{G}_2}$}
+        \NOM{H-Mix}
+        \BIC{$\seq{\mathcal{G}_1 \hsep \mathcal{G}_2 \hsep \mathcal{G}_3
+        \hsep {A \tens B}, \Gamma, \Delta}$} 
+        \DisplayProof
+      \\\\
+      \pvar{$\rho_1$}\UIC{$\seq{\mathcal{G}_1 \hsep {A}, {B}, \Gamma}$}
+      \pvar{$\rho_2$}\UIC{$\seq{\mathcal{G}_2}$}
+      \NOM{H-Mix}
+      \BIC{$\seq{\mathcal{G}_1 \hsep \mathcal{G}_2 \hsep {A}, {B}, \Gamma}$}
+      \SYM{\parr}
+      \UIC{$\seq{\mathcal{G}_1 \hsep \mathcal{G}_2 \hsep {A \parr B}, \Gamma}$}
+      \DisplayProof
+      & \moveMixDown
+      & \pvar{$\rho_1$}\UIC{$\seq{\mathcal{G}_1 \hsep {A}, {B}, \Gamma}$}
+        \SYM{\parr}
+        \UIC{$\seq{\mathcal{G}_1 \hsep \mathcal{G}_2 \hsep {A}, {B}, \Gamma}$}
+        \pvar{$\rho_2$}\UIC{$\seq{\mathcal{G}_2}$}
+        \NOM{H-Mix}
+        \BIC{$\seq{\mathcal{G}_1 \hsep \mathcal{G}_2 \hsep {A \parr B}, \Gamma}$}
+        \DisplayProof
+      \\\\
+      \pvar{$\rho_1$}\UIC{$\seq{\mathcal{G}_1 \hsep \Gamma}$}
+      \pvar{$\rho_2$}\UIC{$\seq{\mathcal{G}_2}$}
+      \NOM{H-Mix}
+      \BIC{$\seq{\mathcal{G}_1 \hsep \mathcal{G}_2 \hsep \Gamma}$}
+      \SYM{\bot}
+      \UIC{$\seq{\mathcal{G}_1 \hsep \mathcal{G}_2 \hsep {\bot}, \Gamma}$}
+      \DisplayProof
+      & \moveMixDown
+      & \pvar{$\rho_1$}\UIC{$\seq{\mathcal{G}_1 \hsep \Gamma}$}
+        \SYM{\bot}
+        \UIC{$\seq{\mathcal{G}_1 \hsep {\bot}, \Gamma}$}
+        \pvar{$\rho_2$}\UIC{$\seq{\mathcal{G}_2}$}
+        \NOM{H-Mix}
+        \BIC{$\seq{\mathcal{G}_1 \hsep \mathcal{G}_2 \hsep \Gamma}$}
+        \DisplayProof
+      \\\\
+      \pvar{$\rho_1$}\UIC{$\seq{\mathcal{G}_1 \hsep {A}, \Gamma}$}
+      \pvar{$\rho_2$}\UIC{$\seq{\mathcal{G}_2}$}
+      \NOM{H-Mix}
+      \BIC{$\seq{\mathcal{G}_1 \hsep \mathcal{G}_2 \hsep {A}, \Gamma}$}
+      \SYM{\plus_1}
+      \UIC{$\seq{\mathcal{G}_1 \hsep \mathcal{G}_2 \hsep {A \plus B}, \Gamma}$}
+      \DisplayProof
+      & \moveMixDown
+      & \pvar{$\rho_1$}\UIC{$\seq{\mathcal{G}_1 \hsep {A}, \Gamma}$}
+        \SYM{\plus_1}
+        \UIC{$\seq{\mathcal{G}_1 \hsep {A \plus B}, \Gamma}$}
+        \pvar{$\rho_2$}\UIC{$\seq{\mathcal{G}_2}$}
+        \NOM{H-Mix}
+        \BIC{$\seq{\mathcal{G}_1 \hsep \mathcal{G}_2 \hsep {A \plus B}, \Gamma}$}
+        \DisplayProof
+      \\\\
+      \multicolumn{3}{l}{%
+      \pvar{$\rho_1$}\UIC{$\seq{\mathcal{G}_1 \hsep {A}, \Gamma}$}
+      \pvar{$\rho_2$}\UIC{$\seq{\mathcal{G}_2}$}
+      \NOM{H-Mix}
+      \BIC{$\seq{\mathcal{G}_1 \hsep \mathcal{G}_2 \hsep {A}, \Gamma}$}
+      \pvar{$\rho_3$}\UIC{$\seq{\mathcal{G}_1 \hsep {B}, \Gamma}$}
+      \pvar{$\rho_4$}\UIC{$\seq{\mathcal{G}_2}$} 
+      \NOM{H-Mix}
+      \BIC{$\seq{\mathcal{G}_1 \hsep \mathcal{G}_2 \hsep {B}, \Gamma}$}
+      \SYM{\with}
+      \BIC{$\seq{\mathcal{G}_1 \hsep \mathcal{G}_2 \hsep {A \with B}, \Gamma}$}
+      \DisplayProof
+      }
+      \\\\
+      & \moveMixDown
+      & \pvar{$\rho_1$}\UIC{$\seq{\mathcal{G}_1 \hsep {A}, \Gamma}$}
+        \pvar{$\rho_3$}\UIC{$\seq{\mathcal{G}_1 \hsep {B}, \Gamma}$}
+        \SYM{\with}
+        \BIC{$\seq{\mathcal{G}_1 \hsep {A \with B}, \Gamma}$}
+        \pvar{$\rho_2$}\UIC{$\seq{\mathcal{G}_2}$}
+        \NOM{H-Mix}
+        \BIC{$\seq{\mathcal{G}_1 \hsep \mathcal{G}_2 \hsep {A \with B}, \Gamma}$}
+        \DisplayProof
+    \end{array}
+    \)}
+  \end{center}
 \end{definition}\noindent
-This relation allows us to apply $\kappa$-rules under arbitrary prefixes. We can use this relation to rewrite any process to a form in which all mixes are either attached to their respective cuts or tensors, or at the top-level.
+This relation allows us to move applications of $\textsc{H-Mix}$ downwards in the proof tree. We can use this relation to rewrite any derivation to a form in which all mixes are either attached to their respective cuts or tensors, or at the top-level.
 \begin{lemma}[Disentangle]\label{lem:hcp-disentangle}
-  If $\seq[P]{\Gamma_1 \hsep \dots \hsep \Gamma_n}$ in \hcp, then there exist $\seq[P_1]{\Gamma_1}, \dots, \seq[P_n]{\Gamma_n}$ in \cp, such that $\tm{P}\equiv_{\gamma\kappa}\tm{(\mtf{P_1}\ppar\dots\ppar\mtf{P_n})}$.
+  If there exists a derivation $\rho$ of $\seq{\Gamma_1 \hsep \dots \hsep \Gamma_n}$ in \hcp, then there exist derivations $\rho_1, \dots, \rho_n$ of $\seq{\Gamma_1}, \dots, \seq{\Gamma_n}$ in \cp such that
+  \[
+  \rho
+  \moveMixDown^\star
+  \begin{prooftree*}
+    \AXC{}\noLine\UIC{$\rho_1$}
+    \AXC{}\noLine\UIC{$\dots$}
+    \AXC{}\noLine\UIC{$\rho_n$}
+    \NOM{H-Mix}
+    \TIC{$\seq{\Gamma_1 \hsep \dots \hsep \Gamma_n}$}
+  \end{prooftree*}
+  \]
 \end{lemma}\vspace*{-0.75\baselineskip}%
 \begin{proof}
-  We repeatedly apply the $\kappa{\ppar}$-rules to move the mixes upwards. There are three cases:
+  We repeatedly apply the $\moveMixDown$-rules to the derivation $\rho$ to move the mixes downwards.
+  There are three cases:
   \begin{enumerate*}[label={\alph*)}]
   \item
     if a mix gets stuck under a cut, it forms a \cp cut;
@@ -797,7 +871,7 @@ Finally, we will prove that \hcp supports the same communication protocols as \c
 
 Environments can be interpreted as types by collapsing them as series of pars.
 \begin{definition}\label{def:bigparr}
-  \(
+  \[
   \begin{array}{lcll}
     \ty{\bigparr(\emptycontext)}
     & = & \ty{\bot}
@@ -807,21 +881,17 @@ Environments can be interpreted as types by collapsing them as series of pars.
      & \text{ if } n \geq 1
     \\
   \end{array}
-  \)
+  \]
 \end{definition}\noindent
 \begin{lemma}\label{lem:cp-bigparr}
   If $\seq{\Gamma}$ in \cp, then $\seq{\bigparr\Gamma}$ in \cp.
 \end{lemma}\vspace*{-0.75\baselineskip}%
 \begin{proof}
   By repeated application of $(\parr)$.
-% By induction on the structure of the environment $\Gamma$.
-% If $\ty{\Gamma} = \ty{A}$, then the statement is trivially true.
-% If $\ty{\Gamma} = \ty{A, B, \Gamma'}$, then we apply $(\parr)$ to get $\seq{A
-%   \parr B, \Gamma'}$, and apply the induction hypothesis.
 \end{proof}\noindent
 Furthermore, hyper-environments can be interpreted as types by collapsing them as series of tensors where environments are handled using \cref{lem:hcp-disentangle}. The empty hyper-environment $\ty{\emptyhypercontext}$ (that is the unit of $\hsep$) is interpreted as the unit of tensor.
 \begin{definition}\label{def:bigtens}
-  \(
+  \[
   \begin{array}{lcll}
     \ty{\bigtens(\emptyhypercontext)}
     & = & \ty{\one}
@@ -830,7 +900,7 @@ Furthermore, hyper-environments can be interpreted as types by collapsing them a
     & = & \ty{\bigparr\Gamma_1 \tens \dots \tens \bigparr\Gamma_n}
     & \text{ if } n \geq 1
   \end{array}
-  \)
+  \]
 \end{definition}\noindent
 
 \begin{theorem}\label{thm:hcp2cp-bigtens}

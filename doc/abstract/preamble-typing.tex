@@ -35,7 +35,9 @@
   {\gdef\scalefactor{#1}\begin{center}\proofSkipAmount \leavevmode}%
   {\scalebox{\scalefactor}{\DisplayProof}\proofSkipAmount \end{center} }
 \newenvironment{scprooftree*}[1][1]%
-  {\gdef\scalefactor{#1} \leavevmode\hbox\bgroup}
+  {\gdef\scalefactor{#1}\leavevmode\hbox\bgroup}
+  {\DisplayProof\egroup} 
+\providecommand{\moveMixDown}{\leadsto}
 
 %% Functions
 \providecommand{\co}[1]{\tm{\overline{#1}}}
