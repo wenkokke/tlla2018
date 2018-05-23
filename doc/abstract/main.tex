@@ -13,7 +13,7 @@
 \usepackage{nameref,hyperref}
 \usepackage[nameinlink,noabbrev]{cleveref}
 \hypersetup{hidelinks,final}
-\newtheorem{lemma}{Lemma}
+\newtheorem{lemma}{Lemma}[section]
 \newtheorem{theorem}[lemma]{Theorem}
 \newtheorem{corollary}[lemma]{Corollary}
 \newtheorem{definition}[lemma]{Definition}
@@ -914,7 +914,7 @@ It took more than ten years for a formal correspondence between linear logic and
 
 The idea of using hypersequents to capture parallelism in linear logic judgements is not novel: \citet{carbone2018} extended the multiplicative-additive fragment of intuitionistic linear logic with hypersequents to type global descriptions of process communications known as choreographies. This work is distinct from our approach in that \hcp is based on classical linear logic and manipulates hypersequents differently: in \citet{carbone2018}, hypersequents can be formed only when sequents share resources (\cf \textsc{H-Mix}), and resource sharing is then tracked using an additional connection modality (which is not present in \hcp).
 
-\clearpage
+%\clearpage
 \bibliographystyle{apalike}
 \bibliography{main}
 \end{document}
