@@ -734,7 +734,7 @@ First, we prove that each \cp process can be translated by this trivial translat
   \SYM{\with}
   \BIC{$\seq[\cpCase{x}{\piPar{P}{Q}}{\piPar{P'}{Q'}}]{ \Gamma \hsep \Delta, \tmty{x}{A \with B}}$}
 \end{prooftree}
-Instead, we will prove that \hcp supports the same communication protocols as \cp. This is the same as saying that it inhabits the same session types, or that the associated logical systems derive the same theorems. We show this by proving that we can interpret the hyper-environments as formulas in the logic. This is a standard method for proving the soundness of a hypersequent calculus.
+Instead, we will prove that \hcp supports the same communication protocols as \cp. This is the same as saying that it inhabits the same session types, or that the associated logical systems derive the same theorems. We show this by proving that we can internalise the hyper-environments as formulas in the logic. This is a standard method for proving the soundness of a hypersequent calculus.
 
 We start off by defining a relation on derivations of \hcp, which we call ``disentanglement''. This relation allows us to move applications of $\textsc{H-Mix}$ downwards in the proof tree. We can use this relation to rewrite any derivation to a form in which all mixes are either attached to their respective cuts or tensors, or at the top-level.
 \begin{definition}\label{def:hcp-disentangle}
@@ -770,7 +770,7 @@ Disentanglement is terminating, and confluent up to the associativity and commut
   \end{enumerate*}
   All applications of $(\one)$ are followed by an application of \textsc{H-Halt}, forming a \cp $(\one)$.
 \end{proof}\noindent
-Environments can be interpreted as types by collapsing them as series of pars.
+An environment can be internalised as a type by collapsing it as a series of pars. We give the case for the empty environment $\ty{\emptycontext}$ for completeness' sake, though there are no proofs of $\seq{\emptycontext}$ in \hcp. 
 \begin{definition}\label{def:bigparr}
   \[
   \begin{array}{lcll}
@@ -790,7 +790,7 @@ Environments can be interpreted as types by collapsing them as series of pars.
 \begin{proof}
   By repeated application of $(\parr)$.
 \end{proof}\noindent
-Furthermore, hyper-environments can be interpreted as types by collapsing them as series of tensors where environments are handled using \cref{lem:hcp-disentangle}. The empty hyper-environment $\ty{\emptyhypercontext}$ is interpreted as the unit of tensor.
+Furthermore, a hyper-environment can be internalised as a type by collapsing it as series a of tensors, where each constituent environment is internalised using $\ty{\bigparr}$. The empty hyper-environment $\ty{\emptyhypercontext}$ is internalised as the unit of tensor.
 \begin{definition}\label{def:bigtens}
   \[
   \begin{array}{lcll}
