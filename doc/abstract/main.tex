@@ -2,16 +2,14 @@
 \providecommand{\event}{Linearity and TLLA 2018}
 \usepackage[british]{babel}
 \usepackage[all]{foreign}
-\usepackage[]{amsmath}
+\usepackage{amsmath}
 \allowdisplaybreaks
 \usepackage{amsthm}
 \usepackage{amssymb}
 \usepackage{mathtools}
-\def\defeq{\coloneqq} %\triangleq
 \usepackage[inline]{enumitem}
-%\usepackage{breakurl} % Not needed if you use pdflatex only.
-%\usepackage{underscore} % Only needed if you use pdflatex.
-%\usepackage{parskip}
+\usepackage{breakurl} % Not needed if you use pdflatex only.
+\usepackage{underscore} % Only needed if you use pdflatex.
 \usepackage{textcomp,textgreek,upgreek}
 \usepackage{nameref,hyperref}
 \usepackage[nameinlink,noabbrev,capitalize]{cleveref}
@@ -124,14 +122,9 @@ Terms in \cp are identified up to structural congruence, which states that links
     \end{array}
   \]
 \end{definition}\noindent
-%\begin{figure}[htb]
-% 
-%  \caption{Classical Processes, reduction relation.}
-%  \label{fig:cp-reduction}
-%\end{figure}
 Reductions relate processes with their reduced forms \eg a reduction $\reducesto{P}{Q}$ denotes that the process $\tm{P}$ can reduce to the process $\tm{Q}$ in a single step.
 \begin{definition}[Reduction]\label{def:cp-reduction}
-  Reductions are described by the smallest relation $\Longrightarrow$ on process terms closed under rules below.%in \cref{fig:cp-reduction}. 
+  Reductions are described by the smallest relation $\Longrightarrow$ on process terms closed under rules below.
   \begin{gather*}
       \begin{array}{llcll}
         \cpRedAxCut1
@@ -260,27 +253,15 @@ Duality plays a crucial role in both linear logic and session types. In \cp, the
     \end{array}
   \]
 \end{definition}\noindent
-An environments associates channels with types. Names in environments must be unique, and two environments $\ty{\Gamma}$ and $\ty{\Delta}$ can only be combined as $\ty{\Gamma, \Delta}$ if $\ty{\fv{\Gamma}} \cap \ty{\fv{\Delta}} = \varnothing$.
+An environment associates channels with types. Names in environments must be unique, and two environments $\ty{\Gamma}$ and $\ty{\Delta}$ can only be combined as $\ty{\Gamma, \Delta}$ if $\ty{\fv{\Gamma}} \cap \ty{\fv{\Delta}} = \varnothing$.
 \begin{definition}[Environments]\label{def:cp-environments}
   \(
     \ty{\Gamma}, \ty{\Delta}, \ty{\Theta} \coloneqq \ty{\emptycontext} \mid \ty{\Gamma}, \tmty{x}{A}
   \)
 \end{definition}\noindent
-%\begin{figure}[htb]
-%  \paragraph*{Structural rules}
-%  \begin{center}\cpInfAx    \cpInfCut   \end{center}
-%  \paragraph*{Logical rules}
-%  \begin{center}\cpInfTens  \cpInfParr  \end{center}
-%  \begin{center}\cpInfBot   \cpInfOne   \end{center}
-%  \begin{center}\cpInfPlus1 \cpInfPlus2 \end{center}
-%  \begin{center}\cpInfWith              \end{center}
-%  \begin{center}\cpInfNil   \cpInfTop   \end{center}
-%  \caption{Classical Processes, typing.}
-%  \label{fig:cp}
-%\end{figure}\noindent
 A typing judgement associates a process with collections of typed channels.
 \begin{definition}[Typing judgements]\label{def:cp}
-  A typing judgement $\seq[{ P }]{\tmty{x_1}{A_1}, \dots, \tmty{x_n}{A_n}}$ denotes that the process \tm{P} communicates along channels $\tm{x_1}$, \dots, $\tm{x_n}$ following protocols $\ty{A_1}$, \dots, $\ty{A_n}$. Typing judgements are derived using rules below. %in \cref{fig:cp}.
+  A typing judgement $\seq[{ P }]{\tmty{x_1}{A_1}, \dots, \tmty{x_n}{A_n}}$ denotes that the process \tm{P} communicates along channels $\tm{x_1}$, \dots, $\tm{x_n}$ following protocols $\ty{A_1}$, \dots, $\ty{A_n}$. Typing judgements are derived using rules below. 
   \begin{description}
 	  \item[Structural rules]
   		\begin{gather*}\cpInfAx  \qquad  \cpInfCut   \end{gather*}
@@ -303,26 +284,26 @@ A typing judgement associates a process with collections of typed channels.
 \cp enjoys subject reduction, termination, and progress~\citep{wadler2012}.
 \begin{lemma}[Preservation for $\equiv$]\label{lem:cp-preservation-equiv}
   If $\tm{P}\equiv\tm{Q}$, then $\seq[P]{\Gamma}$ iff $\seq[Q]{\Gamma}$.
-\end{lemma} %\vspace*{-0.75\baselineskip}%
+\end{lemma} 
 \begin{proof}
   By induction on the derivation of $\tm{P}\equiv\tm{Q}$.
 \end{proof}
 \begin{theorem}[Preservation]\label{thm:cp-preservation}
   If $\seq[P]{\Gamma}$ and $\reducesto{P}{Q}$, then $\seq[Q]{\Gamma}$.
-\end{theorem} %\vspace*{-0.75\baselineskip}%
+\end{theorem} 
 \begin{proof}
   By induction on the derivation of $\reducesto{P}{Q}$.
-\end{proof}%
+\end{proof}
 \begin{theorem}[Termination]\label{thm:cp-termination}
   If $\seq[P]{\Gamma}$, then there are no infinite $\Longrightarrow$-reduction sequences.
-\end{theorem} %\vspace*{-0.75\baselineskip}%
+\end{theorem} 
 \begin{proof}
   Every reduction reduces a single cut to zero, one or two cuts. However, each of these cuts is smaller, measured in the size of the cut term. Furthermore, each instance of the structural congruence preserves the size of the cut. Therefore, there cannot be an infinite $\Longrightarrow$-reduction sequence.
 \end{proof}
 \begin{theorem}[Progress]\label{thm:cp-progress}
   If $\seq[P]{\Gamma}$, then there exists a $\tm{Q}$ such that
   $\tm{P}\Longrightarrow^\star\tm{Q}$ and $\tm{Q}$ is not a cut.
-\end{theorem} %\vspace*{-0.75\baselineskip}%
+\end{theorem} 
 \begin{proof}
   By induction on the derivation of $\seq[P]{\Gamma}$. If the last rule is \textsc{Cut}, there are four cases:
   \begin{enumerate*}[label={\alph*)}]
@@ -337,7 +318,7 @@ A typing judgement associates a process with collections of typed channels.
     otherwise, at least one side is a logical rule acting on a formula other
     than the cut formula, in which case we apply one of the $\kappa$-rules.
   \end{enumerate*}
-\end{proof}%
+\end{proof}
 
 
 \section{Hypersequent Classical Processes}
@@ -558,7 +539,7 @@ A hyper-environment is a multiset of environments. While names within environmen
 Typing judgements in \hcp associate processes with hyper-environments. \textsc{H-Mix} composes two processes in parallel, but remembers that they are independent in the sequent. \textsc{H-Cut} and $(\tens)$ take as their premise a process which consists of at least two independent processes, and connects them, eliminating the vertical bar. Each logical rule has the side condition that $\tm{x} \not\in \ty{\mathcal{G}}$, which can be read as ``you cannot act on one end-point of $x$ if you are also holding its other end-point''. This prevents self-locking processes, \eg $\tm{\piBoundSend{x}{}{\piRecv{x}{}{\piHalt}}}$.
 \begin{definition}[Typing judgements]\label{def:hcp}
   A typing judgement $\seq[P]{\Gamma_1 \hsep \dots \hsep \Gamma_n}$ denotes that the process $\tm{P}$ consists of $n$ independent, but potentially entangled processes, each of which communicates according to its own protocol $\Gamma_i$. 
-  Typing judgements can be constructed using the inference rules below. %in  \cref{fig:hcp}.
+  Typing judgements can be constructed using the inference rules below. 
   \begin{description}
     \item[Structural rules]
     \begin{gather*}
@@ -578,36 +559,31 @@ Typing judgements in \hcp associate processes with hyper-environments. \textsc{H
   \end{description}
   Furthermore, each logical rule has the side condition that $\tm{x} \not\in \ty{\mathcal{G}}$.
 \end{definition}\noindent
-%\begin{figure}[htb]
-%  \centering  Each logical rule has the side condition that $\tm{x} \not\in \ty{\mathcal{G}}$.
-%  \caption{Hypersequent Classical Processes, typing.}
-%  \label{fig:hcp}
-%\end{figure}
 
 \subsection{Metatheory}
 \hcp enjoys subject reduction, termination, and progress.
 \begin{lemma}[Preservation for $\equiv$]\label{lem:hcp-preservation-equiv}
   If $\tm{P}\equiv\tm{Q}$, then $\seq[P]{\mathcal{G}}$ iff $\seq[Q]{\mathcal{G}}$.
-\end{lemma} %\vspace*{-0.75\baselineskip}%
+\end{lemma} 
 \begin{proof}
   By induction on the derivation of $\tm{P}\equiv\tm{Q}$.
-\end{proof}%
+\end{proof}
 \begin{theorem}[Preservation]\label{thm:hcp-preservation}
   If $\seq[P]{\mathcal{G}}$ and $\reducesto{P}{Q}$, then $\seq[Q]{\mathcal{G}}$.
-\end{theorem} %\vspace*{-0.75\baselineskip}%
+\end{theorem} 
 \begin{proof}
   By induction on the derivation of $\reducesto{P}{Q}$.
-\end{proof}%
+\end{proof}
 \begin{theorem}[Termination]\label{thm:hcp-termination}
   If $\seq[P]{\mathcal{G}}$, then there are no infinite $\Longrightarrow$-reduction sequences.
-\end{theorem} %\vspace*{-0.75\baselineskip}%
+\end{theorem} 
 \begin{proof}
   As \cref{thm:cp-termination}.
 \end{proof}
 \begin{theorem}[Progress]\label{thm:hcp-progress}
   If $\seq[P]{\mathcal{G}}$, then there exists a $\tm{Q}$ such that
   $\tm{P}\Longrightarrow^\star\tm{Q}$ and $\tm{Q}$ is not a cut or a mix.
-\end{theorem} %\vspace*{-0.75\baselineskip}%
+\end{theorem} 
 \begin{proof}
   By induction on the derivation of $\seq[P]{\mathcal{G}}$. If the last rule is a cut, there are three cases:
   \begin{enumerate*}[label={\alph*)}]
@@ -627,7 +603,7 @@ Typing judgements in \hcp associate processes with hyper-environments. \textsc{H
     if the rule under the mix is a logical rule, we apply one of the
     $\kappa{\ppar}$-rules.
   \end{enumerate*}
-\end{proof}%
+\end{proof}
 
 
 \section{Relation between \cp and \hcp}
@@ -638,25 +614,25 @@ In this section, we discuss the relationship between \cp and \hcp. We will prove
   \[
     \begin{array}{lcllcl}
          \tm{\mtf{\cpLink{x}{y}}}
-      &  \defeq & \tm{\cpLink{x}{y}}
+      &  \coloneqq & \tm{\cpLink{x}{y}}
       &  \tm{\mtf{\cpCut{x}{P}{Q}}}
-      &  \defeq & \tm{\piNew{x}{(\piPar{\mtf{P}}{\mtf{Q}})}}
+      &  \coloneqq & \tm{\piNew{x}{(\piPar{\mtf{P}}{\mtf{Q}})}}
       \\ \tm{\mtf{\cpSend{x}{y}{P}{Q}}}
-      &  \defeq & \tm{\piBoundSend{x}{y}{(\piPar{\mtf{P}}{\mtf{Q}})}}
+      &  \coloneqq & \tm{\piBoundSend{x}{y}{(\piPar{\mtf{P}}{\mtf{Q}})}}
       &  \tm{\mtf{\cpRecv{x}{y}{P}}}
-      &  \defeq & \tm{\piRecv{x}{y}{\mtf{P}}}
+      &  \coloneqq & \tm{\piRecv{x}{y}{\mtf{P}}}
       \\ \tm{\mtf{\cpHalt{x}}}
-      &  \defeq & \tm{\piBoundSend{x}{}{\piHalt}}
+      &  \coloneqq & \tm{\piBoundSend{x}{}{\piHalt}}
       &  \tm{\mtf{\cpWait{x}{P}}}
-      &  \defeq & \tm{\piRecv{x}{}{\mtf{P}}}
+      &  \coloneqq & \tm{\piRecv{x}{}{\mtf{P}}}
       \\ \tm{\mtf{\cpInl{x}{P}}}
-      &  \defeq & \tm{\cpInl{x}{\mtf{P}}}
+      &  \coloneqq & \tm{\cpInl{x}{\mtf{P}}}
       &  \tm{\mtf{\cpInr{x}{P}}}
-      &  \defeq & \tm{\cpInr{x}{\mtf{P}}}
+      &  \coloneqq & \tm{\cpInr{x}{\mtf{P}}}
       \\ \tm{\mtf{\cpCase{x}{P}{Q}}}
-      &  \defeq & \tm{\cpCase{x}{\mtf{P}}{\mtf{Q}}}
+      &  \coloneqq & \tm{\cpCase{x}{\mtf{P}}{\mtf{Q}}}
       &  \tm{\mtf{\cpAbsurd{x}}}
-      &  \defeq & \tm{\cpAbsurd{x}}
+      &  \coloneqq & \tm{\cpAbsurd{x}}
     \end{array}
   \]
 \end{definition}\noindent
@@ -666,7 +642,7 @@ We will use this relation in the first proof, and its analogue for derivations i
 First, we prove that each \cp process can be translated by this trivial translation to an \hcp process, and that this translation respects structural congruence and reduction. Reductions from \cp can be trivially translated to reductions in \hcp. However, as we took apart each $\kappa$-rule into two separate rules, the reduction relation of \hcp is a slight refinement over that of \cp.
 \begin{theorem}\label{thm:cp2hcp-typing}
   If $\seq[P]{\Gamma}$ in \cp, then $\seq[\mtf{P}]{\Gamma}$ in \hcp.
-\end{theorem} %\vspace*{-0.75\baselineskip}%
+\end{theorem} 
 \begin{proof}
   By induction on the derivation of $\seq[P]{\Gamma}$. We show the interesting cases:
   \begin{itemize}
@@ -729,31 +705,31 @@ First, we prove that each \cp process can be translated by this trivial translat
       \end{array}
     \end{gather*}
   \end{itemize}
-  \vspace*{-\baselineskip}%
-\end{proof}%
+  \vspace*{-\baselineskip}
+\end{proof}
 \begin{theorem}\label{thm:cp2hcp-equiv}
   $\tm{P}\equiv\tm{Q}$ in \cp iff $\tm{\mtf{P}}\equiv\tm{\mtf{Q}}$ in \hcp.
-\end{theorem} %\vspace*{-0.75\baselineskip}%
+\end{theorem} 
 \begin{proof}
   By induction on the derivation of $\tm{P}\equiv\tm{Q}$.
-\end{proof}%
+\end{proof}
 \begin{theorem}\label{thm:cp2hcp-reduction}
   If $\reducesto{P}{Q}$ in \cp, then $\tm{\mtf{P}}\Longrightarrow^{+}\tm{\mtf{Q}}$ in \hcp.
-\end{theorem} %\vspace*{-0.75\baselineskip}%
+\end{theorem} 
 \begin{proof}
   By induction on the the derivation of $\reducesto{P}{Q}$.
-\end{proof}%
+\end{proof}
 \begin{theorem}\label{hcp2cp-reduction}
   If $\reducesto{\mtf{P}}{R}$ in \hcp, then there is a $\tm{Q}$ such that $\reducesto{P}{Q}$ in \cp and $\tm{R}\Longrightarrow^{+}\tm{\mtf{Q}}$ in \hcp.
-\end{theorem} %\vspace*{-0.75\baselineskip}%
+\end{theorem} 
 \begin{proof}
   By induction on the derivation of $\reducesto{\mtf{P}}{R}$. The cases for \hccpRedAxCut1 and the $\beta$-rules are trivial. For the $\kappa\nu$-rules, we rewrite by the appropriate $\kappa{\ppar}$ rule, and vice versa.
 \end{proof}\noindent
 
 \subsection{\hcp supports the same communication protocols as \cp}
-\hcp exhibits some behaviours which are impossible to directly translate back into \cp. For instance, in the process below, the choice sent on $\tm{x}$ will affect the choice between $\tm{P}$ and $\tm{P'}$, even though neither has access to the channel $\tm{x}$. %
+\hcp exhibits some behaviours which are impossible to directly translate back into \cp. For instance, in the process below, the choice sent on $\tm{x}$ will affect the choice between $\tm{P}$ and $\tm{P'}$, even though neither has access to the channel $\tm{x}$.
 \[
-\begin{prooftree*}%
+\begin{prooftree*}
   \AXC{}\noLine\UIC{$\seq[P]{ \Gamma }$}
   \AXC{}\noLine\UIC{$\seq[Q]{ \Delta, \tmty{x}{A} }$}
   \NOM{H-Mix}
@@ -766,13 +742,13 @@ First, we prove that each \cp process can be translated by this trivial translat
   \BIC{$\seq[\cpCase{x}{\piPar{P}{Q}}{\piPar{P'}{Q'}}]{ \Gamma \hsep \Delta, \tmty{x}{A \with B}}$}
 \end{prooftree*}
 \]
-Instead, we will prove that \hcp supports the same communication protocols as \cp. This is the same as saying that it inhabits the same session types, or that the associated logical systems derive the same theorems. We show this by proving that we can interpret the hyper-environments as formulas in the logic. This is a standard method for proving the soundness of a hypersequent calculus.
+Instead, we will prove that \hcp supports the same communication protocols as \cp. This is the same as saying that it inhabits the same session types, or that the associated logical systems derive the same theorems. We show this by proving that we can internalise the hyper-environments as formulas in the logic. This is a standard method for proving the soundness of a hypersequent calculus.
 
 We start off by defining a relation on derivations of \hcp, which we call ``disentanglement''. This relation allows us to move applications of $\textsc{H-Mix}$ downwards in the proof tree. We can use this relation to rewrite any derivation to a form in which all mixes are either attached to their respective cuts or tensors, or at the top-level.
 \begin{definition}\label{def:hcp-disentangle}
   Disentanglement is described by the smallest relation $\moveMixDown$ on proof derivations closed under the rules in \cref{fig:hcp-disentangle}, plus the associativity and commutativity of mixes. The relation $\moveMixDown^\star$ is the reflexive, transitive closure of $\moveMixDown$.
 \end{definition}\noindent
-\begin{sidewaysfigure} %[htb]
+\begin{sidewaysfigure} 
   \(
   \begin{array}{lcr}
     \pvar{$\rho_1$}\UIC{$\seq{\mathcal{G}_1 \hsep {A}, \Gamma}$}
@@ -904,7 +880,7 @@ Disentanglement is terminating, and confluent up to the associativity and commut
     \TIC{$\seq{\Gamma_1 \hsep \dots \hsep \Gamma_n}$}
   \end{prooftree*}
   \]
-\end{lemma} %\vspace*{-0.75\baselineskip}%
+\end{lemma} 
 \begin{proof}
   We repeatedly apply the $\moveMixDown$-rules to the derivation $\rho$ to move the mixes downwards.
   There are three cases:
@@ -918,9 +894,7 @@ Disentanglement is terminating, and confluent up to the associativity and commut
   \end{enumerate*}
   All applications of $(\one)$ are followed by an application of \textsc{H-Halt}, forming a \cp $(\one)$.
 \end{proof}
-
-
-Environments can be interpreted as types by collapsing them as series of pars.
+An environment can be internalised as a type by collapsing it as a series of pars.
 \begin{definition}\label{def:bigparr}
   \[
   \begin{array}{lcll}
@@ -936,11 +910,11 @@ Environments can be interpreted as types by collapsing them as series of pars.
 \end{definition}\noindent
 \begin{lemma}\label{lem:cp-bigparr}
   If $\seq{\Gamma}$ in \cp, then $\seq{\bigparr\Gamma}$ in \cp.
-\end{lemma} %\vspace*{-0.75\baselineskip}%
+\end{lemma} 
 \begin{proof}
   By repeated application of $(\parr)$.
 \end{proof}\noindent
-Furthermore, hyper-environments can be interpreted as types by collapsing them as series of tensors where environments are handled using \cref{lem:hcp-disentangle}. The empty hyper-environment $\ty{\emptyhypercontext}$ is interpreted as the unit of tensor.
+Furthermore, a hyper-environment can be internalised as a type by collapsing it as a series of tensors, where each constituent environment is internalised using $\ty{\bigparr}$. The empty hyper-environment $\ty{\emptyhypercontext}$ is internalised as the unit of tensor.
 \begin{definition}\label{def:bigtens}
   \[
   \begin{array}{lcll}
@@ -956,7 +930,7 @@ Furthermore, hyper-environments can be interpreted as types by collapsing them a
 
 \begin{theorem}\label{thm:hcp2cp-bigtens}
   If $\seq{\mathcal{G}}$ in \hcp, then $\seq{\bigtens\mathcal{G}}$ in \cp.
-\end{theorem} %\vspace*{-0.75\baselineskip}%
+\end{theorem} 
 \begin{proof}
   By case analysis on the structure of the hyper-environment $\ty{\mathcal{G}}$.
   If $\ty{\mathcal{G}} = \ty{\emptyhypercontext}$, we apply $(\one)$.
