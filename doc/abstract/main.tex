@@ -2,15 +2,16 @@
 \providecommand{\event}{Linearity and TLLA 2018}
 \usepackage[british]{babel}
 \usepackage[all]{foreign}
-\usepackage[]{amsmath}
+\usepackage{amsmath}
 \allowdisplaybreaks
 \usepackage{amsthm}
 \usepackage{amssymb}
-\usepackage{mathtools}
+%\usepackage{mathtools}
+\def\Coloneqq{\mathbin{::=}}
+\def\coloneqq{\mathbin{:=}}
 \usepackage[inline]{enumitem}
-%\usepackage{breakurl} % Not needed if you use pdflatex only.
-%\usepackage{underscore} % Only needed if you use pdflatex.
-%\usepackage{parskip}
+\usepackage{breakurl} % Not needed if you use pdflatex only.
+\usepackage{underscore} % Only needed if you use pdflatex.
 \usepackage{textcomp,textgreek,upgreek}
 \usepackage{nameref,hyperref}
 \usepackage[nameinlink,noabbrev,capitalize]{cleveref}
@@ -85,7 +86,7 @@ The term language of \cp is a variant of the \textpi-calculus. The variables $\t
   \[
     \begin{array}{rllrll}
       \tm{P}, \tm{Q}, \tm{R}
-           ::= & \tm{\cpLink{x}{y}}       &\text{link}
+           \Coloneqq & \tm{\cpLink{x}{y}}       &\text{link}
       &  \mid& \tm{\cpCut{x}{P}{Q}}     &\text{parallel composition, ``cut''}
       \\ \mid& \tm{\cpSend{x}{y}{P}{Q}} &\text{output}
       &  \mid& \tm{\cpRecv{x}{y}{P}}    &\text{input}
@@ -219,7 +220,7 @@ Channels in \cp are typed using a session type system which corresponds to class
   \[
     \begin{array}{rclrcl}
       \ty{A}, \ty{B}, \ty{C}
-           ::= & \ty{A \tens B} &\text{pair of independent processes}
+           \Coloneqq & \ty{A \tens B} &\text{pair of independent processes}
       &  \mid& \ty{\one}      &\text{unit for} \; {\tens}
       \\ \mid& \ty{A \parr B} &\text{pair of interdependent processes}
       &  \mid& \ty{\bot}      &\text{unit for} \; {\parr}
@@ -254,15 +255,15 @@ Duality plays a crucial role in both linear logic and session types. In \cp, the
     \end{array}
   \]
 \end{definition}\noindent
-An environments associates channels with types. Names in environments must be unique, and two environments $\ty{\Gamma}$ and $\ty{\Delta}$ can only be combined as $\ty{\Gamma, \Delta}$ if $\ty{\fv{\Gamma}} \cap \ty{\fv{\Delta}} = \varnothing$.
+An environment associates channels with types. Names in environments must be unique, and two environments $\ty{\Gamma}$ and $\ty{\Delta}$ can only be combined as $\ty{\Gamma, \Delta}$ if $\ty{\fv{\Gamma}} \cap \ty{\fv{\Delta}} = \varnothing$.
 \begin{definition}[Environments]\label{def:cp-environments}
   \(
-    \ty{\Gamma}, \ty{\Delta}, \ty{\Theta} ::= \ty{\emptycontext} \mid \ty{\Gamma}, \tmty{x}{A}
+    \ty{\Gamma}, \ty{\Delta}, \ty{\Theta} \Coloneqq \ty{\emptycontext} \mid \ty{\Gamma}, \tmty{x}{A}
   \)
 \end{definition}\noindent
 A typing judgement associates a process with collections of typed channels.
 \begin{definition}[Typing judgements]\label{def:cp}
-  A typing judgement $\seq[{ P }]{\tmty{x_1}{A_1}, \dots, \tmty{x_n}{A_n}}$ denotes that the process \tm{P} communicates along channels $\tm{x_1}$, \dots, $\tm{x_n}$ following protocols $\ty{A_1}$, \dots, $\ty{A_n}$. Typing judgements are derived using rules below.
+  A typing judgement $\seq[{ P }]{\tmty{x_1}{A_1}, \dots, \tmty{x_n}{A_n}}$ denotes that the process \tm{P} communicates along channels $\tm{x_1}$, \dots, $\tm{x_n}$ following protocols $\ty{A_1}$, \dots, $\ty{A_n}$. Typing judgements are derived using rules below. 
   \begin{description}
 	  \item[Structural rules]
   		\begin{gather*}\cpInfAx  \qquad  \cpInfCut   \end{gather*}
@@ -294,7 +295,7 @@ A typing judgement associates a process with collections of typed channels.
 \end{theorem} 
 \begin{proof}
   By induction on the derivation of $\reducesto{P}{Q}$.
-\end{proof}%
+\end{proof}
 \begin{theorem}[Termination]\label{thm:cp-termination}
   If $\seq[P]{\Gamma}$, then there are no infinite $\Longrightarrow$-reduction sequences.
 \end{theorem} 
@@ -319,7 +320,7 @@ A typing judgement associates a process with collections of typed channels.
     otherwise, at least one side is a logical rule acting on a formula other
     than the cut formula, in which case we apply one of the $\kappa$-rules.
   \end{enumerate*}
-\end{proof}%
+\end{proof}
 
 
 \section{Hypersequent Classical Processes}
@@ -333,7 +334,7 @@ The term language of \hcp is a variant of \cp where the term constructs have bee
   \[
     \begin{array}{rllrll}
       \tm{P}, \tm{Q}, \tm{R}
-           ::= & \tm{\cpLink{x}{y}}         &\text{link}
+           \Coloneqq & \tm{\cpLink{x}{y}}         &\text{link}
       &  \mid& \tm{\piHalt}               &\text{terminated process}
       \\ \mid& \tm{\piNew{x}{P}}          &\text{name restriction, ``cut''}
       &  \mid& \tm{( \piPar{P}{Q} )}      &\text{parallel composition, ``mix''}
@@ -533,14 +534,14 @@ There are two changes to the reduction system. First, since $\tm{\piBoundSend{x}
 \subsection{Types}
 We use the same definitions for types and environments for \hcp as we used for \cp. However, we introduce a new layer on top of sequents: hypersequents. As \cp is a one-sided logic, and it uses the left-hand side of the turnstile to write the process, the traditional hypersequent notation can look confusing: ``$\seq[P]{\Gamma_1}\hsep\dots\hsep\seq{\Gamma_n}$'' seems to claim that $\tm{P}$ acts according to protocol $\ty{\Gamma_1}$. What are all the other $\Gamma$s doing there? Are they typing empty processes? Therefore, we opt to leave out the repeated turnstile, and instead work with the notion of ``hyper-environments''. However, we will still refer to our system as a hypersequent system. A hyper-environment is either empty, or consist of a series of typing environments, separated by vertical bars. A hyper-environment $\ty{\Gamma_1 \hsep \dots \hsep \Gamma_n}$ types a series of $n$ entangled, but independent processes.
 \begin{definition}[Hyper-environments]\label{def:hcp-hyper-environment}
-  $\ty{\mathcal{G}}, \ty{\mathcal{H}} ::= \ty{\emptyhypercontext} \, \mid \, \ty{\mathcal{G} \hsep \Gamma}$
+  $\ty{\mathcal{G}}, \ty{\mathcal{H}} \Coloneqq \ty{\emptyhypercontext} \, \mid \, \ty{\mathcal{G} \hsep \Gamma}$
 \end{definition}\noindent
 A hyper-environment is a multiset of environments. While names within environments must be unique, names may be shared between multiple environments in a hyper-environment. We write $\ty{\mathcal{G} \hsep \mathcal{H}}$ to combine two hyper-environments.
 
 Typing judgements in \hcp associate processes with hyper-environments. \textsc{H-Mix} composes two processes in parallel, but remembers that they are independent in the sequent. \textsc{H-Cut} and $(\tens)$ take as their premise a process which consists of at least two independent processes, and connects them, eliminating the vertical bar. Each logical rule has the side condition that $\tm{x} \not\in \ty{\mathcal{G}}$, which can be read as ``you cannot act on one end-point of $x$ if you are also holding its other end-point''. This prevents self-locking processes, \eg $\tm{\piBoundSend{x}{}{\piRecv{x}{}{\piHalt}}}$.
 \begin{definition}[Typing judgements]\label{def:hcp}
   A typing judgement $\seq[P]{\Gamma_1 \hsep \dots \hsep \Gamma_n}$ denotes that the process $\tm{P}$ consists of $n$ independent, but potentially entangled processes, each of which communicates according to its own protocol $\Gamma_i$. 
-  Typing judgements can be constructed using the inference rules below.
+  Typing judgements can be constructed using the inference rules below. 
   \begin{description}
     \item[Structural rules]
     \begin{gather*}
@@ -568,13 +569,13 @@ Typing judgements in \hcp associate processes with hyper-environments. \textsc{H
 \end{lemma} 
 \begin{proof}
   By induction on the derivation of $\tm{P}\equiv\tm{Q}$.
-\end{proof}%
+\end{proof}
 \begin{theorem}[Preservation]\label{thm:hcp-preservation}
   If $\seq[P]{\mathcal{G}}$ and $\reducesto{P}{Q}$, then $\seq[Q]{\mathcal{G}}$.
 \end{theorem} 
 \begin{proof}
   By induction on the derivation of $\reducesto{P}{Q}$.
-\end{proof}%
+\end{proof}
 \begin{theorem}[Termination]\label{thm:hcp-termination}
   If $\seq[P]{\mathcal{G}}$, then there are no infinite $\Longrightarrow$-reduction sequences.
 \end{theorem} 
@@ -604,7 +605,7 @@ Typing judgements in \hcp associate processes with hyper-environments. \textsc{H
     if the rule under the mix is a logical rule, we apply one of the
     $\kappa{\ppar}$-rules.
   \end{enumerate*}
-\end{proof}%
+\end{proof}
 
 
 \section{Relation between \cp and \hcp}
@@ -615,25 +616,25 @@ In this section, we discuss the relationship between \cp and \hcp. We will prove
   \[
     \begin{array}{lcllcl}
          \tm{\mtf{\cpLink{x}{y}}}
-      &  := & \tm{\cpLink{x}{y}}
+      &  \coloneqq & \tm{\cpLink{x}{y}}
       &  \tm{\mtf{\cpCut{x}{P}{Q}}}
-      &  := & \tm{\piNew{x}{(\piPar{\mtf{P}}{\mtf{Q}})}}
+      &  \coloneqq & \tm{\piNew{x}{(\piPar{\mtf{P}}{\mtf{Q}})}}
       \\ \tm{\mtf{\cpSend{x}{y}{P}{Q}}}
-      &  := & \tm{\piBoundSend{x}{y}{(\piPar{\mtf{P}}{\mtf{Q}})}}
+      &  \coloneqq & \tm{\piBoundSend{x}{y}{(\piPar{\mtf{P}}{\mtf{Q}})}}
       &  \tm{\mtf{\cpRecv{x}{y}{P}}}
-      &  := & \tm{\piRecv{x}{y}{\mtf{P}}}
+      &  \coloneqq & \tm{\piRecv{x}{y}{\mtf{P}}}
       \\ \tm{\mtf{\cpHalt{x}}}
-      &  := & \tm{\piBoundSend{x}{}{\piHalt}}
+      &  \coloneqq & \tm{\piBoundSend{x}{}{\piHalt}}
       &  \tm{\mtf{\cpWait{x}{P}}}
-      &  := & \tm{\piRecv{x}{}{\mtf{P}}}
+      &  \coloneqq & \tm{\piRecv{x}{}{\mtf{P}}}
       \\ \tm{\mtf{\cpInl{x}{P}}}
-      &  := & \tm{\cpInl{x}{\mtf{P}}}
+      &  \coloneqq & \tm{\cpInl{x}{\mtf{P}}}
       &  \tm{\mtf{\cpInr{x}{P}}}
-      &  := & \tm{\cpInr{x}{\mtf{P}}}
+      &  \coloneqq & \tm{\cpInr{x}{\mtf{P}}}
       \\ \tm{\mtf{\cpCase{x}{P}{Q}}}
-      &  := & \tm{\cpCase{x}{\mtf{P}}{\mtf{Q}}}
+      &  \coloneqq & \tm{\cpCase{x}{\mtf{P}}{\mtf{Q}}}
       &  \tm{\mtf{\cpAbsurd{x}}}
-      &  := & \tm{\cpAbsurd{x}}
+      &  \coloneqq & \tm{\cpAbsurd{x}}
     \end{array}
   \]
 \end{definition}\noindent
@@ -706,20 +707,20 @@ First, we prove that each \cp process can be translated by this trivial translat
       \end{array}
     \end{gather*}
   \end{itemize}
-  \vspace*{-\baselineskip}%
-\end{proof}%
+  \vspace*{-\baselineskip}
+\end{proof}
 \begin{theorem}\label{thm:cp2hcp-equiv}
   $\tm{P}\equiv\tm{Q}$ in \cp iff $\tm{\mtf{P}}\equiv\tm{\mtf{Q}}$ in \hcp.
 \end{theorem} 
 \begin{proof}
   By induction on the derivation of $\tm{P}\equiv\tm{Q}$.
-\end{proof}%
+\end{proof}
 \begin{theorem}\label{thm:cp2hcp-reduction}
   If $\reducesto{P}{Q}$ in \cp, then $\tm{\mtf{P}}\Longrightarrow^{+}\tm{\mtf{Q}}$ in \hcp.
 \end{theorem} 
 \begin{proof}
   By induction on the the derivation of $\reducesto{P}{Q}$.
-\end{proof}%
+\end{proof}
 \begin{theorem}\label{hcp2cp-reduction}
   If $\reducesto{\mtf{P}}{R}$ in \hcp, then there is a $\tm{Q}$ such that $\reducesto{P}{Q}$ in \cp and $\tm{R}\Longrightarrow^{+}\tm{\mtf{Q}}$ in \hcp.
 \end{theorem} 
@@ -728,9 +729,9 @@ First, we prove that each \cp process can be translated by this trivial translat
 \end{proof}\noindent
 
 \subsection{\hcp supports the same communication protocols as \cp}
-\hcp exhibits some behaviours which are impossible to directly translate back into \cp. For instance, in the process below, the choice sent on $\tm{x}$ will affect the choice between $\tm{P}$ and $\tm{P'}$, even though neither has access to the channel $\tm{x}$. %
+\hcp exhibits some behaviours which are impossible to directly translate back into \cp. For instance, in the process below, the choice sent on $\tm{x}$ will affect the choice between $\tm{P}$ and $\tm{P'}$, even though neither has access to the channel $\tm{x}$.
 \[
-\begin{prooftree*}%
+\begin{prooftree*}
   \AXC{}\noLine\UIC{$\seq[P]{ \Gamma }$}
   \AXC{}\noLine\UIC{$\seq[Q]{ \Delta, \tmty{x}{A} }$}
   \NOM{H-Mix}
@@ -743,13 +744,13 @@ First, we prove that each \cp process can be translated by this trivial translat
   \BIC{$\seq[\cpCase{x}{\piPar{P}{Q}}{\piPar{P'}{Q'}}]{ \Gamma \hsep \Delta, \tmty{x}{A \with B}}$}
 \end{prooftree*}
 \]
-Instead, we will prove that \hcp supports the same communication protocols as \cp. This is the same as saying that it inhabits the same session types, or that the associated logical systems derive the same theorems. We show this by proving that we can interpret the hyper-environments as formulas in the logic. This is a standard method for proving the soundness of a hypersequent calculus.
+Instead, we will prove that \hcp supports the same communication protocols as \cp. This is the same as saying that it inhabits the same session types, or that the associated logical systems derive the same theorems. We show this by proving that we can internalise the hyper-environments as formulas in the logic. This is a standard method for proving the soundness of a hypersequent calculus.
 
 We start off by defining a relation on derivations of \hcp, which we call ``disentanglement''. This relation allows us to move applications of $\textsc{H-Mix}$ downwards in the proof tree. We can use this relation to rewrite any derivation to a form in which all mixes are either attached to their respective cuts or tensors, or at the top-level.
 \begin{definition}\label{def:hcp-disentangle}
   Disentanglement is described by the smallest relation $\moveMixDown$ on proof derivations closed under the rules in \cref{fig:hcp-disentangle}, plus the associativity and commutativity of mixes. The relation $\moveMixDown^\star$ is the reflexive, transitive closure of $\moveMixDown$.
 \end{definition}\noindent
-\begin{sidewaysfigure} %[htb]
+\begin{sidewaysfigure} 
   \(
   \begin{array}{lcr}
     \pvar{$\rho_1$}\UIC{$\seq{\mathcal{G}_1 \hsep {A}, \Gamma}$}
@@ -895,9 +896,7 @@ Disentanglement is terminating, and confluent up to the associativity and commut
   \end{enumerate*}
   All applications of $(\one)$ are followed by an application of \textsc{H-Halt}, forming a \cp $(\one)$.
 \end{proof}
-
-
-Environments can be interpreted as types by collapsing them as series of pars.
+An environment can be internalised as a type by collapsing it as a series of pars.
 \begin{definition}\label{def:bigparr}
   \[
   \begin{array}{lcll}
@@ -917,7 +916,7 @@ Environments can be interpreted as types by collapsing them as series of pars.
 \begin{proof}
   By repeated application of $(\parr)$.
 \end{proof}\noindent
-Furthermore, hyper-environments can be interpreted as types by collapsing them as series of tensors where environments are handled using \cref{lem:hcp-disentangle}. The empty hyper-environment $\ty{\emptyhypercontext}$ is interpreted as the unit of tensor.
+Furthermore, a hyper-environment can be internalised as a type by collapsing it as a series of tensors, where each constituent environment is internalised using $\ty{\bigparr}$. The empty hyper-environment $\ty{\emptyhypercontext}$ is internalised as the unit of tensor.
 \begin{definition}\label{def:bigtens}
   \[
   \begin{array}{lcll}
