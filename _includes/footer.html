@@ -1,0 +1,20 @@
+<footer class="site-footer h-card">
+  <data class="u-url" href="{{ "/" | relative_url }}"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">{{ site.title | escape }}</h2>
+
+    {%- if site.contributors -%}
+    {%- for contributor in site.contributors -%}
+    {%- include social.html -%}
+    {%- endfor -%}
+    {%- else -%}
+    {%- assign contributor = site -%}
+    {%- assign contributor.name = site.author -%}
+    {%- include social.html -%}
+    {%- endif -%}
+
+  </div>
+
+</footer>
