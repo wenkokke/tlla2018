@@ -1,0 +1,25 @@
+\usepackage{amsmath,amssymb}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{xspace}
+\usepackage{bm}
+
+\newcommand{\email}[1]{\href{mailto:#1}{#1}}
+ 
+\DeclareGraphicsRule{.ai}{pdf}{.ai}{}
+\newcommand{\asset}[1]{\ensuremath{\vcenter{\hbox{\includegraphics[width=1em]{assets/#1}}}}\xspace}
+\newcommand{\github}[1]{\asset{Github_Logo.png}\href{https://github.com/#1}{#1}}
+\newcommand{\twitter}[1]{\asset{Twitter_Logo.png}\href{https://twitter.com/#1}{@#1}}
+
+\newcommand{\mail}{\asset{2709.ai}}
+\newcommand{\working}{\asset{1f469-1f3fb-200d-1f4bb.ai}}
+\newcommand{\climbing}{\asset{1f9d7-1f3fb-200d-2640-fe0f.ai}}
+\newcommand{\whatever}{\asset{1f937-1f3fb-200d-2640-fe0f.ai}}
+\newcommand{\supervisor}{\asset{1f9d9-1f3fd-200d-2642-fe0f.ai}}
+
+\newcommand{\ga}[1]{\color{mDarkTeal}\bm{\underline{\ensuremath{#1}}}}}
+\newcommand{\gb}[1]{\color{mDarkBrown}\bm{\underline{\ensuremath{#1}}}}}
+
+%%% Local Variables:
+%%% TeX-master: "main"
+%%% End:

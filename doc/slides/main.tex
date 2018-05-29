@@ -1,0 +1,70 @@
+\documentclass[aspectratio=169,xcolor={dvipsnames}]{beamer}
+\usetheme{metropolis} 
+\input{preamble}
+\title{Taking Linear Logic Apart}
+\makeatletter
+\setbeamertemplate{title page}{
+  \begin{minipage}[b][\paperheight]{\textwidth}
+    \vspace*{.5cm}
+    \vfill%
+    \ifx\inserttitle\@empty\else\usebeamertemplate*{title}\fi
+    \ifx\insertsubtitle\@empty\else\usebeamertemplate*{subtitle}\fi
+    \usebeamertemplate*{title separator}
+    \begin{table}
+      \footnotesize
+      \begin{tabular}{ccc}
+           \normalsize{Wen Kokke}
+        &  \normalsize{Fabrizio Montesi}
+        &  \normalsize{Marco Peressotti}
+        \\ \email{wen.kokke@ed.ac.uk}
+        &  \email{fmontesi@imada.sdu.dk}
+        &  \email{peressotti@imada.sdu.dk}
+        \\ University of Edinburgh
+        &  \multicolumn{2}{c}{University of Southern Denmark}
+        \\ Edinburgh, Scotland
+        &  \multicolumn{2}{c}{Odense, Denmark}
+      \end{tabular}
+    \end{table}
+    \vfill%
+    \vspace*{.5cm}
+  \end{minipage}
+}
+\makeatother
+\begin{document}
+  \maketitle
+
+  \begin{frame}
+    \Huge
+    \only<1>{\[
+        (\nu x)( \quad x[y].(\mail \mid \working ) \quad \mid \quad x(y).\supervisor \quad )
+      \]}
+    \only<2>{\[
+        (\nu x)( \quad x[y].(\mail \mid \climbing) \quad \mid \quad x(y).\supervisor \quad )
+      \]}
+    \only<3>{\[
+        (\nu x)( \quad x[y].(\mail \mid \whatever) \quad \mid \quad x(y).\supervisor \quad )
+      \]}
+    \only<4>{
+      \[
+        \ga{(\nu x)(}
+        \quad x[y].(\mail \mid \whatever)
+        \quad \ga{\mid}
+        \quad x(y).\supervisor
+        \quad
+        \ga{)}
+      \]}
+    \only<5>{
+      \[
+        \ga{(\nu x)(}
+        \quad \gb{x[y].(} \mail \gb{\mid} \whatever \gb{)}
+        \quad \ga{\mid}
+        \quad x(y).\supervisor
+        \quad
+        \ga{)}
+      \]}
+  \end{frame}
+\end{document}
+
+%%% Local Variables:
+%%% TeX-master: "main"
+%%% End:
