@@ -1,5 +1,5 @@
 \documentclass[aspectratio=169,xcolor={dvipsnames}]{beamer}
-\usetheme{metropolis} 
+\usetheme{metropolis}
 \input{preamble}
 \title{Taking Linear Logic Apart}
 \makeatletter
@@ -33,35 +33,377 @@
 \begin{document}
   \maketitle
 
+  \begin{frame}[plain]
+    \Large
+    \[
+      \begin{array}{rllll}
+        \tm{P}, \tm{Q}, \tm{R}
+           :=  & \tm{\cpLink{x}{y}}
+        &  \mid& \tm{\cpCut{x}{P}{Q}}
+        \\ \mid& \tm{\cpSend{x}{y}{P}{Q}}
+        &  \mid& \tm{\cpRecv{x}{y}{P}}
+        \\ \mid& \tm{\cpHalt{x}}
+        &  \mid& \tm{\cpWait{x}{P}}
+        \\ \mid& \tm{\cpInl{x}{P}}
+        &  \mid& \tm{\cpInr{x}{P}}
+        \\ \mid& \tm{\cpCase{x}{P}{Q}}
+        &  \mid& \tm{\cpAbsurd{x}}
+      \end{array}
+    \]
+  \end{frame}
+
+  \begin{frame}[plain]
+    \Large
+    \[
+      \begin{array}{lcll}
+        \tm{\cpLink{x}{y}}
+        & \equiv
+        & \tm{\cpLink{y}{x}}
+        \\
+        \tm{\cpCut{x}{P}{Q}}
+        & \equiv
+        & \tm{\cpCut{x}{Q}{P}}
+        \\
+        \tm{\cpCut{x}{P}{\cpCut{y}{Q}{R}}}
+        & \equiv
+        & \tm{\cpCut{y}{\cpCut{x}{P}{Q}}{R}}
+        \\
+        \multicolumn{3}{c}{%
+        \text{if } x \not\in \text{fv}(R) \text{ and } y \not\in \text{fv}(P)}
+      \end{array}
+    \]
+  \end{frame}
+
+  \begin{frame}[plain]
+    \Large
+    \[
+      \begin{array}{l}
+        \begin{array}{lcl}
+          \tm{\cpCut{x}{\cpLink{w}{x}}{P}}
+          & \Longrightarrow
+          & \tm{\cpSub{w}{x}{P}}
+          \\
+          \tm{\cpCut{x}{\cpSend{x}{y}{P}{Q}}{\cpRecv{x}{y}{R}}}
+          & \Longrightarrow
+          & \tm{\cpCut{y}{P}{\cpCut{x}{Q}{R}}}
+          \\
+          \tm{\cpCut{x}{\cpHalt{x}}{\cpWait{x}{P}}}
+          & \Longrightarrow
+          & \tm{P}
+        \end{array}
+        \\
+        \begin{array}{lcl}
+          \tm{\cpCut{x}{\cpInl{x}{P}}{\cpCase{x}{Q}{R}}}
+          & \Longrightarrow
+          & \tm{\cpCut{x}{P}{Q}}
+          \\
+          \tm{\cpCut{x}{\cpInr{x}{P}}{\cpCase{x}{Q}{R}}}
+          & \Longrightarrow
+          & \tm{\cpCut{x}{P}{R}}
+        \end{array}
+      \end{array}
+    \]
+  \end{frame}
+
+  \begin{frame}[plain]
+    \Large
+    \[
+      \begin{array}{rclrcl}
+        \ty{A}, \ty{B}, \ty{C}
+            := & \ty{A \tens B}
+        &  \mid& \ty{\one}
+        \\ \mid& \ty{A \parr B}
+        &  \mid& \ty{\bot}
+        \\ \mid& \ty{A \plus B}
+        &  \mid& \ty{\nil}
+        \\ \mid& \ty{A \with B}
+        &  \mid& \ty{\top}
+      \end{array}
+    \]
+  \end{frame}
+
+  \begin{frame}[plain]
+    \large
+    \begin{center}
+      \cpInfAx \cpInfCut
+    \end{center}
+    \begin{center}
+      \cpInfTens \cpInfParr
+    \end{center}
+    \begin{center}
+      \cpInfBot \cpInfOne
+    \end{center}
+    \begin{center}
+      \cpInfPlus1 \cpInfPlus2
+    \end{center}
+    \begin{center}
+      \cpInfWith
+    \end{center}
+    \begin{center}
+      \cpInfNil \cpInfTop
+    \end{center}
+  \end{frame}
+
+  \begin{frame}[plain]
+    \Huge
+    \textbf{Theorem} (Preservation)\\
+    \textit{%
+      If $\seq[P]{\Gamma}$ and $\tm{P}\Longrightarrow\tm{Q}$, then $\seq[Q]{\Gamma}$.
+    }
+  \end{frame}
+
+  \begin{frame}[plain]
+    \Huge
+    \textbf{Theorem} (Progress)\\
+    \textit{%
+      If $\seq[P]{\Gamma}$, then there exists a $\tm{Q}$ such that
+      $\tm{P}\Longrightarrow^\star\tm{Q}$ and $\tm{Q}$ is not a cut.
+    }
+  \end{frame}
+
+  \setcounter{framenumber}{0}
+
+  \begin{frame}
+    \Huge\centering
+    \only<1>{\(
+        (\nu x)( \quad x[y].(\mail \mid \working ) \quad
+            \mid \quad x(y).\supervisor \quad )
+      \)}
+    \only<2>{\(
+        (\nu x)( \quad x[y].(\mail \mid \climbing) \quad
+            \mid \quad x(y).\supervisor \quad )
+      \)}
+    \only<3>{\(
+        (\nu x)( \quad x[y].(\mail \mid \whatever) \quad
+            \mid \quad x(y).\supervisor \quad )
+      \)}
+    \only<4>{
+      \(
+        \ga{(\nu x)(} \quad x[y].(\mail \mid \whatever) \quad
+            \ga{\mid} \quad x(y).\supervisor \quad \ga{)}
+      \)}
+    \only<5>{
+      \(
+        \ga{(\nu x)(} \quad \gb{x[y].(} \mail \gb{\mid} \whatever \gb{)} \quad
+            \ga{\mid} \quad x(y).\supervisor \quad \ga{)}
+      \)}
+  \end{frame}
+
   \begin{frame}
     \Huge
-    \only<1>{\[
-        (\nu x)( \quad x[y].(\mail \mid \working ) \quad \mid \quad x(y).\supervisor \quad )
-      \]}
-    \only<2>{\[
-        (\nu x)( \quad x[y].(\mail \mid \climbing) \quad \mid \quad x(y).\supervisor \quad )
-      \]}
-    \only<3>{\[
-        (\nu x)( \quad x[y].(\mail \mid \whatever) \quad \mid \quad x(y).\supervisor \quad )
-      \]}
-    \only<4>{
-      \[
-        \ga{(\nu x)(}
-        \quad x[y].(\mail \mid \whatever)
-        \quad \ga{\mid}
-        \quad x(y).\supervisor
-        \quad
-        \ga{)}
-      \]}
-    \only<5>{
-      \[
-        \ga{(\nu x)(}
-        \quad \gb{x[y].(} \mail \gb{\mid} \whatever \gb{)}
-        \quad \ga{\mid}
-        \quad x(y).\supervisor
-        \quad
-        \ga{)}
-      \]}
+    \only<1>{\(
+        \begin{array}{lrlrl}
+          P, Q, R
+             &  :=  & x{\leftrightarrow}y
+             & \mid & \gb{(\nu x)(} P \gb{\mid} Q \gb{)}
+          \\ & \mid & x(y).P
+             & \mid & \gb{x[y].(} P \gb{\mid} Q \gb{)}
+          \\ & \mid & x().P
+             & \mid & \gb{x[].0}
+          \\ & \mid & \dots
+        \end{array}
+      \)}
+    \only<2>{\(
+        \begin{array}{lrlrlrl}
+          P, Q, R
+             &  :=  & x{\leftrightarrow}y
+             & \mid & \gb{(\nu x)} P
+             & \multirow{2}{*}{\mid}
+             & \multirow{2}{*}{\gb{(} P \gb{\mid} Q \gb{)}}
+          \\ & \mid & x(y).P
+             & \mid & \gb{x[y].} P
+          \\ & \mid & x().P
+             & \mid & \gb{x[].} P
+             & \mid & \gb{0}
+          \\ & \mid & \dots
+        \end{array}
+      \)}
+    \only<3>{\(
+        (\nu x)( \quad x[y].(\mail \mid \whatever) \quad
+            \mid \quad x(y).\supervisor \quad )
+      \)}
+    \only<4>{\(
+        \ga{(\nu x)} \: \gb{(} \quad \ga{x[y].} \: \gb{(} \mail \gb{\mid} \whatever \gb{)}
+            \quad \gb{\mid} \quad x(y).\supervisor \quad \gb{)}
+      \)}
+  \end{frame}
+
+  \begin{frame}
+    \only<1>{
+      \Huge\centering
+      \(
+        \begin{array}{c}
+          (\nu x)(P \mid (\nu y)(Q \mid R)) \\
+          \equiv                            \\
+          (\nu y)((\nu x)(P \mid Q) \mid R) \\
+          \text{if } x \not\in R \text{ and } y \not\in P
+        \end{array}
+      \)}
+    \only<2>{
+      \huge\centering
+      \(
+        \setlength{\arraycolsep}{1em}
+        \begin{array}{ccc}
+          (P \mid (Q \mid R)) & (\nu x)(P \mid Q) & (\nu x)(\nu y)P \\
+          \equiv              & \equiv            & \equiv          \\
+          ((P \mid Q) \mid R) & (P \mid (\nu x)Q) & (\nu y)(\nu x)P \\
+                              & \text{if } x \not\in P
+        \end{array}
+      \)}
+  \end{frame}
+
+  \begin{frame}
+    \Huge\centering
+    \only<1>{\(
+        \begin{array}{c}
+          (\nu x)(x[y].(P \mid Q) \mid x(y).R) \\
+          \Longrightarrow \\
+          (\nu y)(P \mid (\nu x)(Q \mid R))
+        \end{array}
+      \)}
+    \only<2>{\(
+        \begin{array}{c}
+          (\nu x)(x[y].P \mid x(y).R) \\
+          \Longrightarrow \\
+          (\nu y)(\nu x)(P \mid R)
+        \end{array}
+      \)}
+  \end{frame}
+
+  \begin{frame}
+    \Huge\centering
+    \vspace*{1\baselineskip}
+    \only<1>{\(
+      \begin{array}{lrlrl}
+        A, B, C
+           & :=   & A \otimes B
+           & \mid & \one
+        \\ & \mid & A \parr B
+           & \mid & \bot
+        \\ & \mid & \dots
+        \\
+        \Gamma, \Delta
+           & :=   & \Gamma, x : A
+           & \mid & \cdot
+      \end{array}
+      \)}
+  \end{frame}
+
+  \begin{frame}
+    \Large\centering
+    \begin{prooftree}
+      \AXC{$
+        \mail
+        \vdash
+        \Gamma, y : \mailtok
+        $}
+      \AXC{$
+        \whatever
+        \vdash
+        \Delta, x : \dunno
+        $}
+      \BIC{$
+        x[y].(\mail \mid \whatever)
+        \vdash
+        \Gamma, \Delta, x : \mailtok \otimes \dunno
+        $}
+      \AXC{$
+        x(y).\supervisor
+        \vdash
+        \Theta, x : \mailtok^\bot \parr \dunno^\bot
+        $}
+      \BIC{$
+        (\nu x)(x[y].(\mail \mid \whatever) \mid x(y).\supervisor)
+        \vdash
+        \Gamma, \Delta, \Theta
+        $}
+    \end{prooftree}
+  \end{frame}
+
+  \begin{frame}
+    \only<1>{%
+      \Huge\centering
+      \begin{prooftree}
+        \AXC{$P \vdash \Gamma, x : A$}
+        \AXC{$Q \vdash \Delta, x : A^\bot$}
+        \RightLabel{\textsc{Cut}}
+        \BIC{$(\nu x)(P \mid Q) \vdash \Gamma, \Delta$}
+      \end{prooftree}}
+    \only<2>{%
+      \Huge\centering
+      \begin{prooftree}
+        \AXC{$P \vdash \Gamma$}
+        \AXC{$Q \vdash \Delta$}
+        \RightLabel{\textsc{Mix}}
+        \BIC{$(P \mid Q) \vdash \Gamma, \Delta$}
+      \end{prooftree}
+      \begin{prooftree}
+        \AXC{$P \vdash \Gamma, x : A, y : A^\bot$}
+        \RightLabel{\textsc{Cycle}}
+        \UIC{$(\nu x y)P \vdash \Gamma$}
+      \end{prooftree}}
+    \only<3>{%
+      \huge\centering
+      \begin{prooftree}
+        \AXC{}\UIC{$x{\leftrightarrow}y \vdash x : A, y : A^\bot$}
+        \AXC{}\UIC{$z{\leftrightarrow}w \vdash z : A, w : A^\bot$}
+        \BIC{$
+          (x{\leftrightarrow}y \mid z{\leftrightarrow}w)
+          \vdash
+          x : A, y : A^\bot, z : A, w : A^\bot
+          $}
+        \UIC{$
+          (\nu x w)(x{\leftrightarrow}y \mid z{\leftrightarrow}w)
+          \vdash
+          y : A^\bot, z : A
+          $}
+        \UIC{$
+          (\nu y z)(\nu x w)(x{\leftrightarrow}y \mid z{\leftrightarrow}w)
+          \vdash
+          \cdot
+          $}
+      \end{prooftree}}
+  \end{frame}
+
+  \begin{frame}
+    \Huge\centering
+    \onslide<2,3,4>{
+      \vspace*{0.5\baselineskip}
+      \(
+      \begin{array}{lrlrl}
+        \mathcal{G}, \mathcal{H}
+        & :=   & \mathcal{G}, \Gamma
+        & \mid & \varnothing
+      \end{array}
+      \)
+      \vspace*{0.5\baselineskip}}
+    \only<1>{%
+      \begin{prooftree}
+        \AXC{$P \vdash \Gamma$}
+        \AXC{$Q \vdash \Delta$}
+        \RightLabel{\textsc{Mix}}
+        \BIC{$(P \mid Q) \vdash \Gamma, \Delta$}
+      \end{prooftree}
+      \begin{prooftree}
+        \AXC{$P \vdash \Gamma, x : A, y : A^\bot$}
+        \RightLabel{\textsc{Cycle}}
+        \UIC{$(\nu x y)P \vdash \Gamma$}
+      \end{prooftree}}
+    \only<2,3,4>{%
+      \onslide<2,3>{%
+        \begin{prooftree}
+          \AXC{$P \vdash \mathcal{G}$}
+          \AXC{$Q \vdash \mathcal{H}$}
+          \RightLabel{\textsc{H-Mix}}
+          \BIC{$(P \mid Q) \vdash \mathcal{G} \mid \mathcal{H}$}
+        \end{prooftree}}
+      \onslide<2,4>{%
+        \begin{prooftree}
+          \AXC{$P \vdash \mathcal{G} \mid \Gamma, x : A \mid \Delta, x : A^\bot$}
+          \RightLabel{\textsc{H-Cut}}
+          \UIC{$(\nu x)P \vdash \mathcal{G} \mid \Gamma, \Delta$}
+        \end{prooftree}}
+    }
   \end{frame}
 \end{document}
 

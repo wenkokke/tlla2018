@@ -1,24 +1,169 @@
-\usepackage{amsmath,amssymb}
+\usepackage{amssymb}
 \usepackage{hyperref}
 \usepackage{graphicx}
 \usepackage{xspace}
 \usepackage{bm}
+\usepackage{mathtools}
+\usepackage{multirow}
+\usepackage{cmll}
+\def\one{\mathrel{%
+    \mathchoice{\ONE}{\ONE}{\scriptsize\ONE}{\tiny\ONE}%
+}}
+\def\ONE{{%
+    \setbox0\hbox{\hphantom{\bot}}%
+    \rlap{\hbox to \wd0{\hss1\hss}}\box0
+}}
+\usepackage{bussproofs}
+\EnableBpAbbreviations
 
 \newcommand{\email}[1]{\href{mailto:#1}{#1}}
  
 \DeclareGraphicsRule{.ai}{pdf}{.ai}{}
-\newcommand{\asset}[1]{\ensuremath{\vcenter{\hbox{\includegraphics[width=1em]{assets/#1}}}}\xspace}
-\newcommand{\github}[1]{\asset{Github_Logo.png}\href{https://github.com/#1}{#1}}
-\newcommand{\twitter}[1]{\asset{Twitter_Logo.png}\href{https://twitter.com/#1}{@#1}}
+\newcommand{\asset}[1]{\ensuremath{\vcenter{\hbox{%
+\includegraphics[width=1em]{assets/#1}}}}\xspace}
 
 \newcommand{\mail}{\asset{2709.ai}}
+\newcommand{\mailtok}{\asset{1f4e9.ai}}
 \newcommand{\working}{\asset{1f469-1f3fb-200d-1f4bb.ai}}
+\newcommand{\dunno}{\asset{2753.ai}}
 \newcommand{\climbing}{\asset{1f9d7-1f3fb-200d-2640-fe0f.ai}}
 \newcommand{\whatever}{\asset{1f937-1f3fb-200d-2640-fe0f.ai}}
 \newcommand{\supervisor}{\asset{1f9d9-1f3fd-200d-2642-fe0f.ai}}
 
-\newcommand{\ga}[1]{\color{mDarkTeal}\bm{\underline{\ensuremath{#1}}}}
-\newcommand{\gb}[1]{\color{mDarkBrown}\bm{\underline{\ensuremath{#1}}}}
+\newcommand{\ga}[1]{\bm{\underline{\color{mDarkTeal}\ensuremath{#1}}}}
+\newcommand{\gb}[1]{\bm{\underline{\color{mDarkBrown}\ensuremath{#1}}}}
+
+\providecommand{\ppar}{\ensuremath{\mid}}
+
+\providecommand{\piSend}[3]{\ensuremath{#1\langle #2 \rangle.#3}}
+\providecommand{\piBoundSend}[3]{\ensuremath{#1[ #2 ].#3}}
+\providecommand{\piRecv}[3]{\ensuremath{#1( #2 ).#3}}
+\providecommand{\piPar}[2]{\ensuremath{#1 \ppar #2}}
+\providecommand{\piNew}[2]{\ensuremath{(\nu #1)#2}}
+\providecommand{\piRepl}[1]{\ensuremath{!#1}}
+\providecommand{\piHalt}[0]{\ensuremath{0}}
+\providecommand{\piSub}[3]{\ensuremath{#3\{#1/#2\}}}
+
+\providecommand{\tm}[1]{\ensuremath{\normalfont#1}}
+\providecommand{\ty}[1]{\ensuremath{\normalfont#1}}
+\providecommand{\seq}[2][]{\ensuremath{\tm{#1}\;\vdash\;\ty{#2}}}
+\providecommand{\tmty}[2]{\ensuremath{\tm{#1}\colon\!\ty{#2}}}
+\providecommand{\NOM}[1]{\RightLabel{\textsc{#1}}}
+\providecommand{\SYM}[1]{\RightLabel{\ensuremath{#1}}}
+\newenvironment{prooftree*}{\leavevmode\hbox\bgroup}{\DisplayProof\egroup}
+
+\providecommand{\cpLink}[2]{\ensuremath{#1{\leftrightarrow}#2}}
+\providecommand{\cpCut}[3]{\ensuremath{\piNew{#1}({\piPar{#2}{#3}})}}
+\providecommand{\cpSend}[4]{\ensuremath{#1[#2].(\piPar{#3}{#4})}}
+\providecommand{\cpRecv}[3]{\ensuremath{#1(#2).#3}}
+\providecommand{\cpWait}[2]{\ensuremath{#1().#2}}
+\providecommand{\cpHalt}[1]{\ensuremath{#1[].0}}
+\providecommand{\cpInl}[2]{\ensuremath{#1\triangleleft\texttt{inl}.#2}}
+\providecommand{\cpInr}[2]{\ensuremath{#1\triangleleft\texttt{inr}.#2}}
+\providecommand{\cpCase}[3]{\ensuremath{#1\triangleright\{\texttt{inl}:#2;\texttt{inr}:#3\}}}
+\providecommand{\cpAbsurd}[1]{\ensuremath{#1\triangleright\{\}}}
+\providecommand{\cpSub}[3]{\ensuremath{\piSub{#1}{#2}{#3}}}
+\providecommand{\cpPlug}[2]{\ensuremath{{#1}[{#2}]}}
+
+\providecommand{\plus}{\ensuremath{\oplus}}
+\providecommand{\tens}{\ensuremath{\otimes}}
+\providecommand{\one}{\ensuremath{\mathbf{1}}}
+\providecommand{\nil}{\ensuremath{\mathbf{0}}}
+\providecommand{\limp}{\ensuremath{\multimap}}
+\providecommand{\emptycontext}{\ensuremath{\,\cdot\,}}
+\providecommand{\bigtens}{\ensuremath{\scalerel*{\tens}{\sum}}}
+\providecommand{\bigparr}{\ensuremath{\scalerel*{\parr}{\sum}}}
+
+\providecommand{\cpInfAx}{%
+  \begin{prooftree*}
+    \AXC{$\vphantom{\seq[ Q ]{ \Delta, \tmty{y}{A^\bot} }}$}
+    \NOM{Ax}
+    \UIC{$\seq[ \cpLink{x}{y} ]{ \tmty{x}{A}, \tmty{y}{A^\bot} }$}
+  \end{prooftree*}}
+\providecommand{\cpInfCut}{%
+  \begin{prooftree*}
+    \AXC{$\seq[ P ]{ \Gamma, \tmty{x}{A} }$}
+    \AXC{$\seq[ Q ]{ \Delta, \tmty{x}{A^\bot} }$}
+    \NOM{Cut}
+    \BIC{$\seq[ \cpCut{x}{P}{Q} ]{ \Gamma, \Delta }$}
+  \end{prooftree*}}
+\providecommand{\cpInfMix}{%
+  \begin{prooftree*}
+    \AXC{$\seq[ P ]{ \Gamma }$}
+    \AXC{$\seq[ Q ]{ \Delta }$}
+    \NOM{Mix}
+    \BIC{$\seq[ \piPar{P}{Q} ]{ \Gamma , \Delta }$}
+  \end{prooftree*}}
+\providecommand{\cpInfCycle}{%
+  \begin{prooftree*}
+    \AXC{$\seq[ P ]{ \Gamma, \tmty{x}{A}, \tmty{y}{A^\bot}}$}
+  \end{prooftree*}}
+\providecommand{\cpInfHalt}{%
+  \begin{prooftree*}
+    \AXC{$\vphantom{\seq[ Q ]{ \Delta, \tmty{y}{A^\bot} }}$}
+    \NOM{Halt}
+    \UIC{$\seq[{ \piHalt }]{}$}
+  \end{prooftree*}}
+
+%% Logical rules
+\providecommand{\cpInfTens}{%
+  \begin{prooftree*}
+    \AXC{$\seq[ P ]{ \Gamma , \tmty{y}{A} }$}
+    \AXC{$\seq[ Q ]{ \Delta , \tmty{x}{B} }$}
+    \SYM{(\tens)}
+    \BIC{$\seq[ \cpSend{x}{y}{P}{Q} ]{ \Gamma , \Delta , \tmty{x}{A \tens B} }$}
+  \end{prooftree*}}
+\providecommand{\cpInfParr}{%
+  \begin{prooftree*}
+    \AXC{$\seq[ P ]{ \Gamma , \tmty{y}{A} , \tmty{x}{B} }$}
+    \SYM{(\parr)}
+    \UIC{$\seq[ \cpRecv{x}{y}{P} ]{ \Gamma , \tmty{x}{A \parr B} }$}
+  \end{prooftree*}}
+\providecommand{\cpInfOne}{%
+  \begin{prooftree*}
+    \AXC{$\vphantom{\seq[ P ]{ \Gamma }}$}
+    \SYM{(\one)}
+    \UIC{$\seq[ \cpHalt{x} ]{ \tmty{x}{\one} }$}
+  \end{prooftree*}}
+\providecommand{\cpInfBot}{%
+  \begin{prooftree*}
+    \AXC{$\seq[ P ]{ \Gamma }$}
+    \SYM{(\bot)}
+    \UIC{$\seq[ \cpWait{x}{P} ]{ \Gamma , \tmty{x}{\bot} }$}
+  \end{prooftree*}}
+\providecommand{\cpInfPlus}[1]{%
+  \ifdim#1pt=1pt
+  \begin{prooftree*}
+    \AXC{$\seq[ P ]{ \Gamma , \tmty{x}{A} }$}
+    \SYM{(\plus_1)}
+    \UIC{$\seq[{ \cpInl{x}{P} }]{ \Gamma , \tmty{x}{A \plus B} }$}
+  \end{prooftree*}
+  \else%
+  \ifdim#1pt=2pt
+  \begin{prooftree*}
+    \AXC{$\seq[ P ]{ \Gamma , \tmty{x}{B} }$}
+    \SYM{(\plus_2)}
+    \UIC{$\seq[ \cpInr{x}{P} ]{ \Gamma , \tmty{x}{A \plus B} }$}
+  \end{prooftree*}
+  \else%
+  \fi%
+  \fi%
+}
+\providecommand{\cpInfWith}{%
+  \begin{prooftree*}
+    \AXC{$\seq[ P ]{ \Gamma , \tmty{x}{A} }$}
+    \AXC{$\seq[ Q ]{ \Gamma , \tmty{x}{B} }$}
+    \SYM{(\with)}
+    \BIC{$\seq[ \cpCase{x}{P}{Q} ]{ \Gamma , \tmty{x}{A \with B} }$}
+  \end{prooftree*}}
+\providecommand{\cpInfNil}{%
+  \text{(no rule for \ty{\nil})}}
+\providecommand{\cpInfTop}{%
+  \begin{prooftree*}
+    \AXC{}
+    \SYM{(\top)}
+    \UIC{$\seq[ \cpAbsurd{x} ]{ \Gamma, \tmty{x}{\top} }$}
+  \end{prooftree*}}
 
 %%% Local Variables:
 %%% TeX-master: "main"
