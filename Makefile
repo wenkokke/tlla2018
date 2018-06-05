@@ -25,11 +25,11 @@ endef
 
 $(foreach doc,$(DOC),$(eval $(call DOC_template,$(doc))))
 
-setup:
+travis-setup:
 ifndef TEXLIVEONFLY
 	curl -L http://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz | tar xz -C $(HOME)
 	cd $(HOME)/install-tl-*;\
-		yes i | ./install-tl --profile=$(TRAVISpdfs_DIR)/texlive.profile
+		yes i | ./install-tl --profile=$(TRAVIS_BUILD_DIR)/texlive.profile
 	tlmgr install                 \
 		luatex                      \
 		biber                       \
@@ -48,4 +48,4 @@ ifndef TEXLIVEONFLY
 		collection-bibtexextra
 endif
 
-.phony: setup
+.phony: travis-setup
