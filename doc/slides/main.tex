@@ -386,8 +386,8 @@
       \(
       \begin{array}{lrlrl}
         \mathcal{G}, \mathcal{H}
-        & :=   & \mathcal{G}, \Gamma
-        & \mid & \varnothing
+        & :=   & \mathcal{G} \mathbin{\ga{\mid}} \Gamma
+        & \mid & \ga{\varnothing}
       \end{array}
       \)
       \vspace*{0.5\baselineskip}}
@@ -496,9 +496,7 @@
       \end{center}}
     \only<4,5>{%
       \Huge\centering
-      \(
-      (\nu x)(x(y).\only<5>{x[y].}\dots)
-      \)}
+      \((\nu x)(x(y).\only<5>{x[y].}\dots)\)}
     \only<6>{%
       \Huge\centering
       \begin{center}
@@ -507,9 +505,16 @@
       \begin{center}
         \hcpInfParr
       \end{center}
-      \(
-      \text{if } x \not\in \mathcal{G}
-      \)}
+      \(\text{if } x \not\in \mathcal{G}\)}
+  \end{frame}
+
+  \begin{frame}[plain]
+    \Huge
+    \textbf{Theorem} (Progress)\\
+    \textit{%
+      If $\seq[P]{\mathcal{G}}$, then there exists a $\tm{Q}$ such that
+      $\tm{P}\Longrightarrow^\star\tm{Q}$ and $\tm{Q}$ is not a cut or a mix.
+    }
   \end{frame}
 
   \begin{frame}
@@ -517,8 +522,7 @@
     \textbf{Theorem} (Representability)\\
     \textit{%
       If $\seq{\Gamma_1 \hsep \dots \hsep \Gamma_n}$ in our new calculus, then
-      $\seq{\bigparr\Gamma_1 \tens \dots \tens \bigparr\Gamma_n}$ in CP. 
-    }
+      $\seq{\bigparr\Gamma_1 \tens \dots \tens \bigparr\Gamma_n}$ in CP.}
   \end{frame}
 \end{document}
 

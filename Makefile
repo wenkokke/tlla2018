@@ -13,7 +13,7 @@ pdfs/$(1).pdf: pdfs/ doc/$(1)/main.tex
 	cd doc/$(1);\
 		$(TEXLIVEONFLY)                             \
 			-c latexmk                                \
-			-a "-pdflatex=pdflatex                    \
+			-a "-pdflatex=lualatex                    \
 			    -f                                    \
 			    -pdf                                  \
 			    -outdir=../../pdfs                  \
