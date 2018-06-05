@@ -287,37 +287,51 @@
            & \mid & \cdot
       \end{array}
       \)}
+    \only<2>{\(
+      \begin{array}{lcl}
+        (A \otimes B)^\bot = A^\bot \parr   B^\bot & \quad & \one^\bot = \bot \\
+        (A \parr   B)^\bot = A^\bot \otimes B^\bot & \quad & \bot^\bot = \one \\
+      \end{array}
+      \)}
   \end{frame}
 
   \begin{frame}
     \Large\centering
-    \begin{prooftree}
-      \AXC{$
-        \mail
-        \vdash
-        \Gamma, y : \mailtok
-        $}
-      \AXC{$
-        \whatever
-        \vdash
-        \Delta, x : \dunno
-        $}
-      \BIC{$
-        x[y].(\mail \mid \whatever)
-        \vdash
-        \Gamma, \Delta, x : \mailtok \otimes \dunno
-        $}
-      \AXC{$
-        x(y).\supervisor
-        \vdash
-        \Theta, x : \mailtok^\bot \parr \dunno^\bot
-        $}
-      \BIC{$
-        (\nu x)(x[y].(\mail \mid \whatever) \mid x(y).\supervisor)
-        \vdash
-        \Gamma, \Delta, \Theta
-        $}
-    \end{prooftree}
+    \only<1>{
+      \begin{prooftree}
+        \AXC{$
+          \mail
+          \vdash
+          \Gamma, y : \mailtok
+          $}
+        \AXC{$
+          \whatever
+          \vdash
+          \Delta, x : \dunno
+          $}
+        \BIC{$
+          x[y].(\mail \mid \whatever)
+          \vdash
+          \Gamma, \Delta, x : \mailtok \otimes \dunno
+          $}
+        \AXC{$
+          x(y).\supervisor
+          \vdash
+          \Theta, x : \mailtok^\bot \parr \dunno^\bot
+          $}
+        \BIC{$
+          (\nu x)(x[y].(\mail \mid \whatever) \mid x(y).\supervisor)
+          \vdash
+          \Gamma, \Delta, \Theta
+          $}
+      \end{prooftree}}
+    \only<2>{
+      \begin{center}
+        \cpInfTens \cpInfParr
+      \end{center}
+      \begin{center}
+        \cpInfCut
+      \end{center}}
   \end{frame}
 
   \begin{frame}
@@ -366,8 +380,8 @@
   \end{frame}
 
   \begin{frame}
-    \Huge\centering
     \onslide<2,3,4>{
+      \Huge\centering
       \vspace*{0.5\baselineskip}
       \(
       \begin{array}{lrlrl}
@@ -378,6 +392,7 @@
       \)
       \vspace*{0.5\baselineskip}}
     \only<1>{%
+      \Huge\centering
       \begin{prooftree}
         \AXC{$P \vdash \Gamma$}
         \AXC{$Q \vdash \Delta$}
@@ -402,7 +417,107 @@
           \AXC{$P \vdash \mathcal{G} \mid \Gamma, x : A \mid \Delta, x : A^\bot$}
           \RightLabel{\textsc{H-Cut}}
           \UIC{$(\nu x)P \vdash \mathcal{G} \mid \Gamma, \Delta$}
-        \end{prooftree}}
+        \end{prooftree}}}
+    \only<5>{%
+      \huge\centering
+      \begin{prooftree}
+        \AXC{}\UIC{$x{\leftrightarrow}y \vdash x : A, y : A^\bot$}
+        \AXC{}\UIC{$y{\leftrightarrow}x \vdash y : A, x : A^\bot$}
+        \BIC{$
+          (x{\leftrightarrow}y \mid y{\leftrightarrow}x)
+          \vdash
+          x : A, y : A^\bot \mid y : A, x : A^\bot
+          $}
+        \UIC{$
+          (\nu x)(x{\leftrightarrow}y \mid y{\leftrightarrow}x)
+          \vdash
+          y : A^\bot, y : A
+          $}
+        \vspace*{2\baselineskip}
+    \end{prooftree}}
+  \end{frame}
+
+  \begin{frame}
+    \only<1>{
+      \Large\centering
+      \begin{prooftree}
+        \AXC{$
+          \mail
+          \vdash
+          \Gamma, y : \mailtok
+          $}
+        \AXC{$
+          \whatever
+          \vdash
+          \Delta, x : \dunno
+          $}
+        \BIC{$
+          (\mail \mid \whatever)
+          \vdash
+          \Gamma, y : \mailtok \mid \Delta, x : \dunno
+          $}
+        \UIC{$
+          x[y].(\mail \mid \whatever)
+          \vdash
+          \Gamma, \Delta, x : \mailtok \otimes \dunno
+          $}
+        \AXC{$
+          x(y).\supervisor
+          \vdash
+          \Theta, x : \mailtok^\bot \parr \dunno^\bot
+          $}
+        \BIC{$
+          (x[y].(\mail \mid \whatever) \mid x(y).\supervisor)
+          \vdash
+          \Gamma, \Delta, x : \mailtok \otimes \dunno \mid
+          \Theta, x : \mailtok^\bot \parr \dunno^\bot
+          $}
+        \UIC{$
+          (\nu x)(x[y].(\mail \mid \whatever) \mid x(y).\supervisor)
+          \vdash
+          \Gamma, \Delta, \Theta
+          $}
+      \end{prooftree}}
+    \only<2>{%
+      \Large\centering
+      \begin{center}
+        \hccpInfBoundTens \hcpInfParr
+      \end{center}
+      \begin{center}
+        \hcpInfMix \hccpInfCycle
+      \end{center}}
+    \only<3>{%
+      \Huge\centering
+      \begin{center}
+        \hccpInfBoundTens
+      \end{center}
+      \begin{center}
+        \hcpInfParr
+      \end{center}}
+    \only<4,5>{%
+      \Huge\centering
+      \(
+      (\nu x)(x(y).\only<5>{x[y].}\dots)
+      \)}
+    \only<6>{%
+      \Huge\centering
+      \begin{center}
+        \hccpInfBoundTens
+      \end{center}
+      \begin{center}
+        \hcpInfParr
+      \end{center}
+      \(
+      \text{if } x \not\in \mathcal{G}
+      \)}
+  \end{frame}
+
+  \begin{frame}
+    \Huge
+    \textbf{Theorem} (Representability)\\
+    \textit{%
+      If $\seq{\Gamma_1 \hsep \dots \hsep \Gamma_n}$ in our new calculus, then
+      $\seq{\bigparr\Gamma_1 \tens \dots \tens \bigparr\Gamma_n}$ in CP. 
     }
   \end{frame}
 \end{document}

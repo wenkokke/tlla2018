@@ -34,6 +34,7 @@
 \newcommand{\gb}[1]{\bm{\underline{\color{mDarkBrown}\ensuremath{#1}}}}
 
 \providecommand{\ppar}{\ensuremath{\mid}}
+\providecommand{\hsep}{\ensuremath{\mid}}
 
 \providecommand{\piSend}[3]{\ensuremath{#1\langle #2 \rangle.#3}}
 \providecommand{\piBoundSend}[3]{\ensuremath{#1[ #2 ].#3}}
@@ -164,6 +165,51 @@
     \SYM{(\top)}
     \UIC{$\seq[ \cpAbsurd{x} ]{ \Gamma, \tmty{x}{\top} }$}
   \end{prooftree*}}
+\providecommand{\hccpInfCycle}{%
+  \begin{prooftree*}
+    \AXC{$\seq[{ P }]{
+        \mathcal{G}\hsep
+        \Gamma, \tmty{x}{A} \hsep
+        \Delta, \tmty{x}{A^\bot}
+      }$}
+    \NOM{H-Cut}
+    \UIC{$\seq[{ \piNew{x}{P} }]{
+        \mathcal{G}\hsep
+        \ty{\Gamma}, \ty{\Delta}
+      }$}
+  \end{prooftree*}}
+\providecommand{\hccpInfBoundTens}{%
+  \begin{prooftree*}
+    \AXC{$\seq[{ P }]{
+        \mathcal{G} \hsep
+        \ty{\Gamma}, \tmty{y}{A} \hsep
+        \ty{\Delta}, \tmty{x}{B}
+      }$}
+    \SYM{\tens}
+    \UIC{$\seq[{ \piBoundSend{x}{y}{P} }]{
+        \mathcal{G} \hsep
+        \ty{\Gamma}, \ty{\Delta}, \tmty{x}{A \tens B}
+      }$}
+  \end{prooftree*}}
+\providecommand{\hcpInfMix}{%
+  \begin{prooftree*}
+    \AXC{$\seq[ P ]{\mathcal{G} }$}
+    \AXC{$\seq[ Q ]{\mathcal{H} }$}
+    \NOM{H-Mix}
+    \BIC{$\seq[ \piPar{P}{Q} ]{
+        \mathcal{G} \hsep \mathcal{H} }$}
+  \end{prooftree*}}
+\providecommand{\hcpInfParr}{%
+  \begin{prooftree*}
+    \AXC{$\seq[ P ]{%
+        \mathcal{G} \hsep
+        \Gamma , \tmty{y}{A} , \tmty{x}{B} }$}
+    \SYM{(\parr)}
+    \UIC{$\seq[ \cpRecv{x}{y}{P} ]{
+        \mathcal{G} \hsep
+        \Gamma , \tmty{x}{A \parr B} }$}
+  \end{prooftree*}}
+
 
 %%% Local Variables:
 %%% TeX-master: "main"
