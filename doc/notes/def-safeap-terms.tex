@@ -1,0 +1,14 @@
+\begin{definition}[Terms]\label{def:safe-ap-terms}
+  We extend the terms from \cref{def:hccp-terms} with the following construct:
+  \begin{gather*}
+    \begin{aligned}
+      \tm{P}, \tm{Q}, \tm{R}
+          :=& \; \dots
+      \\\mid& \; \tm{\apSend{x}{y}{P}} &&\text{connect to access point}
+      \\\mid& \; \tm{\apRecv{x}{y}{P}} &&\text{connect to access point, dual}
+    \end{aligned}
+  \end{gather*}
+\end{definition}
+%%% Local Variables:
+%%% TeX-master: "main"
+%%% End:

@@ -1,0 +1,124 @@
+\newgeometry{right=0.75in,left=0.75in}
+\begin{landscape}
+\begin{figure*}[!p]
+  \centering
+  $$
+  \begin{array}{lcl}
+    \pvar{$\rho_1$}\UIC{$\seq{\mathcal{G}_1 \hsep {A}, \Gamma}$}
+    \pvar{$\rho_2$}\UIC{$\seq{\mathcal{G}_2}$}
+    \NOM{H-Mix}
+    \BIC{$\seq{\mathcal{G}_1 \hsep \mathcal{G}_2}$}
+    \pvar{$\rho_3$}\UIC{$\seq{\mathcal{G}_3 \hsep {A^\bot}, \Delta}$}
+    \NOM{Cut}
+    \BIC{$\seq{\mathcal{G}_1 \hsep \mathcal{G}_2 \hsep \mathcal{G}_3
+    \hsep \Gamma, \Delta}$}
+    \DisplayProof
+    & \Longrightarrow
+    & \pvar{$\rho_1$}\UIC{$\seq{\mathcal{G}_1 \hsep {A}, \Gamma}$}
+      \pvar{$\rho_3$}\UIC{$\seq{\mathcal{G}_3 \hsep {A^\bot}, \Delta}$}
+      \NOM{Cut}
+      \BIC{$\seq{\mathcal{G}_1 \hsep \mathcal{G}_3 \hsep \Gamma, \Delta}$}
+      \pvar{$\rho_2$}\UIC{$\seq{\mathcal{G}_2}$}
+      \NOM{H-Mix}
+      \BIC{$\seq{\mathcal{G}_1 \hsep \mathcal{G}_2 \hsep \mathcal{G}_3
+      \hsep \Gamma, \Delta}$}
+      \DisplayProof
+    \\\\
+    \pvar{$\rho_1$}\UIC{$\seq{\mathcal{G}_1 \hsep {A}, \Gamma}$}
+    \pvar{$\rho_2$}\UIC{$\seq{\mathcal{G}_2}$}
+    \NOM{H-Mix}
+    \BIC{$\seq{\mathcal{G}_1 \hsep \mathcal{G}_2 \hsep {A}, \Gamma}$}
+    \pvar{$\rho_3$}\UIC{$\seq{\mathcal{G}_3 \hsep {B}, \Delta}$}
+    \SYM{\tens}
+    \BIC{$\seq{\mathcal{G}_1 \hsep \mathcal{G}_2 \hsep \mathcal{G}_3
+    \hsep {A \tens B}, \Gamma, \Delta}$}
+    \DisplayProof
+    & \Longrightarrow
+    & \pvar{$\rho_1$}\UIC{$\seq{\mathcal{G}_1 \hsep {A}, \Gamma}$}
+      \pvar{$\rho_3$}\UIC{$\seq{\mathcal{G}_3 \hsep {B}, \Delta}$}
+      \SYM{\tens}
+      \BIC{$\seq{\mathcal{G}_1 \hsep \mathcal{G}_2 \hsep {A \tens B},
+      \Gamma, \Delta}$}
+      \pvar{$\rho_2$}\UIC{$\seq{\mathcal{G}_2}$}
+      \NOM{H-Mix}
+      \BIC{$\seq{\mathcal{G}_1 \hsep \mathcal{G}_2 \hsep \mathcal{G}_3
+      \hsep {A \tens B}, \Gamma, \Delta}$} 
+      \DisplayProof
+    \\\\
+    \pvar{$\rho_1$}\UIC{$\seq{\mathcal{G}_1 \hsep {A}, {B}, \Gamma}$}
+    \pvar{$\rho_2$}\UIC{$\seq{\mathcal{G}_2}$}
+    \NOM{H-Mix}
+    \BIC{$\seq{\mathcal{G}_1 \hsep \mathcal{G}_2 \hsep {A}, {B}, \Gamma}$}
+    \SYM{\parr}
+    \UIC{$\seq{\mathcal{G}_1 \hsep \mathcal{G}_2 \hsep {A \parr B}, \Gamma}$}
+    \DisplayProof
+    & \Longrightarrow
+    & \pvar{$\rho_1$}\UIC{$\seq{\mathcal{G}_1 \hsep {A}, {B}, \Gamma}$}
+      \SYM{\parr}
+      \UIC{$\seq{\mathcal{G}_1 \hsep \mathcal{G}_2 \hsep {A}, {B}, \Gamma}$}
+      \pvar{$\rho_2$}\UIC{$\seq{\mathcal{G}_2}$}
+      \NOM{H-Mix}
+      \BIC{$\seq{\mathcal{G}_1 \hsep \mathcal{G}_2 \hsep {A \parr B}, \Gamma}$}
+      \DisplayProof
+    \\\\
+    \pvar{$\rho_1$}\UIC{$\seq{\mathcal{G}_1 \hsep \Gamma}$}
+    \pvar{$\rho_2$}\UIC{$\seq{\mathcal{G}_2}$}
+    \NOM{H-Mix}
+    \BIC{$\seq{\mathcal{G}_1 \hsep \mathcal{G}_2 \hsep \Gamma}$}
+    \SYM{\bot}
+    \UIC{$\seq{\mathcal{G}_1 \hsep \mathcal{G}_2 \hsep {\bot}, \Gamma}$}
+    \DisplayProof
+    & \Longrightarrow
+    & \pvar{$\rho_1$}\UIC{$\seq{\mathcal{G}_1 \hsep \Gamma}$}
+      \SYM{\bot}
+      \UIC{$\seq{\mathcal{G}_1 \hsep {\bot}, \Gamma}$}
+      \pvar{$\rho_2$}\UIC{$\seq{\mathcal{G}_2}$}
+      \NOM{H-Mix}
+      \BIC{$\seq{\mathcal{G}_1 \hsep \mathcal{G}_2 \hsep \Gamma}$}
+      \DisplayProof
+    \\\\
+    \pvar{$\rho_1$}\UIC{$\seq{\mathcal{G}_1 \hsep {A}, \Gamma}$}
+    \pvar{$\rho_2$}\UIC{$\seq{\mathcal{G}_2}$}
+    \NOM{H-Mix}
+    \BIC{$\seq{\mathcal{G}_1 \hsep \mathcal{G}_2 \hsep {A}, \Gamma}$}
+    \SYM{\plus_1}
+    \UIC{$\seq{\mathcal{G}_1 \hsep \mathcal{G}_2 \hsep {A \plus B}, \Gamma}$}
+    \DisplayProof
+    & \Longrightarrow
+    & \pvar{$\rho_1$}\UIC{$\seq{\mathcal{G}_1 \hsep {A}, \Gamma}$}
+      \SYM{\plus_1}
+      \UIC{$\seq{\mathcal{G}_1 \hsep {A \plus B}, \Gamma}$}
+      \pvar{$\rho_2$}\UIC{$\seq{\mathcal{G}_2}$}
+      \NOM{H-Mix}
+      \BIC{$\seq{\mathcal{G}_1 \hsep \mathcal{G}_2 \hsep {A \plus B}, \Gamma}$}
+      \DisplayProof
+    \\\\
+    \pvar{$\rho_1$}\UIC{$\seq{\mathcal{G}_1 \hsep {A}, \Gamma}$}
+    \pvar{$\rho_2$}\UIC{$\seq{\mathcal{G}_2}$}
+    \NOM{H-Mix}
+    \BIC{$\seq{\mathcal{G}_1 \hsep \mathcal{G}_2 \hsep {A}, \Gamma}$}
+    \pvar{$\rho_3$}\UIC{$\seq{\mathcal{G}_1 \hsep {B}, \Gamma}$}
+    \pvar{$\rho_4$}\UIC{$\seq{\mathcal{G}_2}$} 
+    \NOM{H-Mix}
+    \BIC{$\seq{\mathcal{G}_1 \hsep \mathcal{G}_2 \hsep {B}, \Gamma}$}
+    \SYM{\with}
+    \BIC{$\seq{\mathcal{G}_1 \hsep \mathcal{G}_2 \hsep {A \with B}, \Gamma}$}
+    \DisplayProof
+    & \Longrightarrow
+    & \pvar{$\rho_1$}\UIC{$\seq{\mathcal{G}_1 \hsep {A}, \Gamma}$}
+      \pvar{$\rho_3$}\UIC{$\seq{\mathcal{G}_1 \hsep {B}, \Gamma}$}
+      \SYM{\with}
+      \BIC{$\seq{\mathcal{G}_1 \hsep {A \with B}, \Gamma}$}
+      \pvar{$\rho_2$}\UIC{$\seq{\mathcal{G}_2}$}
+      \NOM{H-Mix}
+      \BIC{$\seq{\mathcal{G}_1 \hsep \mathcal{G}_2 \hsep {A \with B}, \Gamma}$}
+      \DisplayProof
+  \end{array}
+  $$
+  {\footnotesize
+    (We have omitted the rewrite rules for the variants of \textsc{Cut} and $(\tens)$.)}
+  \caption{Rewrite rules for \textsc{H-Mix} in \hcp.}
+  \label{fig:cc-hmix}
+\end{figure*}
+\end{landscape}
+\restoregeometry

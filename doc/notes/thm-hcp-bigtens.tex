@@ -1,0 +1,62 @@
+\begin{definition}\label{def:hcp-bigtens}
+  We can interpret hyper-environments as types by collapsing them using a series
+  of tensors. In the case of the empty hyper-environment
+  $\ty{\emptyhypercontext}$, we interpret this as the unit of tensor.
+  \begin{gather*}
+    \begin{array}{lcl}
+      \ty{\bigtens\emptyhypercontext}
+      & = & \ty{\one}
+      \\
+      \ty{\bigtens(\Gamma_1 \hsep \dots \hsep \Gamma_n)}
+      & = & \ty{\bigparr\Gamma_1 \tens \dots \tens \bigparr\Gamma_n}
+    \end{array}
+  \end{gather*}
+\end{definition}
+\begin{theorem}\label{thm:hcp-bigtens}
+  If $\seq{\mathcal{G}}$ in \hcp, then $\seq{\bigtens\mathcal{G}}$ in \hcp.
+\end{theorem}
+\begin{proof}
+  By case analysis on the structure of $\ty{\mathcal{G}}$.
+  \begin{itemize}
+  \item
+    Case $\ty{\mathcal{G}} = \ty{\emptyhypercontext}$.\\
+    By inversion on the derivation of $\seq{\emptyhypercontext}$.
+    The only typing derivation ends in \textsc{H-Halt}.\\
+    We rewrite as follows:
+    \[
+      \begin{array}{lcl}
+        \AXC{}\NOM{H-Halt}\UIC{$\seq{\emptyhypercontext}$}
+        \DisplayProof
+        & \Rightarrow
+        & \AXC{}\SYM{\one}\UIC{$\seq{\one}$}
+          \DisplayProof
+      \end{array}
+    \] 
+  \item
+    Case $\ty{\mathcal{G}} = \ty{\Gamma_1 \hsep \dots \hsep \Gamma_n}$.\\
+    By induction on the derivation of $\seq{\Gamma_1 \hsep \dots \hsep \Gamma_n}$.
+    \begin{itemize}
+    \item
+      We remove any application of \textsc{H-Mix} where either premise is \textsc{H-Halt}.
+    \item
+      We propagate the applications of \textsc{H-Mix} downwards to the root of the
+      proof, using the rewrite rules in \cref{fig:cc-hmix}, and obtain a
+      derivation of the following form:
+      \begin{prooftree}
+        \pvar{$\rho_1$}\UIC{$\seq{\Gamma_1}$}
+        \AXC{$\dots$}
+        \pvar{$\rho_n$}\UIC{$\seq{\Gamma_n}$}
+        \NOM{H-Mix}
+        \TIC{$\seq{\Gamma_1 \hsep \dots \hsep \Gamma_n}$}
+      \end{prooftree}
+    \item
+      We apply \cref{lem:hcp-bigparr} to each sub-proof $\rho_i$ to obtain a
+      series of single-formula sequents, joined by applications of \textsc{H-Mix}.
+    \item
+      We replace the applications of \textsc{H-Mix} with applications of $(\tens)$.
+    \end{itemize}
+  \end{itemize}
+\end{proof}
+%%% Local Variables:
+%%% TeX-master: "main"
+%%% End:

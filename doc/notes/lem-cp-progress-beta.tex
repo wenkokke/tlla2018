@@ -1,0 +1,48 @@
+\begin{lemma}\label{lem:cp-progress-beta}
+  If $\seq[{ \cpPlug{G}{P_1 \dots P_n} }]{ \Gamma }$, and some $\tm{P_i}$ and
+  $\tm{P_j}$, on different sides of at least one cut, act on the same bound
+  channel $\tm{x}$, then there exist $\tm{E}$, $\tm{E_i}$ and $\tm{E_j}$ such that 
+  \(
+  \tm{\cpPlug{G}{P_1 \dots P_n}} =
+  \tm{\cpPlug{E}{\cpCut{x}{\cpPlug{E_i}{P_i}}{\cpPlug{E_j}{P_j}}}}
+  \).
+\end{lemma}
+\begin{proof}
+  By induction on the structure of $\tm{G}$.
+  \begin{itemize}
+  \item
+    Case $\tm{\cpCut{x}{\cpPlug{G'}{P_1\dots P_i\dots P_m}}{\cpPlug{G''}{P_{m+1}\dots P_j\dots P_n}}}$. 
+    \\
+    \(
+    \arraycolsep=4pt
+    \begin{array}[t]{lll}
+      \text{Let}& \tm{E}   &:= \tm{\hole}, \\
+                & \tm{E_i} &:= \tm{\cpPlug{G'}{P_1\dots P_{i-1},\hole,P_{i+1}\dots P_m}}, \\
+                & \tm{E_j} &:= \tm{\cpPlug{G''}{P_{m+1}\dots P_{j-1},\hole,P_{j+1}\dots P_n}}.
+    \end{array}
+    \)
+    \\[1ex]
+    By reflexivity.
+  \item
+    Case $\tm{\cpCut{x}{\cpPlug{G'}{P_1\dots P_j\dots P_m}}{\cpPlug{G''}{P_{m+1}\dots P_i\dots P_n}}}$.
+    \\
+    As above.
+  \item
+    Case $\tm{\cpCut{y}{\cpPlug{G'}{P_1\dots P_i\dots P_j\dots P_m}}{\cpPlug{G''}{P_{m+1}\dots P_n}}}$. \\
+    Case $\tm{\cpCut{y}{\cpPlug{G'}{P_1\dots P_m}}{\cpPlug{G''}{P_{m+1}\dots P_i\dots P_j\dots P_n}}}$.
+    \\
+    We obtain $\tm{E}$, $\tm{E_1}$ and $\tm{E_2}$ from the induction hypothesis and
+    \cref{thm:cp-preservation-equiv}, and then prepend either
+    $\tm{\cpCut{y}{\hole}{\cpPlug{G''}{P_{m+1}\dots P_n}}}$ or
+    $\tm{\cpCut{y}{\cpPlug{G'}{P_1\dots P_m}}{\hole}}$ to $\tm{E}$.
+    The desired equality follows by congruence.
+  \end{itemize}
+  The case for $\tm{\hole}$ is excluded because $n > 1$.
+  The cases in which $\tm{P_i}$ and $\tm{P_j}$ are on the \emph{same} side of the
+  cut, but the cut binds $\tm{x}$, and the cases in which $\tm{P_i}$ and $\tm{P_j}$
+  are on different sides of the cut, but the cut binds some other channel
+  $\tm{y}$, are excluded by the type system.
+\end{proof}
+%%% Local Variables:
+%%% TeX-master: "main"
+%%% End:

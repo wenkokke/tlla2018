@@ -1,0 +1,486 @@
+\documentclass[aspectratio=169,xcolor={dvipsnames,table}]{beamer}
+\input{preamble-typing}
+\input{preamble-emoji}
+\usetheme{metropolis}
+\title{Taking Apart Classical Processes}
+\date{December 18th, 2017}
+\author{Wen Kokke}
+\institute{University of Edinburgh}
+\newcommand*{\comment}[1]{\textcolor{mLightGreen}{#1}}
+\begin{document}
+\maketitle
+
+\begin{frame}{Dramatis person\ae}
+ \centering\Huge
+ \begin{tabular}{lll}
+   \mary  && Mary           \\
+   \john  && John           \\
+   \only<1,3>{\cake}\only<2>{\oldcake}
+          && Cake           \\
+   \money && Money
+ \end{tabular}
+\end{frame}
+
+{
+  \setbeamertemplate{frame footer}{%
+    \textcolor{mDarkTeal}{(Milner, Parrow, and Walker, 1992.)}}
+  \begin{frame}{Cake so Good It Should Be Illegal}
+    \centering\Huge
+    \vfill
+    \textit{``Gimme the cake, and you'll have your money!''}
+    \textit{``No! Money first!''}
+    \vfill
+    \[
+      \piNew{x}{(\piPar{
+          \; \piRecv{x}{z}{\piSend{x}{\money}{\mary}} \;
+        }}{
+        \; \piRecv{x}{y}{\piSend{x}{\cake}{\john}} \;
+        )}
+    \]
+    \vfill
+  \end{frame}
+}
+
+{
+  \setbeamertemplate{frame footer}{%
+    \textcolor{mDarkTeal}{(Caires and Pfenning, 2010\hsep Wadler, 2012.)}}
+  \begin{frame}{Classical Processes -- Types, Contexts, and Typing Rules}
+    \centering\Large
+    \[\!
+      \arraycolsep=0.16667em
+      \begin{array}{lll}
+        \text{Type}&\ty{A},\ty{B}
+        & := \ty{A \tens B} \mid \ty{A \parr B}
+          \mid \dots \\
+        \text{Ctxt}&\ty{\Gamma},\ty{\Delta}
+        & := \tmty{x_1}{A_1},\dots,\tmty{x_n}{A_n}
+      \end{array}
+    \] 
+    \only<1>{%
+      \begin{center}
+        \cpInfAx
+        \cpInfCut
+      \end{center}
+    }
+    \only<2>{%
+      \begin{center}
+        \cpInfTens
+        \cpInfParr
+      \end{center}
+      \begin{center}
+        \cpInfOne
+        \cpInfBot
+      \end{center}
+    }
+    \vfill
+  \end{frame}
+}
+
+\begin{frame}{Classical Processes -- Best Facilitator of Illegal Cake Resale}
+  \centering
+  \vfill
+  \Huge
+  \textit{``Fine! I'll go first!''}
+  \vfill
+  \Large
+  \[\!
+    \begin{aligned}
+      \piNew{x}{}
+      & ( & \cpSend{x}{u}{\cpLink{u}{\money}}{\cpRecv{x}{z}{\mary}}
+          & \piPar{}{}
+          & \cpRecv{x}{y}{\cpSend{x}{v}{\cpLink{v}{\cake}}{\john}}
+          )
+    \end{aligned}
+  \]
+  \vfill
+\end{frame}
+
+\begin{frame}{Classical Processes -- Terms}
+  \centering\Large
+  \vfill
+  \[\!
+    \begin{aligned}
+      \tm{P}, \tm{Q}, \tm{R}
+           :=& \; \tm{\cpCut{x}{P}{Q}}
+      &      &\comment{Communication}
+      \\ \mid& \; \tm{\cpSend{x}{y}{P}{Q}}
+      &      &\comment{Independence, ``send''}
+      \\ \mid& \; \tm{\cpRecv{x}{y}{P}}
+      &      &\comment{Interdependence, ``receive''}
+      \\ \mid& \; \tm{\cpHalt{x}}
+      &      &\comment{Halt}
+      \\ \mid& \; \tm{\cpWait{x}{P}}
+      &      &\comment{Wait}
+      \\ \mid& \; \dots
+    \end{aligned}
+  \]  
+\end{frame}
+
+\begin{frame}[label=hccp1]{\hccp\ -- Types, Contexts, and Typing Rules}
+  \centering\Large
+  \vfill
+  \[\!
+    \arraycolsep=0.16667em
+    \begin{array}{lll}
+      \text{Type} & \ty{A},\ty{B}
+      & := \ty{A \tens B} \mid \ty{A \parr B}
+        \mid \ty{\one} \mid \ty{\bot}
+        \mid \dots
+      \\
+      \text{Ctxt} & \ty{\Gamma},\ty{\Delta}
+      & := \tmty{x_1}{A_1},\dots,\tmty{x_n}{A_n}
+      \\
+      \text{I'm gonna talk about hypersequent CP, about constrained cyclic Meta} & \ty{X},\ty{Y}
+      & := \ty{\Gamma_1\hsep\dots\hsep\Gamma_n}
+    \end{array}
+  \]
+  \begin{center}
+    \hccpInfAx
+    \hccpInfHalt
+  \end{center}
+  \begin{center}
+    \hccpInfCycle
+    \hccpInfMix
+  \end{center}
+\end{frame}
+
+\begin{frame}{\hccp\ -- An Intuition for Semicolons}
+  \centering\Large
+  If $\tm{P}$ is typed by $\seq[P]{\ty{\Gamma}}$,\\
+  it will reduce to a single process.
+  \vfill
+  If $\tm{P}$ is typed by $\seq[P]{\ty{\Gamma_1}\hsep\dots\hsep\ty{\Gamma_n}}$,\\
+  it will reduce to a series of $n$ parallel processes.
+\end{frame}
+
+\begin{frame}{\hccp\ -- Cut is Derivable}
+  \centering\Large
+  \vfill
+  \begin{prooftree}
+    \AXC{$\seq[P]{\tmty{x}{A}, \Gamma\only<2>{\hsep X}}$}
+    \AXC{$\seq[Q]{\tmty{\bar{x}}{A^\bot}, \Delta\only<2>{\hsep Y}}$}
+    \NOM{Mix}
+    \BIC{$\seq[(\piPar{P}{Q})]{%
+        \tmty{x}{A}, \Gamma\hsep \tmty{\bar{x}}{A^\bot},
+        \Delta\only<2>{\hsep X\hsep Y}}$}
+    \NOM{Cycle}
+    \UIC{$\seq[\piNew{x\bar{x}}{(\piPar{P}{Q})}]{%
+        \Gamma, \Delta\only<2>{\hsep X\hsep Y}}$}
+  \end{prooftree}
+\end{frame}
+
+\begin{frame}{\hccp\ -- ``Multicut'' is Derivable}
+  \centering\Large
+  \vfill
+  ``Multicut''
+  \begin{prooftree}
+    \AXC{$\seq[P]{
+        \tmty{x_1}{A_1}, \Gamma_1\hsep
+        \dots\hsep
+        \tmty{x_n}{A_n}, \Gamma_n\hsep X}$}
+    \AXC{$\seq[Q]{
+        \tmty{\bar{x}_1}{A^\bot_1}, \Delta_1\hsep
+        \dots\hsep
+        \tmty{\bar{x}_n}{A^\bot_n}, \Delta_n\hsep Y}$}
+    \BIC{$\seq[\piNew{x_1\bar{x}_1 \dots x_n\bar{x}_n}{(\piPar{P}{Q})}]{
+        \Gamma_1, \Delta_1\hsep
+        \dots\hsep 
+        \Gamma_n, \Delta_n\hsep X\hsep Y}$}
+  \end{prooftree}
+\end{frame}
+
+\begin{frame}[label=hccp2]{\hccp\ -- Types, Contexts, and Typing Rules (cont'd)}
+  \centering\Large
+  \vfill
+  \[\!
+    \arraycolsep=0.16667em
+    \begin{array}{lll}
+      \text{Type} & \ty{A},\ty{B}
+      & := \ty{A \tens B} \mid \ty{A \parr B}
+        \mid \ty{\one} \mid \ty{\bot}
+        \mid \dots
+      \\
+      \text{Ctxt} & \ty{\Gamma},\ty{\Delta}
+      & := \tmty{x_1}{A_1},\dots,\tmty{x_n}{A_n}
+      \\
+      \text{Meta} & \ty{X},\ty{Y}
+      & := \ty{\Gamma_1\hsep\dots\hsep\Gamma_n}
+    \end{array}
+  \]
+  \begin{center}
+    \hccpInfBoundTens
+    \hccpInfParr
+  \end{center}
+  \begin{center}
+    \hccpInfOne
+    \hccpInfBot
+  \end{center} 
+  \vfill
+\end{frame}
+
+\begin{frame}{\hccp\ -- 41st Best Facilitator of Illegal Cake Resale}
+  \centering\Huge
+  \vfill
+  \textit{``Fine! I'll go first!''}
+  \vfill
+  \[\!
+    \begin{aligned}
+      \piNew{x\bar{x}}{(\piPar
+      {& \; \cpSend{x}{u}{\cpLink{u}{\money}}{\cpRecv{x}{z}{\mary}} \\}
+      {& \; \cpRecv{\bar{x}}{y}{\cpSend{\bar{x}}{v}{\cpLink{v}{\cake}}{\john}} \;})}
+    \end{aligned}
+  \]
+  \vfill
+\end{frame}
+
+\begin{frame}{\hccp\ -- Terms}
+  \centering\Large
+  \vfill
+  \[\!
+    \begin{aligned}
+      \tm{P}, \tm{Q}, \tm{R}
+           :=& \; \tm{\piNew{x\bar{x}}{P}}
+      &      &\comment{Channel Creation}
+      \\ \mid& \; \tm{(\piPar{P}{Q})}
+      &      &\comment{Parallel Composition}
+      \\ \mid& \; \tm{\piHalt}
+      &      &\comment{Halted Process}
+      \\ \mid& \; \tm{\piBoundSend{x}{y}{P}}
+      &      &\comment{Independence, ``send''}
+      \\ \mid& \; \tm{\piRecv{x}{y}{P}}
+      &      &\comment{Interdependence, ``receive''}
+      \\ \mid& \; \dots
+    \end{aligned}
+  \]  
+\end{frame}
+
+{
+  \setbeamertemplate{frame footer}{%
+    \textcolor{mDarkTeal}{(Boreale, 1996\hsep Lindley and Morris, 2015.)}}
+  \begin{frame}{\hccp\ -- Setting Send Free}
+    \centering\Large
+    \vfill
+    \[
+      \tm{\piBoundSend{x}{y}{P}} :=
+      \tm{\piNew{y\bar{y}}{( \piSend{x}{y}{P} )}}
+    \]
+    \vfill
+    \begin{center}
+      \hccpInfTens
+    \end{center}
+    \vfill
+    \begin{prooftree}
+      \AXC{$\seq[P]{\tmty{y}{A}, \Gamma\hsep \tmty{x}{B}, \Delta\hsep X}$}
+      \SYM{\tens}
+      \UIC{$\seq[{\piSend{x}{y}{P}}]{
+          \tmty{y}{A}, \Gamma\hsep
+          \tmty{x}{A \tens B}, \tmty{\bar{y}}{A^\bot}, \Delta\hsep X}$}
+      \NOM{Cycle}
+      \UIC{$\seq[{\piNew{y\bar{y}}{( \piSend{x}{y}{P} )}}]{
+          \tmty{x}{A \tens B}, \Gamma, \Delta\hsep X}$}
+    \end{prooftree}
+    \vfill
+  \end{frame}
+}
+
+\begin{frame}{Cake so Good It Should Be Illegal}
+  \centering\Huge
+  \vfill
+  \textit{``Fine! I'll go first!''}
+  \vfill
+  \[
+    \piNew{x}{(\piPar{
+      \; \piSend{x}{\money}{\piRecv{x}{z}{\mary}} \;
+    }}{
+      \; \piRecv{x}{y}{\piSend{x}{\cake}{\john}} \;
+    )}
+  \]
+  \vfill
+\end{frame}
+
+{
+  \setbeamertemplate{frame footer}{%
+    \textcolor{mDarkTeal}{(*Modulo \emph{a lot of things}, like the case
+      construct, etc.)}}
+  \begin{frame}{Conclusion?}
+    \centering\Huge
+    We have taken CP apart, and its term constructs now match that of the
+    \textpi-calculus, more or less*!
+  \end{frame}
+}
+
+{
+  \begin{frame}{\hccp\ -- An Interesting Theorem\dots}
+    \centering\Large
+    If $\seq[P]{\Gamma_1\hsep \dots\hsep \Gamma_{n+1}}$,\\
+    then there exist $\tm{x_1}\dots\tm{x_n}$ and $\tm{\pi_1}\dots\tm{\pi_{n+1}}$,
+    such that
+    \[
+      \seq[\piNew{x_1\bar{x_1}}\dots\piNew{x_n\bar{x_n}}{%
+        (\pi_1.0 \mid \dots \mid \pi_{n+1}.0)}]{\Gamma_1\hsep \dots\hsep \Gamma_{n+1}}.
+    \]
+  \end{frame}
+}
+
+\begin{frame}{\hccp\ -- \dots and its Awkward Cousin}
+  \centering\Large
+  \only<1>{%
+    If $\seq[P]{\Gamma_1\hsep \dots\hsep \Gamma_{n+1}}$,\\
+    then there exist $\tm{x_1}\dots\tm{x_n}$ and $\tm{\pi_1}\dots\tm{\pi_{n+1}}$,
+    such that
+    \[
+      \seq[\piNew{x_1\bar{x_1}}\dots\piNew{x_n\bar{x_n}}{%
+        (\{\pi_1,\dots,\pi_{n+1}\}.(0^{n+1}) )}]{\Gamma_1\hsep \dots\hsep \Gamma_{n+1}},
+    \]
+    where $\tm{(0^n)}$ represents $n$ halted processes in parallel.
+  }
+  \only<2>{%
+    So, for instance
+    \[
+      \tm{\piNew{x\bar{x}}{(%
+          \piPar{\piRecv{x}{}{\piHalt}}{\piSend{\bar{x}}{}{\piHalt}} )}}
+    \]
+    corresponds to
+    \[
+      \tm{\piNew{x\bar{x}}{(%
+          \piRecv{x}{}{\piSend{\bar{x}}{}{(\piPar{\piHalt}{\piHalt})}})}}
+    \]
+    which looks deadlocked to me.
+  }
+\end{frame} 
+
+{
+  \begin{frame}{Where to go from here?}
+    \centering\Large
+    We can submit to a nice, sunny conference upstate\dots
+  \end{frame}
+}
+
+{
+  \setbeamertemplate{frame footer}{%
+    \textcolor{mDarkTeal}{(Dardha and Gay, 2017)}}
+  \begin{frame}{Where to go from here?}
+    \centering\Large
+    \only<1>{
+      We can restrict the type system further, to restrict access to named
+      channels if their co-names are still in scope\dots\\
+    }
+    \only<2>{
+      This gets rid of stuff like
+      \[
+        \tm{\piNew{x\bar{x}}{(\piNew{y\bar{y}}{(%
+              \piRecv{x}{}{\piSend{\bar{x}}{}{%
+                  \piRecv{y}{}{\piSend{\bar{y}}{}{(%
+                      \piPar{\piHalt}{\piHalt})}})}}}}}.
+      \]
+    }
+  \end{frame}
+}
+
+{
+  \setbeamertemplate{frame footer}{%
+    \textcolor{mDarkTeal}{(Bellin and Scott, 1994)}}
+  \begin{frame}{Where to go from here?}
+    \centering\Large
+    \only<1>{
+      We can equate all these processes,
+      \[
+        \tm{\pi.(P \mid Q)} \equiv \tm{(\pi.P \mid Q)}
+        \quad \text{if} \quad \text{fv}(\tm{\pi}) \cap \text{fv}(\tm{Q})
+        = \varnothing
+      \]
+      which allows all deadlocked processes to proceed.
+    }
+    \only<2>{
+      Basically, this is like saying
+      \[
+        \tm{\piNew{x\bar{x}}{(%
+            \piRecv{x}{}{\piSend{\bar{x}}{}{(\piPar{\piHalt}{\piHalt})}})}}
+      \]
+      is equivalent to
+      \[
+        \tm{\piNew{x\bar{x}}{(%
+            \piPar{\piRecv{x}{}{\piHalt}}{\piSend{\bar{x}}{}{\piHalt}} )}},
+      \]
+      so it can reduce.
+    }
+  \end{frame}
+}
+
+\begin{frame}{\hccp\ -- Reduction Rules}
+  \centering\Large
+  \[
+    \begin{array}{llll}
+      & \tm{\piNew{x\bar{x}}(\piPar{\cpLink{w}{x}}{P})}
+      & \Longrightarrow \;
+      & \tm{\cpSub{w}{\bar{x}}{P}} 
+      \\
+      & \tm{\piNew{x\bar{x}}(%
+        \piPar{\piRecv{x}{z}{R}}{\piSend{\bar{x}}{y}{P}})}
+      & \Longrightarrow \;
+      & \tm{\piNew{x\bar{x}}(\piPar{P}{R})}
+      \\
+      & \tm{\piNew{x\bar{x}}(%
+        \piPar{\piRecv{x}{}{R}}{\piSend{\bar{x}}{}{P}})}
+      & \Longrightarrow \;
+      & \tm{\piNew{x\bar{x}}(\piPar{P}{R})}
+    \end{array}
+  \]
+  \quad
+  \begin{prooftree*}
+    \AXC{\reducesto{P}{P^\prime}}
+    \UIC{\reducesto{\piNew{x\bar{x}}{P}}{\piNew{x\bar{x}}{P^\prime}}}
+  \end{prooftree*}
+  \begin{prooftree*}
+    \AXC{\reducesto{P}{P^\prime}}
+    \UIC{\reducesto{( \piPar{P}{Q} )}{( \piPar{P^\prime}{Q} )}}
+  \end{prooftree*}
+  \begin{prooftree}
+    \AXC{$\tm{P}\equiv\tm{Q}$}
+    \AXC{\reducesto{Q}{Q^\prime}}
+    \AXC{$\tm{Q^\prime}\equiv\tm{P^\prime}$}
+    \TIC{\reducesto{P}{P^\prime}}
+  \end{prooftree}
+\end{frame}
+
+\begin{frame}{\hccp\ -- Structural Congruence}
+  \centering\Large
+  Where $\equiv$ is reflexive, transitive, congruent, and has:
+  \[
+    \begin{array}{llll}
+        \tm{\cpLink{x}{y}}
+      & \equiv \;
+      & \tm{\cpLink{y}{x}}
+      \\
+        \tm{(\piPar{P}{Q})}
+      & \equiv \;
+      & \tm{(\piPar{Q}{P})}
+      \\
+        \tm{( \piPar{P}{( \piPar{Q}{R} )} )}
+      & \equiv \;
+      & \tm{( \piPar{( \piPar{P}{Q} )}{R} )}
+      \\
+        \tm{\piNew{x\bar{x}}{( \piPar{P}{Q} )}}
+      & \equiv \;
+      & \tm{( \piPar{\piNew{x\bar{x}}{P}}{Q} )}
+      & \text{if} \; \tm{x},\tm{\bar{x}}\not\in\text{fv}(\tm{Q})
+      \\
+        \tm{\pi.(P \mid Q)}
+      & \equiv \;
+      & \tm{(\pi.P \mid Q)}
+      & \text{if} \; \text{fv}(\tm{\pi}) \cap \text{fv}(\tm{Q}) = \varnothing
+    \end{array}
+  \]
+\end{frame}
+
+\begin{frame}{Questions? Remarks?}
+  \centering\Huge
+  I have found the calculus I was looking for,
+  but maybe not the calculus I wanted\dots
+\end{frame}
+
+\againframe{hccp1}
+
+\againframe{hccp2}
+
+\end{document}

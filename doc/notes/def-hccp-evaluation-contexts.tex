@@ -1,0 +1,20 @@
+\begin{definition}[Evaluation contexts]\label{def:hccp-evaluation-contexts}
+  We define evaluation contexts as:
+  \begin{gather*}
+    \tm{E} := \tm{\hole} \mid \tm{\piNew{x}{E}} \mid \tm{(\piPar{E}{P})} \mid \tm{(\piPar{P}{E})}
+  \end{gather*}
+\end{definition}
+\begin{definition}[Plugging]\label{def:hccp-evaluation-context-plugging}
+  We define plugging for evaluation contexts as:
+  \begin{gather*}
+    \begin{array}{lcl}
+      \tm{\cpPlug{\hole}{R}}          & := & \tm{R} \\
+      \tm{\cpPlug{(\piNew{x}{E})}{R}} & := & \tm{\piNew{x}{\cpPlug{E}{R}}} \\
+      \tm{\cpPlug{(\piPar{E}{P})}{R}} & := & \tm{\piPar{\cpPlug{E}{R}}{P}} \\
+      \tm{\cpPlug{(\piPar{P}{E})}{R}} & := & \tm{\piPar{P}{\cpPlug{E}{R}}}
+    \end{array}
+  \end{gather*}
+\end{definition}
+%%% Local Variables:
+%%% TeX-master: "main"
+%%% End:

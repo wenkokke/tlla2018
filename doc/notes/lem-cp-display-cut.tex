@@ -1,0 +1,38 @@
+\begin{lemma}\label{lem:cp-display-cut}
+  If $\seq[{ \tm{\cpCut{x}{\cpPlug{E}{P}}{Q}} }]{ \Gamma }$ and
+  $\notFreeIn{x}{E}$, then $\tm{\cpCut{x}{\cpPlug{E}{P}}{Q}} \equiv
+  \tm{\cpPlug{E}{\cpCut{x}{P}{Q}}}$. 
+\end{lemma}
+\begin{proof}
+  By induction on the structure of the evaluation context $\tm{E}$.
+  \begin{itemize}
+  \item
+    Case $\tm{\hole}$. By reflexivity.
+  \item
+    Case $\tm{\cpCut{y}{E}{R}}$.
+    \begin{gather*}
+      \begin{array}{lcl}
+        \tm{\cpCut{x}{\cpCut{y}{\cpPlug{E}{P}}{R}}{Q}} & \equiv &\text{by \cpEquivCutComm}\\
+        \tm{\cpCut{x}{\cpCut{y}{R}{\cpPlug{E}{P}}}{Q}} & \equiv &\text{by \cpEquivCutAss2}\\
+        \tm{\cpCut{y}{R}{\cpCut{x}{\cpPlug{E}{P}}{Q}}} & \equiv &\text{by \cpEquivCutComm}\\
+        \tm{\cpCut{y}{\cpCut{x}{\cpPlug{E}{P}}{Q}}{R}} & \equiv &\text{by the induction hypothesis}\\ 
+        \tm{\cpCut{y}{\cpPlug{E}{\cpCut{x}{P}{Q}}}{R}} &
+      \end{array}
+    \end{gather*}
+  \item
+    Case $\tm{\cpCut{y}{R}{E}}$.
+    \begin{gather*}
+      \begin{array}{lcl}
+        \tm{\cpCut{x}{\cpCut{y}{R}{\cpPlug{E}{P}}}{Q}} & \equiv &\text{by \cpEquivCutAss2}\\
+        \tm{\cpCut{y}{R}{\cpCut{x}{\cpPlug{E}{P}}{Q}}} & \equiv &\text{by the induction hypothesis}\\
+        \tm{\cpCut{y}{R}{\cpPlug{E}{\cpCut{x}{P}{Q}}}}
+      \end{array}
+    \end{gather*}
+  \end{itemize}
+  In each case, the side conditions for \cpEquivCutAss2, $\notFreeIn{x}{R}$ and
+  $\notFreeIn{y}{Q}$, can be inferred from $\notFreeIn{x}{E}$ and the fact that
+  $\tm{\cpCut{x}{\cpPlug{E}{P}}{Q}}$ is well-typed.
+\end{proof}
+%%% Local Variables:
+%%% TeX-master: "main"
+%%% End:

@@ -1,0 +1,21 @@
+\begin{definition}[Reduction]\label{def:safeap-reduction}
+  A reduction $\reducesto{P}{Q}$ denotes that the process $\tm{P}$ can reduce
+  to the process $\tm{Q}$ in a single step. Reductions can only be constructed
+  using the rules in \cref{def:cccp-reduction} and the following addition
+  congruence rule:
+  \begin{gather*}
+    \begin{array}{llcll}
+      \apRedSessInit
+      & \tm{\piNew{xy}{(\piPar{\piPar{\apSend{x}{z}{P}}{\apRecv{y}{w}{Q}}}{R})}}
+      & \Longrightarrow
+      & \tm{\piNew{xy}{\piNew{zw}{(\piPar{\piPar{P}{Q}}{R})}}}
+      \\
+    \end{array}
+  \end{gather*}
+  The relations $\Longrightarrow^{?}$, $\Longrightarrow^{+}$, and
+  $\Longrightarrow^\star$ are the reflexive, the transitive, and the reflexive,
+  transitive closures of $\Longrightarrow$.
+\end{definition}
+%%% Local Variables:
+%%% TeX-master: "main"
+%%% End:

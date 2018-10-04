@@ -1,0 +1,53 @@
+\begin{definition}[Reduction]\label{def:cp-reduction}
+  A reduction $\reducesto{P}{Q}$ denotes that the process $\tm{P}$ can reduce
+  to the process $\tm{Q}$ in a single step. Reductions can only be constructed
+  as follows:
+  \begin{gather*}
+    \begin{array}{llcll}
+      \cpRedAxCut1
+      & \tm{\cpCut{x}{\cpLink{w}{x}}{P}}
+      & \Longrightarrow
+      & \tm{\cpSub{w}{x}{P}} 
+      \\
+      \cpRedBetaTensParr
+      & \tm{\cpCut{x}{\cpSend{x}{y}{P}{Q}}{\cpRecv{x}{z}{R}}}
+      & \Longrightarrow
+      & \tm{\cpCut{y}{P}{\cpCut{x}{Q}{\cpSub{y}{z}{R}}}}
+      \\
+      \cpRedBetaOneBot
+      & \tm{\cpCut{x}{\cpHalt{x}}{\cpWait{x}{P}}}
+      & \Longrightarrow
+      & \tm{P}
+      \\
+      \cpRedBetaPlusWith1
+      & \tm{\cpCut{x}{\cpInl{x}{P}}{\cpCase{x}{Q}{R}}}
+      & \Longrightarrow
+      & \tm{\cpCut{x}{P}{Q}}
+      \\
+      \cpRedBetaPlusWith2
+      & \tm{\cpCut{x}{\cpInr{x}{P}}{\cpCase{x}{Q}{R}}}
+      & \Longrightarrow
+      & \tm{\cpCut{x}{P}{R}}
+    \end{array}
+  \end{gather*}
+  \begin{center}
+    \begin{prooftree*}
+      \AXC{$\reducesto{P}{P^\prime}$}
+      \SYM{\cpRedGammaCut}
+      \UIC{$\reducesto{\cpCut{x}{P}{Q}}{\cpCut{x}{P^\prime}{Q}}$}
+    \end{prooftree*}
+    \begin{prooftree*}
+      \AXC{$\tm{P}\equiv\tm{Q}$}
+      \AXC{$\reducesto{Q}{Q^\prime}$}
+      \AXC{$\tm{Q^\prime}\equiv\tm{P^\prime}$}
+      \SYM{\cpRedGammaEquiv}
+      \TIC{$\reducesto{P}{P^\prime}$}
+    \end{prooftree*}
+  \end{center}
+  The relations $\Longrightarrow^{?}$, $\Longrightarrow^{+}$, and
+  $\Longrightarrow^\star$ are the reflexive, the transitive, and the reflexive,
+  transitive closures of $\Longrightarrow$.
+\end{definition}
+%%% Local Variables:
+%%% TeX-master: "main"
+%%% End:

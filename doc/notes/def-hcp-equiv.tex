@@ -1,0 +1,32 @@
+\begin{definition}[Structural congruence]\label{def:hcp-equiv}
+  We define the structural congruence $\equiv$ as the congruence closure over
+  terms which satisfies the axioms in \cref{def:cp-equiv} and the following
+  additional axioms:
+  \begin{gather*}
+    \begin{array}{llcll}
+      \hcpEquivMixComm
+      & \tm{\piPar{P}{Q}}
+      & \equiv
+      & \tm{\piPar{Q}{P}}
+      \\
+      \hcpEquivMixAss1
+      & \tm{\piPar{P}{( \piPar{Q}{R}} )}
+      & \equiv
+      & \tm{\piPar{( \piPar{P}{Q} )}{R}}
+      \\
+      \hcpEquivMixCut1
+      & \tm{\cpCut{x}{( \piPar{P}{Q} )}{R}}
+      & \equiv
+      & \tm{\piPar{P}{\cpCut{x}{Q}{R}}}
+      & \text{if }\notFreeIn{x}{P} 
+      \\
+      \hcpEquivMixHalt1
+      & \tm{\piPar{P}{\piHalt}}
+      & \equiv
+      & \tm{P}
+    \end{array}
+  \end{gather*}
+\end{definition}
+%%% Local Variables:
+%%% TeX-master: "main"
+%%% End:

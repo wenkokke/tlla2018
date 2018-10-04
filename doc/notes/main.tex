@@ -1,0 +1,402 @@
+\documentclass{article}
+\input{preamble}
+\input{preamble-biblatex}
+\input{preamble-theorems}
+\input{preamble-typing}
+\input{preamble-emoji}
+\pagenumbering{gobble}
+\usepackage[section]{placeins}
+\usepackage[parfill]{parskip}
+\usepackage{titlesec}
+\newcommand{\sectionbreak}{\ifnum\value{section}>1\clearpage\fi}
+\addbibresource{main.bib}
+\author{Wen Kokke}
+\title{Hypersequent Classical Processes}
+\begin{document}
+
+
+\section{Classical Processes}\label{sec:cp}
+In this section, we will introduce a variant of \cp which removes the
+commutative conversions from the reductions.
+\cp was introduced by \textcite{wadler2012}, based on work by \textcite{caires2010}
+and \textcite{gay2009}.
+
+\subsection{Terms}\label{sec:cp-terms}
+\input{def-cp-terms}
+\input{def-cp-equiv}
+\input{def-cp-reduction}
+
+\subsection{Types}\label{sec:cp-types}
+\input{def-cp-types}
+\input{def-cp-negation}
+\input{lem-cp-negation-involutive}
+\input{def-cp-envs}
+\input{def-cp-typing}
+
+\subsection{Properties}\label{sec:cp-properties}
+
+\subsubsection{Preservation}\label{sec:cp-preservation}
+\input{lem-cp-preservation-equiv}
+\input{lem-cp-preservation-subst}
+\input{thm-cp-preservation}
+
+\subsubsection{Canonical Forms and Progress}\label{sec:cp-canonical-forms-and-progress}
+
+\paragraph{Canonical Forms}\label{sec:cp-canonical-forms}
+\input{def-cp-action}
+
+\paragraph{Evaluation Contexts}\label{sec:cp-evaluation-contexts}
+\input{def-cp-evaluation-contexts}
+\input{def-cp-evaluation-prefixes}
+\input{def-cp-maximum-evaluation-prefixes}
+\input{lem-cp-maximum-evaluation-prefixes}
+
+\paragraph{Progress}\label{sec:cp-progress}
+\input{thm-cp-progress}
+
+
+\section{Hypersequent Classical Processes}\label{sec:hcp}
+In this section, we will introduce a variant of \cp based on hypersequent
+calculi.
+Hypersequent calculi were introduced independently by \textcite{avron1987} and
+\textcite{pottinger1983}.
+
+\subsection{Terms}\label{sec:hcp-terms}
+\input{def-hcp-terms}
+\input{def-hcp-equiv}
+\input{def-hcp-reduction}
+
+\subsection{Types}\label{sec:hcp-types}
+We keep the types and environments from \cp, see \cref{def:cp-types} and
+\cref{def:cp-envs}.
+We introduce a new layer on top of sequents: hypersequents.
+However, as \cp is a one-sided logic, and it uses the left-hand side of the
+turnstile to write the process, the traditional hypersequent notation can look
+awkward:
+\[
+  \seq[P]{\Gamma_1}\hsep\dots\hsep\seq{\Gamma_n}.
+\]
+The above may be confusing. It seems to claim that $\tm{P}$ acts according to
+protocol $\ty{\Gamma_1}$. What are all the other $\Gamma$s doing there?
+Are they typing empty processes?
+Therefore, we opt to leave out the repeated turnstile, and instead work with the
+notion of ``hyper-environments''. However, we will still refer to our system as a
+hypersequent system.
+\input{def-hcp-hyperenvs}
+\input{def-hcp-typing}
+
+\subsection{Properties}\label{sec:hcp-properties}
+
+\subsubsection{Preservation}\label{sec:hcp-preservation}
+\input{lem-hcp-preservation-equiv}
+\input{lem-hcp-preservation-subst}
+\input{thm-hcp-preservation}
+
+\subsubsection{Canonical Forms and Progress}\label{sec:hcp-canonical-forms-and-progress}
+
+\paragraph{Canonical Forms}\label{sec:hcp-canonical-forms}
+\input{def-hcp-canonical-forms}
+
+\paragraph{Evaluation contexts}
+\input{def-hcp-evaluation-contexts}
+\input{def-hcp-evaluation-prefixes}
+
+\paragraph{Progress}
+\input{thm-hcp-progress}
+
+\subsection{Relation to \cp}\label{sec:hcp2cp}
+
+\subsubsection{\hcp shares \textsc{Mix}-free processes with \cp}
+First off, we have the following theorems, relating terms with a singleton
+hypersequent, i.e.\ \textsc{Mix}-free terms, in \hcp to terms in \cp and vice
+versa.
+\input{thm-cp2hcp-typing}
+\input{thm-cp2hcp-equiv}
+\input{thm-cp2hcp-reduction}
+\input{thm-hcp2cp-typing}
+\input{thm-hcp2cp-equiv}
+\input{thm-hcp2cp-reduction}
+
+\subsubsection{\hcp supports the same protocols as \cp}
+In \hcp, we can use \textsc{H-Mix} to compose two independent processes, but
+once composed, we cannot form any direct connections between the two.
+Unconnected process can block on each other's communications, and behave
+differently due to each other's choices.
+Therefore, processes in \hcp are strictly more expressive than processes in \cp
+and parallel compositions of processes in \cp.
+One example of a process which is expressible in \hcp, but not in \cp, is
+$$
+\seq[{
+  \cpCase{x}{\piPar{P}{Q}}{\piPar{P'}{Q'}}
+}]{
+  \Gamma \hsep \tmty{x}{A \with B}, \Delta
+}
+$$
+where $\seq[P]{\Gamma}$, $\seq[P']{\Gamma}$, $\seq[Q]{\tmty{x}{A}, \Delta}$ and
+$\seq[Q]{\tmty{x}{B}, \Delta}$.
+
+However, we can prove that \hcp inhabits the same types as \cp. This is a
+property of the logic, and we will present it as such, omitting the process
+terms. We prove this by showing that the hypersequent separator can be
+interpreted as a tensor.\footnote{%
+  In most hypersequent systems, the hypersequent separator is interpreted as a
+  disjunctive connective. However, here we interpret it as a conjunctive
+  connective.}
+First, however, we prove a lemma showing that we can interpret the structural
+comma as a par.
+\input{lem-hcp-bigparr}
+\input{thm-hcp-bigtens}
+As a corollary, we now know that \hcp inhabits the same types as \cp.
+\input{fig-hcp-cc-hmix}
+
+
+\section{Hypersequent Cyclic Classical Processes}\label{sec:hccp}
+
+\subsection{Terms}\label{sec:hccp-term}
+\input{def-hccp-terms}
+\input{def-hccp-equiv}
+\input{def-hccp-reduction}
+
+\subsection{Types}\label{sec:hccp-types}
+We keep the types, environments, and hyper-environments from \hcp, see
+\cref{def:cp-types,def:cp-envs,def:hcp-hyperenvs}.
+\input{def-hccp-typing}
+
+\subsection{Properties}\label{sec:hccp-properties}
+
+\subsubsection{Preservation}\label{sec:hccp-preservation}
+\input{lem-hccp-preservation-equiv}
+\input{lem-hccp-preservation-subst}
+\input{thm-hccp-preservation}
+
+\subsubsection{Canonical Forms and Progress}\label{sec:hccp-canonical-forms-and-progress}
+
+\paragraph{Canonical Forms}\label{sec:hccp-canonical-forms}
+\input{def-hccp-canonical-forms}
+
+\paragraph{Evaluation Contexts}\label{sec:hccp-evaluation-contexts}
+\input{def-hccp-evaluation-contexts}
+\input{def-hccp-evaluation-prefixes}
+\input{def-hccp-maximum-evaluation-prefixes}
+\input{lem-hccp-maximum-evaluation-prefixes}
+
+\paragraph{Progress}\label{sec:hccp-progress}
+\input{thm-hccp-progress}
+
+\subsection{Relation to \hcp}\label{sec:hcp2hccp}
+\subsubsection{\hcp processes can be translated to \hccp}
+The relation between \hccp and \hcp is slightly more complex than that between
+\hcp and \cp.
+In \cref{sec:hcp2cp}, we could simply insert terms in \cp into \hcp, as the term
+language of \hcp is a simple extension of that of \cp.
+In this case, however, we will have to start by defining a translation between
+the two term languages.
+\input{def-hcp2hccp-terms}
+In the cases for $\tm{\cpCut{x}{P}{Q}}$, $\tm{\cpSend{x}{y}{P}{Q}}$ and
+$\tm{\cpHalt{x}}$, while it does not look like much is happening, it is
+important to realise that the constructs on the left-hand side are atomic,
+whereas those on the right-hand side are complex. 
+
+We can show that this translation respects typing.
+\input{thm-hcp2hccp-typing}
+
+We can show that this translation respects the structural congruence---that is
+to say, if two terms are equivalent in \hcp, then their translations are
+equivalent in \hccp.
+\input{thm-hcp2hccp-equiv}
+
+Furthermore, we can show that this translation respects reductions.
+\input{thm-hcp2hccp-reduction}
+\input{thm-hcp2hccp-reduction-inv}
+
+\subsubsection{\hccp supports the same protocols as \hcp}\label{sec:hccp2hcp}
+There is no neat translation from \hccp to \hcp, as there is no way to translate
+processes of the form $\tm{\piSend{x}{}{P}}$ in \hcp---though there is probably
+a way to simulate them.
+Instead, similarly to \cref{sec:hcp2cp}, we will prove that \hccp inhabits the
+same sequents as \hcp.
+We prove this by showing that each proof in \hccp can be transformed into a
+proof in \hcp.
+The reduction behaviour between the two processes associated with these proofs,
+however, may differ.
+Therefore, we will present this as a property of the logic, and we will present
+it as such, omitting the process terms.
+\input{thm-hccp2hcp}
+As a corollary, we now have that \hccp inhabits the same types as \cp.
+
+\section{Priority-based Classical Processes}\label{sec:ccp}
+The type system for \cp with cyclic communication structures (\ccp) is described
+by \textcite{dardha2018}.
+It is strictly more expressive than \cp and \hccp, as it allows cyclic
+communication structures to be formed.
+It enforces deadlock freedom by checking that the communication graph is
+acyclic.
+It uses the same definitions for terms as \hccp, and the following definitions
+for structural congruence and term reduction. 
+\input{def-ccp-equiv}
+\input{def-ccp-reduction}
+It uses the same types and environments as \hccp, though it annotates the
+connectives of types with \emph{priorities}, e.g.\ as $\ty{A \tens^{\cs{o}} B}$.
+A priority can be thought of as a label for an action.
+Priorities form a partial order, where $\cs{o}<\cs{o'}$ means that the action
+labeled with $\cs{o}$ must happen before the action labeled with $\cs{o'}$.
+In \textcite{dardha2018}, priorities are natural numbers.
+\input{def-ccp-pr}
+\input{def-ccp-typing}
+
+In this section, we will explore a revision of \ccp which has two benefits:
+\begin{itemize}
+\item
+  we allow our priorities to be any partial order, instead of requiring them to
+  be natural numbers;
+\item
+  and we generate a set of priority constraints during type checking, and return 
+  this set as a result of type checking, instead of interleaving type and
+  priority checking.
+\end{itemize}
+Why are these benefits?
+
+The priority constraints are an encoding of (a sub-graph\footnote{%
+  It is a sub-graph because some of the edges are enforced by the term syntax,
+  and as such these are not checked by the priority constraints.
+  For instance, in
+  $\tm{\piBoundSend{x^{\cs{o}}}{y}{\piRecv{x^{\cs{o'}}}{z}{P}}}$,
+  there is no reason to check that $\cs{o < o'}$, as there is no way for the
+  receive action to take place before the send action.
+} of) the communication graph, where $\cs{o < o'}$ means that the action
+associated with $\cs{o}$ must happen before the action associated with
+$\cs{o'}$.
+In the case of parallel actions, we will have $\cs{o \parallel o'}$---i.e.\ %
+there is \emph{no relation} between $\cs{o}$ and $\cs{o'}$. 
+Natural numbers, however, are a total order, meaning that we will have to choose
+either $\cs{o < o'}$, $\cs{o' < o}$, or $\cs{o = o'}$.
+Therefore, by using priorities which have more structure than is required, we
+lose some precision.
+
+Gathering all priority constraints, instead of checking them during type
+checking, makes it convenient to talk about
+\begin{itemize}
+\item 
+  programs which are well-typed but (potentially) contain deadlocks;
+\item
+  programs which are deadlock free but also obey additional constraints on the
+  ordering of actions, such as those that may arise from global types; 
+\item
+  translations between \ccp and other systems, such as \cp, because it separates
+  the proofs of type preservation and that of constraint satisfaction.
+\end{itemize}
+We define two functions on priority-annotated types, in addition to the function
+$\pr{\ty{A}}$ given in \cref{def:ccp-pr}:
+\input{def-cccp-fg}
+\input{def-cccp-un}
+\input{def-cccp-typing}
+
+\section{Safe Access Points}
+\input{def-safeap-terms}
+\input{def-safeap-equiv}
+\input{def-safeap-reduction}
+\input{def-safeap-types}
+\input{def-safeap-typing}
+
+\section{Global Types for Binary Sessions}\label{sec:globaltypes}
+The work by \textcite{carbone2016} introduced globally-governed \cp (\gcp).
+This work introduces a multiparty extension of \cp.
+Processes in \gcp are ``typed'' by global types.
+This is a bit of a misnomer, as global types are a whole host of things, but
+types is not one of them, and it is probably best to see global types as the
+arbiter processes to which they are compiled, together with some proof of
+coherence.
+With the addition of global types, \gcp adds several new---and in my eyes
+orthogonal---features to \cp.
+
+\begin{itemize}
+\item
+  \textbf{Global types stratify the global communication order}\\
+  What do we mean by this? If there are two independent communications which can
+  happen, say we have
+  $\tm{({\piBoundSend{x}{y}{P}}\ppar{\piBoundSend{z}{w}{Q}}\ppar\dots)}$ and
+  both $\tm{\piBoundSend{x}{y}{}}$ and $\tm{\piBoundSend{z}{w}{}}$ can happen,
+  then we can use global types to stratify these communications. How? The
+  potential for stratification in global types arises from the fact that we are
+  basically writing an arbiter process. We are writing down who sends what to
+  who when. For instance, for the example above, we could imagine some global
+  type written as $\tm{{x}\to{\co{x}}.{z}\to{\co{z}}.\dots}$, where
+  $\tm{\co{x}}$ and $\tm{\co{z}}$ are the endpoints on the other side of
+  $\tm{x}$ and $\tm{z}$. This would require that the communication on $\tm{x}$
+  happens before the communication on $\tm{z}$.
+\item
+  \textbf{Global types allow for broadcasting}\\
+  There are two kinds of broadcasting in \gcp. First, the rules for $\tens\parr$
+  and $\one\bot$ give the language some sort of ``gather'' operation and a
+  wait-for-all operation. However, it is a well-known fact that the the
+  constructs associated with the multiplicative connectives only perform
+  ``plumbing''. Therefore, the gather construct that is implemented is not
+  really gathering any information. Rather, it allows for some measure of
+  abstraction in putting together sessions in which one process communicates
+  with multiple other processes.
+
+  The \emph{real} broadcasting operation is implemented by the $\plus\with$
+  rule, which facilitates a single process sending one bit of information,
+  identical in each case, to multiple recipients.
+
+  The coherence rules presented by \textcite{carbone2016} are all asymmetric. In
+  each case, \emph{one} process on the one side is communicating with multiple
+  processes on the other. In each case, the side with \emph{one} process happens
+  to be the ``strong'' side---the side which decides in which order
+  communications happen $(\parr)$, and the side which makes the choice
+  $(\plus)$. This, of course, is no coincidence. Instead, it has a much deeper
+  connection to the logic. In each case, these stronger connectives are
+  associated with \emph{unary} instead of binary rules. This makes it easy to
+  expand a ``gather'' into a series of receive actions, and a choice into a
+  series of choices.\footnote{This means that it should be possible to define a
+    globally-governed variant of, say, \hccp or \ccp, in which both the plumbing
+    and the choice are taken care of by broadcasting operations.}
+\item
+  \textbf{Global types allow for \emph{some} measure of non-determinism}\\
+  If we see a broadcast operation as a series of binary sending operations, then
+  we wouldn't expect those to be ordered among one another. The semantics for
+  \gcp treat broadcast and gather as a \emph{single} operation, which only takes
+  place when all intended recipients are ready. The semantics for \gcp, when
+  compiled to \cp, however, imposes an ordering on the broadcasting (or
+  gathering) process, by compiling the single action down to a series of
+  actions. This is a bit odd.
+\end{itemize}
+We can easily model stratification of the global communication order in \cccp,
+by simply making more demands of the final constraint set.
+For instance, if we have a global type which requires
+$\tm{{x}\to{\co{x}}.{z}\to{\co{z}}.\dots}$, i.e. that the first action on
+$\tm{x}$ happens before the first action on $\tm{z}$, we can simply grab the
+priorities associated with those actions---say $\cs{o}$ and $\cs{o'}$---and
+require that the constraint $\cs{o} < \cs{o'}$ is present in the final
+constraint set.
+
+The broadcasting behaviours added by \gcp are\dots
+
+
+\begin{definition}[Global types]\label{def:globaltypes}
+  We define global types following \textcite{carbone2016}:
+  \begin{gather*}
+    \begin{array}{lcll}
+      \tm{G}, \tm{H}
+      & :=   & \gtyAx{x}{A}{y}                                         & \text{link} \\
+      & \mid & \gtyTensParr{x}{y}{G}{H}                                & \text{multiparty gather} \\
+      & \mid & \gtyOneBot{x}{y}                                        & \text{multiparty halt} \\
+      & \mid & \gtyPlusWith{x}{y}{G}{H}                                & \text{multiparty choice} \\
+      & \mid & \gtyNilTop{x}{y}                                        & \text{multiparty absurd}
+    \end{array}
+  \end{gather*}
+\end{definition}
+
+\begin{definition}[Coherence]\label{def:globaltypes-coherence}
+  We define coherence following \textcite{carbone2016}:
+  \begin{center} \gcpInfAx                     \end{center}\vspace{1\baselineskip}
+  \begin{center} \gcpInfTensParr \gcpInfOneBot \end{center}
+\end{definition}
+
+
+\printbibliography
+
+\end{document}
+%%% Local Variables:
+%%% TeX-master: "main"
+%%% End:

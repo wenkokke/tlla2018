@@ -1,0 +1,80 @@
+\begin{theorem}\label{thm:hcp2hccp-typing}
+  If $\seq[P]{\mathcal{G}}$ in \hcp, then $\seq[\mtf{P}]{\mathcal{G}}$ in \hccp.
+\end{theorem}
+\begin{proof}
+  By induction on the structure of the derivation of $\seq[P]{\mathcal{G}}$.
+  \begin{itemize}
+  \item 
+    Case \textsc{Cut}.
+    We rewrite as follows:
+    \[
+      \begin{array}{c}
+        \AXC{$\seq[P]{\mathcal{G} \hsep \tmty{x}{A}, \Gamma}$}
+        \AXC{$\seq[Q]{\mathcal{H} \hsep \tmty{x}{A^\bot}, \Delta}$}
+        \NOM{Cut}
+        \BIC{$\seq[\cpCut{x}{P}{Q}]{
+        \mathcal{G} \hsep \mathcal{H} \hsep \Gamma, \Delta}$}
+        \DisplayProof
+        \\\\
+        \Downarrow
+        \\\\
+        \AXC{$\seq[\mtf{P}]{\mathcal{G} \hsep \tmty{x}{A}, \Gamma}$}
+        \AXC{$\seq[\mtf{Q}]{\mathcal{H} \hsep \tmty{x}{A^\bot}, \Delta}$}
+        \NOM{H-Mix} 
+        \BIC{$\seq[\piPar{\mtf{P}}{\mtf{Q}}]{
+        \mathcal{G} \hsep \mathcal{H} \hsep
+        \tmty{x}{A}, \Gamma \hsep \tmty{x}{A^\bot}, \Delta}$}
+        \NOM{H-Cycle}
+        \UIC{$\seq[\piNew{x}{(\piPar{\mtf{P}}{\mtf{Q}})}]{
+        \mathcal{G} \hsep \mathcal{H} \hsep \Gamma, \Delta}$}
+        \DisplayProof
+      \end{array}
+    \]
+  \item
+    Case $(\tens)$.
+    We rewrite as follows:
+    \[
+      \begin{array}{c}
+        \AXC{$\seq[P]{\mathcal{G} \hsep \tmty{y}{A}, \Gamma}$}
+        \AXC{$\seq[Q]{\mathcal{H} \hsep \tmty{x}{B}, \Delta}$}
+        \SYM{\tens}
+        \BIC{$\seq[\cpSend{x}{y}{P}{Q}]{
+        \mathcal{G} \hsep \mathcal{H} \hsep \tmty{x}{A \tens B}, \Gamma, \Delta}$}
+        \DisplayProof
+        \\\\
+        \Downarrow
+        \\\\
+        \AXC{$\seq[\mtf{P}]{\mathcal{G} \hsep \tmty{y}{A}, \Gamma}$}
+        \AXC{$\seq[\mtf{Q}]{\mathcal{H} \hsep \tmty{x}{B}, \Delta}$}
+        \NOM{H-Mix}
+        \BIC{$\seq[\piPar{\mtf{P}}{\mtf{Q}}]{
+        \mathcal{G} \hsep \mathcal{H} \hsep
+        \tmty{y}{A}, \Gamma \hsep \tmty{x}{B}, \Delta}$}
+        \NOM{H-Cycle}
+        \UIC{$\seq[\piNew{x}{(\piPar{\mtf{P}}{\mtf{Q}})}]{
+        \mathcal{G} \hsep \mathcal{H} \hsep \Gamma, \Delta}$}
+        \DisplayProof
+      \end{array}
+    \]
+  \item
+    Case $(\one)$.
+    We rewrite as follows:
+    \[
+      \begin{array}{lcl}
+        \AXC{$\seq[\cpHalt{x}]{\tmty{x}{\one}}$}
+        \DisplayProof
+        & \Rightarrow
+        & \AXC{}
+          \NOM{H-Halt}
+          \UIC{$\seq[\piHalt]{\emptyhypercontext}$}
+          \SYM{\one}
+          \UIC{$\seq[\piBoundSend{x}{}{\piHalt}]{\tmty{x}{\one}}$}
+          \DisplayProof
+      \end{array}      
+    \]
+  \end{itemize}
+  The other cases are trivial.
+\end{proof}
+%%% Local Variables:
+%%% TeX-master: "main"
+%%% End:

@@ -1,0 +1,19 @@
+\begin{definition}[Priority erasure]\label{def:cccp-fg}
+  We define the function $\fg{\cdot}$ which erases priorities from types:
+  \begin{gather*}
+    \setlength{\arraycolsep}{1pt}
+    \begin{array}{lclclcl}
+      {}\fg{\ty{\one^{\cs{o}}}}      & = & \ty{\one} & \qquad
+      & \fg{\ty{\nil^{\cs{o}}}}      & = & \ty{\nil} \\
+      {}\fg{\ty{\bot^{\cs{o}}}}      & = & \ty{\bot} & \qquad
+      & \fg{\ty{\top^{\cs{o}}}}      & = & \ty{\top} \\ 
+      {}\fg{\ty{A \tens^{\cs{o}} B}} & = & \ty{\fg{A} \tens \fg{B}} & \qquad
+      & \fg{\ty{A \plus^{\cs{o}} B}} & = & \ty{\fg{A} \plus \fg{B}} \\
+      {}\fg{\ty{A \parr^{\cs{o}} B}} & = & \ty{\fg{A} \parr \fg{B}} & \qquad
+      & \fg{\ty{A \with^{\cs{o}} B}} & = & \ty{\fg{A} \with \fg{B}}
+    \end{array}
+  \end{gather*}
+\end{definition}
+%%% Local Variables:
+%%% TeX-master: "main"
+%%% End:

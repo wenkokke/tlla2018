@@ -1,0 +1,17 @@
+\begin{definition}[Reduction]\label{def:hcp-reduction}
+  A reduction $\reducesto{P}{Q}$ denotes that the process $\tm{P}$ can reduce
+  to the process $\tm{Q}$ in a single step. Reductions can only be constructed
+  using the rules in \cref{def:cp-reduction} and the following addition
+  congruence rule:
+  \begin{prooftree}
+    \AXC{$\reducesto{P}{P^\prime}$}
+    \SYM{\hcpRedGammaMix}
+    \UIC{$\reducesto{\piPar{P}{Q}}{\piPar{P^\prime}{Q}}$}
+  \end{prooftree}
+  The relations $\Longrightarrow^{?}$, $\Longrightarrow^{+}$, and
+  $\Longrightarrow^\star$ are the reflexive, transitive and reflexive,
+  transitive closures of $\Longrightarrow$.
+\end{definition}
+%%% Local Variables:
+%%% TeX-master: "main"
+%%% End:

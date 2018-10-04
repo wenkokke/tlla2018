@@ -1,0 +1,22 @@
+\begin{definition}[Priority function]\label{def:ccp-pr}
+  We define the function $\pr{\cdot}$ to extract the top-level priority from types:
+  \begin{gather*}
+    \begin{array}{lclclcl}
+      {}\pr{\ty{\one^{\cs{o}}}}      & = & \cs{o} & \qquad
+      & \pr{\ty{\nil^{\cs{o}}}}      & = & \cs{o} \\
+      {}\pr{\ty{\bot^{\cs{o}}}}      & = & \cs{o} & \qquad
+      & \pr{\ty{\top^{\cs{o}}}}      & = & \cs{o} \\
+      {}\pr{\ty{A \tens^{\cs{o}} B}} & = & \cs{o} & \qquad
+      & \pr{\ty{A \plus^{\cs{o}} B}} & = & \cs{o} \\
+      {}\pr{\ty{A \parr^{\cs{o}} B}} & = & \cs{o} & \qquad
+      & \pr{\ty{A \with^{\cs{o}} B}} & = & \cs{o}
+    \end{array}
+  \end{gather*}
+  We extend it to environments to extract the smallest priority:
+  \begin{gather*}
+    \pr{\tmty{x_1}{A_1}, \dots, \tmty{x_n}{A_n}} = \cs{\bigwedge_{i=1}^{n}\pr{A_i}}
+  \end{gather*} 
+\end{definition}
+%%% Local Variables:
+%%% TeX-master: "main"
+%%% End:

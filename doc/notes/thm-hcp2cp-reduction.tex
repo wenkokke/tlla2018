@@ -1,0 +1,8 @@
+\begin{theorem}\label{thm:hcp2cp-reduction}
+  If $\seq[P]{\Gamma}$ and $\reducesto{P}{Q}$ in \hcp, then $\reducesto{P}{Q}$ in \cp.
+\end{theorem}
+\begin{proof}
+  By induction on the structure of the derivation of $\reducesto{P}{Q}$.
+  From $\seq[P]{\Gamma}$ we conclude that $\tm{P}$ is \textsc{Mix}-free, and
+  therefore \hcpRedGammaMix will never occur in the derivation of $\reducesto{P}{Q}$.
+\end{proof}

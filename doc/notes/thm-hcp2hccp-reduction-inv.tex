@@ -1,0 +1,65 @@
+\begin{theorem}
+  If $\reducesto{\mtf{P}}{Q}$ in \hccp, then there exists an $\tm{R}$ such that
+  $\tm{\mtf{R}}\equiv\tm{Q}$ and $\reducesto{P}{R}$ in \hcp.
+\end{theorem}
+\begin{proof}
+  By induction on the structure of the derivation of $\reducesto{\mtf{P}}{Q}$.
+  \begin{itemize}
+  \item 
+    Case $\hccpRedBetaTensParr$.\\
+    We have
+    $\tm{P}\equiv\tm{\cpCut{x}{\piBoundSend{x}{y}{(
+          \piPar{P'}{Q'})}}{\piRecv{x}{z}{R'}}}$ and
+    $\tm{Q}\equiv\tm{\piNew{x}{\piNew{y}{(\piPar{(
+            \piPar{\mtf{P'}}{\mtf{Q'}})}{\cpSub{y}{z}{\mtf{R'}}})}}}$. 
+
+    We let $\tm{R} = \tm{\cpCut{y}{P'}{\cpCut{x}{Q'}{\cpSub{y}{z}{R'}}}}$.
+
+    We have
+    \begin{gather*}
+      \setlength{\arraycolsep}{1pt}
+      \begin{array}{lcl}
+        \tm{\piNew{y}{(\piPar{\mtf{P'}}{\piNew{x}{(
+        \piPar{\mtf{Q'}}{\mtf{\cpSub{y}{z}{R'}}})}})}}
+        & \equiv & \text{by \hccpEquivScopeExt1}
+        \\
+        \tm{\piNew{y}{\piNew{x}{(\piPar{\mtf{P'}}{(
+        \piPar{\mtf{Q'}}{\mtf{\cpSub{y}{z}{R'}}})})}}}
+        & \equiv & \text{by \hccpEquivMixAss1}
+        \\
+        \tm{\piNew{y}{\piNew{x}{(\piPar{(
+        \piPar{\mtf{P'}}{\mtf{Q'}})}{\mtf{\cpSub{y}{z}{R'}}})}}}
+        & \equiv & \text{by \hccpEquivNewComm}
+        \\
+        \tm{\piNew{x}{\piNew{y}{(\piPar{(
+        \piPar{\mtf{P'}}{\mtf{Q'}})}{\mtf{\cpSub{y}{z}{R'}}})}}}
+      \end{array}
+    \end{gather*}
+    and
+    \begin{gather*}
+      \setlength{\arraycolsep}{1pt}
+      \begin{array}{lcl}
+        \tm{\cpCut{x}{\piBoundSend{x}{y}{(\piPar{P'}{Q'})}}{\piRecv{x}{z}{R'}}}
+        & \Longrightarrow & \text{by \hccpRedBetaTensParr}
+        \\
+        \tm{\cpCut{y}{P'}{\cpCut{x}{Q'}{\cpSub{y}{z}{R'}}}}.
+      \end{array}
+    \end{gather*}
+  \item
+    Case $\hccpRedBetaOneBot$.\\
+    We have $\tm{P} \equiv
+    \tm{\piNew{x}{(\piPar{\piBoundSend{x}{}{\piHalt}}{\piRecv{x}{}{Q'}})}}$,
+    and $\tm{Q} \equiv \tm{(\piPar{\piHalt}{Q'})}$.
+
+    We let $\tm{R} = \tm{Q'}$.
+
+    We have $\tm{\mtf{Q'}} \equiv \tm{(\piPar{\piHalt}{\mtf{Q'}})}$ by
+    $\hccpEquivMixHalt1$ and
+    $\tm{\piNew{x}{(\piPar{\piBoundSend{x}{}{\piHalt}}{\piRecv{x}{}{Q'}})}}
+    \Longrightarrow \tm{Q'}$ by $\cpRedBetaOneBot$.
+  \end{itemize}
+  The other cases are trivial.
+\end{proof}
+%%% Local Variables:
+%%% TeX-master: "main"
+%%% End:

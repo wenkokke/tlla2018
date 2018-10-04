@@ -1,0 +1,14 @@
+\begin{definition}[Terms]\label{def:hcp-terms}
+  We extend the terms from \cref{def:cp-terms} with the following construct:
+  \begin{gather*}
+    \begin{aligned}
+      \tm{P}, \tm{Q}, \tm{R}
+          :=& \; \dots
+      \\\mid& \; \tm{\piHalt}          &&\text{terminated process}
+      \\\mid& \; \tm{( \piPar{P}{Q} )} &&\text{parallel composition, or ``mix''}
+    \end{aligned}
+  \end{gather*}
+\end{definition}
+%%% Local Variables:
+%%% TeX-master: "main"
+%%% End:

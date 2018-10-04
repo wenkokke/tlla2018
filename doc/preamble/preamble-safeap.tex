@@ -1,0 +1,72 @@
+%%% Safe Access Points
+\providecommand{\apBang}[1]{!_{#1}}
+\providecommand{\apYnot}[1]{?_{#1}}
+\providecommand{\apSend}[3]{\star\piBoundSend{#1}{#2}{#3}}
+\providecommand{\apRecv}[3]{\star\piRecv{#1}{#2}{#3}}
+
+\providecommand{\apEquivGCNew}{\ensuremath{(\nu\textsc{GC})}}
+\providecommand{\apRedSessInit}{\ensuremath{(\beta\textsc{AP})}}
+
+\providecommand{\apInfApBang}{%
+  \begin{prooftree*}
+    \AXC{$\cseq[P]{ \Gamma, \tmty{y}{A} }{ \mathcal{C} }$}
+    \SYM{\apBang{1}}
+    \UIC{$\cseq[\apRecv{x}{y}{P}]{
+        \Gamma, \tmty{x}{\apBang{1}^{\cs{o}} A} }{
+        \mathcal{C} \cup \cmin{o}{\Gamma} }$}
+  \end{prooftree*}}
+\providecommand{\apInfApYnot}{%
+  \begin{prooftree*}
+    \AXC{$\cseq[P]{ \Gamma, \tmty{y}{A} }{ \mathcal{C} }$}
+    \SYM{\apYnot{1}}
+    \UIC{$\cseq[\apSend{x}{y}{P}]{
+        \Gamma, \tmty{x}{\apYnot{1}^{\cs{o}} A} }{
+        \mathcal{C} \cup \cmin{o}{\Gamma} }$}
+  \end{prooftree*}}
+\providecommand{\apInfApBangC}{%
+  \begin{prooftree*}
+    \AXC{$\cseq[P]{
+        \Gamma,
+        \tmty{x}{\apBang{m}^{\cs{\kappa}} A},
+        \tmty{x'}{\apBang{n}^{\cs{\kappa'}} A}
+      }{ \mathcal{C} }$}
+    \NOM{$\apBang{+}$C}
+    \UIC{$\cseq[\piSub{x}{x'}{P}]{
+        \Gamma,
+        \tmty{x}{\apBang{m+n}^{\cs{o}} A},
+      }{ \mathcal{C}
+        \cup \cmin{o}{\Gamma}
+        \cup \{ o \le \kappa, o \le \kappa' \}
+      }$}
+  \end{prooftree*}}
+\providecommand{\apInfApYnotC}{%
+  \begin{prooftree*}
+    \AXC{$\cseq[P]{
+        \Gamma,
+        \tmty{x}{\apYnot{m}^{\cs{\kappa}} A},
+        \tmty{x'}{\apYnot{n}^{\cs{\kappa'}} A}
+      }{ \mathcal{C} }$}
+    \NOM{$\apYnot{+}$C}
+    \UIC{$\cseq[\piSub{x}{x'}{P}]{
+        \Gamma,
+        \tmty{x}{\apYnot{m+n}^{\cs{o}} A},
+      }{ \mathcal{C}
+        \cup \cmin{o}{\Gamma}
+        \cup \{ o \le \kappa, o \le \kappa' \}
+      }$}
+  \end{prooftree*}}
+\providecommand{\apInfApBangW}{%
+  \begin{prooftree*}
+    \AXC{$\cseq[P]{ \Gamma }{ \mathcal{C} }$}
+    \NOM{$\apBang{0}$W}
+    \UIC{$\cseq[P]{ \Gamma, \tmty{x}{\apBang{0}^{\cs{o}} A} }{ \mathcal{C} }$}
+  \end{prooftree*}}
+\providecommand{\apInfApYnotW}{%
+  \begin{prooftree*}
+    \AXC{$\cseq[P]{ \Gamma }{ \mathcal{C} }$}
+    \NOM{$\apYnot{0}$W}
+    \UIC{$\cseq[P]{ \Gamma, \tmty{x}{\apYnot{0}^{\cs{o}} A} }{ \mathcal{C} }$}
+  \end{prooftree*}}
+%%% Local Variables:
+%%% TeX-master: "main"
+%%% End:

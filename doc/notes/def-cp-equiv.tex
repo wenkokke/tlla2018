@@ -1,0 +1,26 @@
+\begin{definition}[Structural congruence]\label{def:cp-equiv}
+  We define the structural congruence $\equiv$ as the congruence closure over
+  terms which satisfies the following additional axioms:
+  \begin{gather*}
+    \begin{array}{llcll}
+      \cpEquivLinkComm
+      & \tm{\cpLink{x}{y}}
+      & \equiv
+      & \tm{\cpLink{y}{x}}
+      \\
+      \cpEquivCutComm
+      & \tm{\cpCut{x}{P}{Q}}
+      & \equiv
+      & \tm{\cpCut{x}{Q}{P}}
+      \\
+      \cpEquivCutAss1
+      & \tm{\cpCut{x}{P}{\cpCut{y}{Q}{R}}}
+      & \equiv
+      & \tm{\cpCut{y}{\cpCut{x}{P}{Q}}{R}}
+      & \text{if }\notFreeIn{x}{R}\text{ and }\notFreeIn{y}{P}
+    \end{array}
+  \end{gather*}
+\end{definition}
+%%% Local Variables:
+%%% TeX-master: "main"
+%%% End:

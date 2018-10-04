@@ -1,0 +1,46 @@
+\begin{definition}[Structural congruence]\label{def:ccp-equiv}
+  We define the structural congruence $\equiv$ as the congruence closure over
+  terms which satisfies the following additional axioms:
+  \begin{gather*}
+    \begin{array}{llcll}
+      \cpEquivLinkComm
+      & \tm{\cpLink{x}{y}}
+      & \equiv
+      & \tm{\cpLink{y}{x}}
+      \\
+      \ccpEquivLinkCut
+      & \tm{\piNew{xy}{\cpLink{x}{y}}}
+      & \equiv
+      & \tm{\piHalt}
+      \\
+      \hccpEquivMixComm
+      & \tm{\piPar{P}{Q}}
+      & \equiv
+      & \tm{\piPar{Q}{P}}
+      \\
+      \hccpEquivMixAss1
+      & \tm{\piPar{P}{( \piPar{Q}{R} )}}
+      & \equiv
+      & \tm{\piPar{( \piPar{P}{Q} )}{R}}
+      \\
+      \hccpEquivNewComm
+      & \tm{\piNew{xy}{\piNew{zw}{P}}}
+      & \equiv
+      & \tm{\piNew{zw}{\piNew{xy}{P}}}
+      \\
+      \hccpEquivScopeExt1
+      & \tm{\piNew{xy}{( \piPar{P}{Q} )}}
+      & \equiv
+      & \tm{\piPar{P}{\piNew{xy}{Q}}}
+      & \text{if }\tm{x},\tm{y}\not\in\tm{P}
+      \\
+      \hccpEquivMixHalt1
+      & \tm{\piPar{P}{\piHalt}}
+      & \equiv
+      & \tm{P}
+    \end{array}
+  \end{gather*}
+\end{definition}
+%%% Local Variables:
+%%% TeX-master: "main"
+%%% End:

@@ -1,0 +1,85 @@
+\begin{theorem}[Progress]\label{thm:hccp-progress}
+  If $\seq[P]{\mathcal{G}}$, then there exists a $\tm{Q}$ such that either
+  $\tm{P}\equiv\tm{Q}$ and $\tm{Q}$ is in canonical form, or $\reducesto{P}{Q}$.
+\end{theorem}
+\begin{proof}
+  By induction on the structure of the derivation for $\seq[P]{\mathcal{G}}$.
+  The only interesting cases are when the last rule of the derivation is
+  \textsc{H-Cycle} or \textsc{H-Mix}. In every other case, the typing rule
+  constructs a term which is in canonical form. 
+
+  If the last rule in the derivation is \textsc{H-Cycle} or \textsc{H-Mix}, we
+  consider the maximum evaluation prefix $\tm{G}$ of $\tm{P}$.
+  Let the prefix $\tm{G}$ consist of $n$ cycles, and $m$ mixes, which introduces
+  $n$ channels, and composes $m+1$ actions.
+  Furthermore, let $o$ denote the number of environments in the
+  hyper-environment $\ty{\mathcal{G}}$.
+
+  Actions are introduced by the logical rules, each of which is annotated with
+  the side condition that to act on one end-point of a channel, the other
+  end-point may not be in scope.
+  Let us call a channel ``locked'' if both its end-points are in scope.
+  In this sense, a mix can unlock \emph{one} channel introduced by a cycle,
+  and $m$ mixes can unlock $m$ channels.
+  As the hyper-environment $\ty{\mathcal{G}}$ consists of $o$ environments,
+  there are $o - 1$ possible applications of \textsc{Mix} which do not unlock
+  one of the $n$ channels introduced in $\tm{G}$.
+  Let $n'$ refer to the number of unlocked channels.
+  We have $m - (o - 1) \le n' \le m$.
+  Therefore, one of the following must be true:
+  \begin{itemize}
+  \item
+    One of the actions composed by $\tm{G}$ is a link $\tm{\cpLink{x}{y}}$
+    acting on a bound channel.
+    Suppose that $\tm{x}$ is the bound channel.
+    There exist evaluation contexts $\tm{E}$, $\tm{E'}$, and $\tm{E''}$ such that
+    \[
+      \tm{P} =
+      \tm{\cpPlug{E}{\piNew{x}{\cpPlug{E'}{\piPar{\cpPlug{E''}{\cpLink{x}{y}}}{R}}}}}.
+    \]
+    We rewrite by $\equiv$ to obtain
+    \[
+      \tm{P} \equiv
+      \tm{\cpPlug{E}{\cpPlug{E'}{\cpPlug{E''}{\piNew{x}{( \piPar{\cpLink{x}{y}}{R} )}}}}}.
+    \]
+    We then reduce by applying \hccpRedAxCut1.
+    Similarly if $\tm{y}$ is the bound channel.
+  \item
+    Two of the actions composed by $\tm{G}$ are acting on the \emph{same}
+    bound channel.
+    Let the two actions be $\tm{P_i}$ and $\tm{P_i}$, and the bound channel
+    $\tm{x}$.
+    There exist evaluation contexts $\tm{E}$, $\tm{E'}$, $\tm{E_i}$, and
+    $\tm{E_j}$ such that
+    \[
+      \tm{P} =
+      \tm{\cpPlug{E}{
+          \piNew{x}{\cpPlug{E'}{
+              \piPar{
+                \cpPlug{E_i}{P_i}
+              }{
+                \cpPlug{E_j}{P_j}
+              }}}}}
+    \]
+    We rewrite by $\equiv$ to obtain
+    \[
+      \tm{P} \equiv
+      \tm{\cpPlug{E}{
+          \cpPlug{E'}{
+            \cpPlug{E_i}{
+              \cpPlug{E_j}{
+                \piNew{x}{(\piPar{P_i}{P_j})}
+              }}}}}
+    \]
+    We then reduce by applying the appropriate \textbeta-reduction.
+  \item
+    Otherwise, (at least) one of the actions composed by $\tm{G}$ must be acting
+    on a free channel.
+    None of the actions composed by $\tm{G}$ is a link acting on a bound channel.
+    No two actions composed by $\tm{G}$ are acting on the same bound channel.
+    Therefore, $\tm{P}$ is equivalent to a process in canonical form.
+  \end{itemize}
+\end{proof}
+%%% Local Variables:
+%%% TeX-master: "main"
+%%% End:

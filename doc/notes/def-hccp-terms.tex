@@ -1,0 +1,22 @@
+\begin{definition}[Terms]\label{def:hccp-terms}
+  \begin{gather*}
+    \begin{aligned}
+      \tm{P}, \tm{Q}, \tm{R}
+           :=& \; \tm{\cpLink{x}{y}}         &&\text{link}
+      \\ \mid& \; \tm{\piNew{x}{P}}          &&\text{name restriction, or ``new''}
+      \\ \mid& \; \tm{( \piPar{P}{Q} )}      &&\text{parallel composition, or ``mix''}
+      \\ \mid& \; \tm{\piHalt}               &&\text{terminated process}
+      \\ \mid& \; \tm{\piBoundSend{x}{y}{P}} &&\text{output}
+      \\ \mid& \; \tm{\piRecv{x}{y}{P}}      &&\text{input}
+      \\ \mid& \; \tm{\piBoundSend{x}{}{P}}  &&\text{halt}
+      \\ \mid& \; \tm{\cpWait{x}{}{P}}       &&\text{wait}
+      \\ \mid& \; \tm{\cpInl{x}{P}}          &&\text{select left choice}
+      \\ \mid& \; \tm{\cpInr{x}{P}}          &&\text{select right choice}
+      \\ \mid& \; \tm{\cpCase{x}{P}{Q}}      &&\text{offer binary choice}
+      \\ \mid& \; \tm{\cpAbsurd{x}}          &&\text{offer nullary choice}
+    \end{aligned}
+  \end{gather*}
+\end{definition}
+%%% Local Variables:
+%%% TeX-master: "main"
+%%% End:

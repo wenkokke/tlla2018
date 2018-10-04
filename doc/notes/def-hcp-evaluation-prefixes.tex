@@ -1,0 +1,20 @@
+\begin{definition}[Evaluation prefixes]\label{def:hcp-evaluation-prefixes}
+  We extend \cref{def:cp-evaluation-prefixes} with the following constructs:
+  \begin{align*}
+    \tm{G}, \tm{H} := \dots \mid \tm{(\piPar{G}{H})}
+  \end{align*}
+\end{definition}
+\begin{definition}[Plugging]\label{def:hcp-evaluation-prefix-plugging}
+  We define plugging for an evaluation prefix with $n$ holes as:
+  \begin{gather*}
+    \begin{array}{l}
+      \tm{\cpPlug{(\piPar{G}{H})}{R_1 \dots R_m, R_{m+1} \dots R_{n}}}
+      := \; \tm{(\piPar{\cpPlug{G}{R_1 \dots R_m}}{\cpPlug{H}{R_{m+1} \dots R_n}})}
+    \end{array}
+  \end{gather*}
+  Note that in this case, $\tm{G}$ is an evaluation prefix with $m$ holes,
+  and $\tm{H}$ is an evaluation prefix with $(n-m)$ holes.
+\end{definition}
+%%% Local Variables:
+%%% TeX-master: "main"
+%%% End:

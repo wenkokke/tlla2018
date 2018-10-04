@@ -1,0 +1,34 @@
+\begin{lemma}\label{thm:hcp-display-cut}
+  If $\seq[{ \tm{\cpCut{x}{\cpPlug{E}{P}}{Q}} }]{ \Gamma }$ and
+  $\notFreeIn{x}{E}$, then $\tm{\cpCut{x}{\cpPlug{E}{P}}{Q}} \equiv
+  \tm{\cpPlug{E}{\cpCut{x}{P}{Q}}}$.
+\end{lemma}
+\begin{proof}
+  By induction on the structure of the evaluation context $\tm{E}$.
+  \begin{itemize}
+  \item
+    Case $\tm{\Box}$, $\tm{\cpCut{y}{H}{R}}$, and $\tm{\cpCut{y}{R}{H}}$. See \cref{thm:cp-display-cut}.
+  \item
+    Case $\tm{\piPar{E}{R}}$.
+    \begin{gather*}
+      \begin{array}{lcl}
+        \tm{\cpCut{x}{\piPar{\cpPlug{E}{P}}{R}}{Q}} &\equiv &\text{by }\hcpEquivMixComm \\
+        \tm{\cpCut{x}{\piPar{R}{\cpPlug{E}{P}}}{Q}} &\equiv &\text{by }\hcpEquivMixCut1 \\
+        \tm{\piPar{R}{\cpCut{x}{\cpPlug{E}{P}}{Q}}} &\equiv &\text{by }\hcpEquivMixComm \\
+        \tm{\piPar{\cpCut{x}{\cpPlug{E}{P}}{Q}}{R}} &\equiv &\text{by the induction hypothesis}\\
+        \tm{\piPar{\cpPlug{E}{\cpCut{x}{P}{Q}}}{R}} &
+      \end{array}
+    \end{gather*}
+  \item
+    Case $\tm{\piPar{R}{E}}$.
+    \begin{gather*}
+      \begin{array}{lcl}
+        \tm{\cpCut{x}{\piPar{R}{\cpPlug{E}{P}}}{Q}} &\equiv &\text{by }\hcpEquivMixCut1 \\
+        \tm{\piPar{R}{\cpCut{x}{\cpPlug{E}{P}}{Q}}} &\equiv &\text{by the induction hypothesis}\\
+        \tm{\piPar{R}{\cpPlug{E}{\cpCut{x}{P}{Q}}}} &
+      \end{array}
+    \end{gather*}
+  \end{itemize}
+  The side conditions for the induction hypothesis can be inferred from
+  \cref{thm:hcp-preservation-equiv}.
+\end{proof}

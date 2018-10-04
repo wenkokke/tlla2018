@@ -1,0 +1,26 @@
+\begin{definition}[Typing judgements]\label{def:hcp-typing}
+  A typing judgement $\seq[P]{\Gamma_1 \hsep \dots \hsep \Gamma_n}$ denotes
+  that the process $\tm{P}$ consists of $n$ independent, but potentially
+  interleaved processes, each of which communicates according to its own
+  protocol $\Gamma_i$. 
+  Typing judgements can be constructed using the inference rules in
+  \cref{fig:hcp}.
+\end{definition}
+\begin{figure*}[!htb]
+  Structural Rules.
+  \begin{center} \hcpInfAx     \hcpInfCut    \end{center}\vspace*{1\baselineskip}
+  \begin{center} \hcpInfMix    \hcpInfHalt   \end{center}\vspace*{1\baselineskip}
+  
+  Logical Rules.
+  \begin{center} \hcpInfTens   \hcpInfParr   \end{center}\vspace*{1\baselineskip}
+  \begin{center} \hcpInfOne    \hcpInfBot    \end{center}\vspace*{1\baselineskip}
+  \begin{center} \hcpInfPlus1  \hcpInfPlus2  \end{center}\vspace*{1\baselineskip}
+  \begin{center} \hcpInfWith                 \end{center}\vspace*{1\baselineskip}
+  \begin{center} \hcpInfNil    \hcpInfTop    \end{center} 
+  
+  \caption{Hypersequent Classical Processes with \textsc{H-Mix}}
+  \label{fig:hcp}
+\end{figure*}
+%%% Local Variables:
+%%% TeX-master: "main"
+%%% End:

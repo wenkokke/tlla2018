@@ -1,0 +1,25 @@
+\begin{lemma}\label{lem:hcp-progress-beta}
+  If $\seq[{ \cpPlug{G}{P_1 \dots P_n} }]{ \Gamma }$, and some $\tm{P_i}$ and
+  $\tm{P_j}$, on different sides of at least one cut, act on the same bound
+  channel $\tm{x}$, then there exist $\tm{E}$, $\tm{E_i}$ and $\tm{E_j}$ such
+  that 
+  \begin{gather*}
+    \tm{\cpPlug{G}{P_1 \dots P_n}} =
+    \tm{\cpPlug{E}{\cpCut{x}{\cpPlug{E_i}{P_i}}{\cpPlug{E_j}{P_j}}}}.
+  \end{gather*}
+\end{lemma}
+\begin{proof}
+  As \cref{lem:cp-progress-link}.
+  The two cases for
+  \begin{gather*}
+    \tm{\piPar{\cpPlug{G'}{P_1 \dots P_i \dots P_j \dots P_m}}{\cpPlug{G''}{P_{m+1} \dots P_n}}}\\
+    \text{and}\\
+    \tm{\piPar{\cpPlug{G'}{P_1 \dots P_m}}{\cpPlug{G''}{P_{m+1} \dots P_i \dots P_j \dots P_n}}}
+  \end{gather*}
+  are handled exactly as the cases for cuts which do not bind $\tm{x}$.
+  The case where $\tm{P_i}$ and $\tm{P_j}$ are on different sides of a mix is
+  excluded by the type system.
+\end{proof}
+%%% Local Variables:
+%%% TeX-master: "main"
+%%% End:

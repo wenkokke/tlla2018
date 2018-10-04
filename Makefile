@@ -5,11 +5,11 @@ PDF := $(addprefix pdfs/,$(addsuffix .pdf,$(DOC)))
 
 default: $(PDF)
 
-pdfs/:
+pdfs:
 	mkdir -p pdfs/
 
 define DOC_template
-pdfs/$(1).pdf: pdfs/ doc/$(1)/main.tex
+pdfs/$(1).pdf: doc/$(1)/main.tex | pdfs/
 	cd doc/$(1);\
 		$(TEXLIVEONFLY)                             \
 			-c latexmk                                \
@@ -48,4 +48,7 @@ ifndef TEXLIVEONFLY
 		collection-bibtexextra
 endif
 
-.phony: travis-setup
+clobber:
+	rm -rf pdfs/
+
+.phony: travis-setup clobber

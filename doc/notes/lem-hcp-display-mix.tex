@@ -1,0 +1,55 @@
+\begin{lemma}\label{lem:hcp-display-mix}
+  If $\seq[{ \piPar{\cpPlug{E}{P}}{Q} }]{ \Gamma }$, then
+  $\tm{\piPar{\cpPlug{E}{P}}{Q}} \equiv \tm{\cpPlug{E}{\piPar{P}{Q}}}$. 
+\end{lemma}
+\begin{proof}
+  By induction on the structure of the evaluation context $\tm{E}$.
+  \begin{itemize}
+  \item
+    Case $\tm{\hole}$. By reflexivity.
+  \item
+    Case $\tm{\cpCut{x}{E}{R}}$.
+    \begin{gather*}
+      \begin{array}{lcl}
+        \tm{\piPar{\cpCut{x}{\cpPlug{E}{P}}{R}}{Q}}     &\equiv &\text{by }\hcpEquivMixComm \\
+        \tm{\piPar{Q}{\cpCut{x}{\cpPlug{E}{P}}{R}}}     &\equiv &\text{by }\hcpEquivMixCut2 \\
+        \tm{\cpCut{x}{( \piPar{Q}{\cpPlug{E}{P}} )}{R}} &\equiv &\text{by }\cpEquivCutComm \\
+        \tm{\cpCut{x}{( \piPar{\cpPlug{E}{P}}{Q} )}{R}} &\equiv &\text{by the induction hypothesis}\\
+        \tm{\cpCut{x}{\cpPlug{E}{\piPar{P}{Q}}}{R}}
+      \end{array}
+    \end{gather*}
+  \item
+    Case $\tm{\cpCut{x}{R}{E}}$.
+    \begin{gather*}
+      \begin{array}{lcl}
+        \tm{\piPar{\cpCut{x}{R}{\cpPlug{E}{P}}}{Q}}     &\equiv &\text{by }\hcpEquivMixComm \\
+        \tm{\piPar{Q}{\cpCut{x}{\cpPlug{E}{P}}{R}}}     &\equiv &\text{by }\hcpEquivMixCut2 \\
+        \tm{\cpCut{x}{( \piPar{Q}{\cpPlug{E}{P}} )}{R}} &\equiv &\text{by }\cpEquivCutComm \\
+        \tm{\cpCut{x}{R}{( \piPar{Q}{\cpPlug{E}{P}} )}} &\equiv &\text{by the induction hypothesis} \\
+        \tm{\cpCut{x}{R}{\cpPlug{E}{\piPar{P}{Q}}}}
+      \end{array}
+    \end{gather*}
+  \item
+    Case $\tm{\piPar{E}{R}}$.
+    \begin{gather*}
+      \begin{array}{lcl}
+        \tm{\piPar{( \piPar{\cpPlug{E}{P}}{R} )}{Q}} &\equiv &\text{by }\hcpEquivMixComm \\
+        \tm{\piPar{( \piPar{R}{\cpPlug{E}{P}} )}{Q}} &\equiv &\text{by }\hcpEquivMixAss2 \\
+        \tm{\piPar{R}{( \piPar{\cpPlug{E}{P}}{Q} )}} &\equiv &\text{by }\hcpEquivMixComm \\
+        \tm{\piPar{( \piPar{\cpPlug{E}{P}}{Q} )}{R}} &\equiv &\text{by the induction hypothesis} \\
+        \tm{\piPar{\cpPlug{E}{\piPar{P}{Q}}}{R}}
+      \end{array}
+    \end{gather*}
+  \item
+    Case $\tm{\piPar{R}{E}}$.
+    \begin{gather*}
+      \begin{array}{lcl}
+        \tm{\piPar{( \piPar{R}{\cpPlug{E}{P}} )}{Q}} &\equiv &\text{by }\hcpEquivMixAss2 \\
+        \tm{\piPar{R}{( \piPar{\cpPlug{E}{P}}{Q} )}} &\equiv &\text{by the induction hypothesis} \\
+        \tm{\piPar{R}{\cpPlug{E}{\piPar{P}{Q}}}}
+      \end{array}
+    \end{gather*}
+  \end{itemize}
+  The side conditions for the induction hypothesis can be inferred from
+  \cref{thm:hcp-preservation-equiv}.
+\end{proof}

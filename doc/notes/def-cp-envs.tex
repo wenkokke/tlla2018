@@ -1,0 +1,15 @@
+\begin{definition}[Environments]\label{def:cp-envs}
+  We define environments as follows:
+  \begin{gather*}
+    \ty{\Gamma}, \ty{\Delta}, \ty{\Theta} ::=
+    \tmty{x_1}{A_1}\dots\tmty{x_n}{A_n}
+  \end{gather*}
+  The empty environment is denoted $\emptycontext$.
+
+  Names in environments must be unique, and environments $\ty{\Gamma}$ and
+  $\ty{\Delta}$ can only be combined as $\ty{\Gamma}, \ty{\Delta}$ if
+  $\text{fv}(\ty{\Gamma}) \cap \text{fv}(\ty{\Delta}) = \varnothing$.
+\end{definition}
+%%% Local Variables:
+%%% TeX-master: "main"
+%%% End:

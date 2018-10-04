@@ -1,0 +1,9 @@
+\begin{theorem}\label{thm:hcp2cp-typing}
+  If $\seq[P]{\Gamma}$ in \hcp, then $\seq[P]{\Gamma}$ in \cp.
+\end{theorem}
+\begin{proof}
+  By induction on the structure of the derivation of $\seq[P]{\Gamma}$.
+  From $\seq[P]{\Gamma}$ we conclude that $\tm{P}$ is \textsc{Mix}-free, and
+  therefore all sequents in the derivation of $\seq[P]{\Gamma}$ have a single
+  environment.
+\end{proof}

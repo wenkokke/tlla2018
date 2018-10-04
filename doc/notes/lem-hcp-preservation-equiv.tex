@@ -1,0 +1,129 @@
+\begin{lemma}\label{lem:hcp-preservation-equiv}
+  If $\tm{P}\equiv\tm{Q}$, then $\seq[P]{\mathcal{G}}$ iff $\seq[Q]{\mathcal{G}}$.
+\end{lemma}
+\begin{proof}
+  By induction on the structure of $\tm{P}\equiv\tm{Q}$.
+  \begin{itemize}
+  \item
+    Case \hcpEquivLinkComm, \hcpEquivCutComm, and \hcpEquivCutAss1.
+    As \cref{lem:cp-preservation-equiv}.
+  \item
+    Case \hcpEquivMixComm.
+    We have to show $\seq[\piPar{P}{Q}]{\mathcal{G}} \Rightarrow
+    \seq[\piPar{Q}{P}]{\mathcal{G}}$.
+    For each direction, we continue by inversion on the typing derivation of the
+    premise.
+    The only typing derivation ends in \textsc{H-Mix}.
+    We rewrite as follows:
+    \[
+      \begin{array}{lcl}
+        \AXC{$\seq[P]{ \mathcal{G}_1 }$}
+        \AXC{$\seq[Q]{ \mathcal{G}_2 }$}
+        \NOM{H-Mix}
+        \BIC{$\seq[\piPar{P}{Q}]{ \mathcal{G}_1 \hsep \mathcal{G}_2 }$}
+        \DisplayProof
+        & \Leftrightarrow
+        & \AXC{$\seq[Q]{ \mathcal{G}_2 }$}
+          \AXC{$\seq[P]{ \mathcal{G}_1 }$}
+          \NOM{H-Mix}
+          \BIC{$\seq[\piPar{Q}{P}]{ \mathcal{G}_1 \hsep \mathcal{G}_2 }$}
+          \DisplayProof
+      \end{array}
+    \]
+  \item
+    Case \hcpEquivMixAss1.
+    We have to show $\seq[\piPar{(\piPar{P}{Q})}{R}]{\mathcal{G}} \Rightarrow
+    \seq[\piPar{(\piPar{P}{Q})}{R}]{\mathcal{G}}$.
+    For each direction, we continue by inversion on the typing derivation of the
+    premise.
+    The only typing derivation ends in two applications of \textsc{H-Mix}.
+    We rewrite as follows:
+    \[
+      \begin{array}{c}
+        \AXC{$\seq[P]{ \mathcal{G}_1 }$}
+        \AXC{$\seq[Q]{ \mathcal{G}_2 }$}
+        \NOM{H-Mix}
+        \BIC{$\seq[\piPar{P}{Q}]{ \mathcal{G}_1 \hsep \mathcal{G}_2 }$}
+        \AXC{$\seq[R]{ \mathcal{G}_3 }$}
+        \NOM{H-Mix}
+        \BIC{$\seq[\piPar{(\piPar{P}{Q})}{R}]{ \mathcal{G}_1 \hsep
+        \mathcal{G}_2 \hsep \mathcal{G}_3 }$}
+        \DisplayProof
+        \\\\
+        \Updownarrow
+        \\\\
+        \AXC{$\seq[P]{ \mathcal{G}_1 }$}
+        \AXC{$\seq[Q]{ \mathcal{G}_2 }$}
+        \AXC{$\seq[R]{ \mathcal{G}_3 }$}
+        \NOM{H-Mix}
+        \BIC{$\seq[\piPar{Q}{R}]{ \mathcal{G}_2 \hsep \mathcal{G}_3 }$}
+        \NOM{H-Mix}
+        \BIC{$\seq[\piPar{(\piPar{P}{Q})}{R}]{ \mathcal{G}_1 \hsep
+        \mathcal{G}_2 \hsep \mathcal{G}_3 }$}
+        \DisplayProof
+      \end{array}
+    \]
+  \item
+    Case \hcpEquivMixCut1.
+    We have to show $\seq[\piPar{P}{\cpCut{x}{Q}{R}}]{\mathcal{G}} \Rightarrow
+    \seq[\piPar{P}{\cpCut{x}{Q}{R}}]{\mathcal{G}}$.
+    For each direction, we continue by inversion on the typing derivation of the
+    premise.
+    The only typing derivation ends in \textsc{H-Mix} and \textsc{Cut}.
+    We rewrite as follows:
+    \[
+      \begin{array}{c}
+        \AXC{$\seq[P]{ \mathcal{G}_1 }$}
+        \AXC{$\seq[Q]{ \mathcal{G}_2 \hsep \Gamma, \tmty{x}{A} }$}
+        \AXC{$\seq[R]{ \mathcal{G}_3 \hsep \Delta, \tmty{x}{A^\bot} }$}
+        \NOM{Cut}
+        \BIC{$\seq[\cpCut{x}{Q}{R}]{ \mathcal{G}_2 \hsep \mathcal{G}_3 \hsep
+        \Gamma, \Delta }$}
+        \NOM{H-Mix}
+        \BIC{$\seq[\piPar{P}{\cpCut{x}{Q}{R}}]{ \mathcal{G}_1 \hsep
+        \mathcal{G}_2 \hsep \mathcal{G}_3 \hsep \Gamma, \Delta }$}
+        \DisplayProof
+        \\\\
+        \Updownarrow
+        \\\\
+        \AXC{$\seq[P]{ \mathcal{G}_1 }$}
+        \AXC{$\seq[Q]{ \mathcal{G}_2 \hsep \Gamma, \tmty{x}{A} }$}
+        \NOM{H-Mix}
+        \BIC{$\seq[\piPar{P}{\cpCut{x}{Q}{R}}]{ \mathcal{G}_1 \hsep
+        \mathcal{G}_2 \hsep \Gamma, \tmty{x}{A} }$}
+        \AXC{$\seq[R]{ \mathcal{G}_3 \hsep \Delta, \tmty{x}{A^\bot} }$}
+        \NOM{Cut}
+        \BIC{$\seq[\piPar{P}{\cpCut{x}{Q}{R}}]{ \mathcal{G}_1 \hsep
+        \mathcal{G}_2 \hsep \mathcal{G}_3 \hsep \Gamma, \Delta }$}
+        \DisplayProof
+      \end{array}
+    \]
+  \item
+    Case \hcpEquivMixHalt1.
+    We have to show that if $\seq[(\piPar{P}{\piHalt})]{\mathcal{G}}$, then
+    $\seq[P]{\mathcal{G}}$, and the converse.
+    In the $[\Rightarrow]$ direction, we proceed by inversion on the typing
+    derivation of the premise.
+    The only derivation ends in \textsc{H-Mix} and \textsc{H-Halt}.
+    In the $[\Leftarrow]$ direction, we rewrite immediately.
+    For either direction, we rewrite as follows:
+    \[
+      \begin{array}{lcl}
+        \AXC{$\seq[P]{\mathcal{G}}$}
+        \AXC{}
+        \NOM{H-Halt}
+        \UIC{$\seq[\piHalt]{\emptyhypercontext}$}
+        \NOM{H-Mix}
+        \BIC{$\seq[(\piPar{P}{\piHalt})]{\mathcal{G}}$}
+        \DisplayProof
+        & \Leftrightarrow
+        & \AXC{$\seq[P]{\mathcal{G}}$}
+          \DisplayProof
+      \end{array}
+    \]
+  \end{itemize}
+\end{proof}
+%%% Local Variables:
+%%% TeX-master: "main"
+%%% End:
+

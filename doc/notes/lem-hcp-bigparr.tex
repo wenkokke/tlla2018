@@ -1,0 +1,14 @@
+\begin{lemma}\label{lem:hcp-bigparr}
+  If $\seq{\Gamma}$ in \hcp, then $\seq{\bigparr\Gamma}$ in \hcp.
+\end{lemma}
+\begin{proof}
+  By induction on the structure of $\Gamma$.
+  \begin{itemize}
+  \item
+    If $\ty{\Gamma} = \ty{A}$, then the statement is trivially true.
+  \item
+    If $\ty{\Gamma} = \ty{A, B, \Gamma'}$,
+    then we apply $(\parr)$ to get $\seq{A \parr B, \Gamma'}$,\\
+    and apply the induction hypothesis.
+  \end{itemize}
+\end{proof}

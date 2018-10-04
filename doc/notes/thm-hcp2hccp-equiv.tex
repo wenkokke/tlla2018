@@ -1,0 +1,54 @@
+\begin{theorem}\label{thm:hcp2hccp-equiv}
+  If $\tm{P}\equiv\tm{Q}$ in \hcp, then $\tm{\mtf{P}}\equiv\tm{\mtf{Q}}$ in \hccp.
+\end{theorem}
+\begin{proof}
+  By induction on the structure of the derivation of $\tm{P}\equiv\tm{Q}$.
+  \begin{itemize}
+  \item
+    Case \hcpEquivCutComm.
+    \begin{gather*}
+      \begin{array}{lcl}
+        \tm{\piNew{x}{(\piPar{\mtf{P}}{\mtf{Q}})}}
+        & \equiv & \text{by \hccpEquivMixComm}
+        \\
+        \tm{\piNew{x}{(\piPar{\mtf{Q}}{\mtf{P}})}}
+      \end{array}
+    \end{gather*}
+  \item
+    Case \hcpEquivCutAss1.
+    \begin{gather*}
+      \begin{array}{lcl}
+        \tm{\piNew{x}{(\piPar{\mtf{P}}{\piNew{y}{(\piPar{\mtf{Q}}{\mtf{R}})}})}}
+        & \equiv & \text{by \hccpEquivScopeExt2}
+        \\
+        \tm{\piNew{x}{\piNew{y}{(\piPar{\mtf{P}}{(\piPar{\mtf{Q}}{\mtf{R}})})}}}
+        & \equiv & \text{by \hccpEquivNewComm}
+        \\
+        \tm{\piNew{y}{\piNew{x}{(\piPar{\mtf{P}}{(\piPar{\mtf{Q}}{\mtf{R}})})}}}
+        & \equiv & \text{by \hccpEquivMixAss1}
+        \\
+        \tm{\piNew{y}{\piNew{x}{(\piPar{(\piPar{\mtf{P}}{\mtf{Q}})}{\mtf{R}})}}}
+        & \equiv & \text{by \hccpEquivScopeExt1 and \hccpEquivMixComm}
+        \\
+        \tm{\piNew{y}{(\piPar{\piNew{x}{(\piPar{\mtf{P}}{\mtf{Q}})}}{\mtf{R}})}}
+      \end{array}
+    \end{gather*}
+  \item
+    Case \hcpEquivMixCut1.
+    \begin{gather*}
+      \begin{array}{lcl}
+        \tm{\piNew{x}{(\piPar{(\piPar{P}{Q})}{R})}}
+        & \equiv & \text{by \hccpEquivMixAss2}
+        \\
+        \tm{\piNew{x}{(\piPar{P}{(\piPar{Q}{R})})}}
+        & \equiv & \text{by \hccpEquivScopeExt1}
+        \\
+        \tm{(\piPar{P}{\piNew{x}{(\piPar{Q}{R})}})}
+      \end{array}
+    \end{gather*}
+  \end{itemize}
+  The other cases are trivial.
+\end{proof}
+%%% Local Variables:
+%%% TeX-master: "main"
+%%% End:

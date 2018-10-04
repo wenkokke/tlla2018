@@ -1,0 +1,21 @@
+\begin{lemma}\label{lem:hcp-progress-link}
+  If $\seq[{ \cpPlug{G}{P_1 \dots P_n} }]{ \Gamma }$, and some $\tm{P_i}$ is a
+  link $\tm{\cpLink{x}{y}}$, then either $\tm{x}$ and $\tm{y}$ are not bound by
+  $\tm{G}$, or there exist $\tm{E}$, $\tm{E'}$ and $\tm{Q}$ such that
+  \begin{gather*}
+    \tm{\cpPlug{G}{P_1 \dots P_n}} \equiv
+    \tm{\cpPlug{E}{\cpCut{x}{\cpPlug{E'}{\cpLink{x}{y}}}{Q}}}.
+  \end{gather*}
+\end{lemma}
+\begin{proof}
+  As \cref{lem:cp-progress-link}. The two cases for
+  \begin{gather*}
+    \tm{\piPar{\cpPlug{G'}{P_1 \dots P_i \dots P_m}}{\cpPlug{G''}{P_{m+1} \dots P_n}}}\\
+    \text{and}\\
+    \tm{\piPar{\cpPlug{G'}{P_1 \dots P_m}}{\cpPlug{G''}{P_{m+1} \dots P_i \dots P_n}}}
+  \end{gather*}
+  are handled exactly as the cases for cuts which do not bind $\tm{x}$ or $\tm{y}$.
+\end{proof}
+%%% Local Variables:
+%%% TeX-master: "main"
+%%% End:

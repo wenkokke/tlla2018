@@ -1,0 +1,17 @@
+\begin{definition}[Canonical forms]\label{def:hccp-canonical-forms}
+  A process $\tm{P}$ is in canonical form if it is an action, or if it is of the
+  form
+  \[
+    \tm{\piNew{x_1\dots x_n}{(P_1\ppar\dots\ppar P_{m+n+1})}}
+  \]
+  where each $\tm{P_i}$ is an action, no $\tm{P_i}$ is a link acting on a bound
+  channel, and no two actions $\tm{P_i}$ and $\tm{P_j}$ act on the same bound
+  channel.
+
+  An immediate consequence of this definition is that if a process is in
+  canonical form, then at least $m+1$ of the actions $\tm{P_i}$ are blocked on
+  free channels.
+\end{definition}
+%%% Local Variables:
+%%% TeX-master: "main"
+%%% End:

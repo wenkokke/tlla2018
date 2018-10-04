@@ -1,0 +1,44 @@
+\begin{theorem}\label{thm:hcp2hccp-reduction}
+  If $\reducesto{P}{Q}$ in \hcp, then $\reducesto{\mtf{P}}{\mtf{Q}}$ in \hccp.
+\end{theorem}
+\begin{proof}
+  By induction on the structure of the derivation of $\reducesto{P}{Q}$.
+  \begin{itemize}
+  \item
+    Case \cpRedBetaTensParr.
+    \begin{gather*}
+      \begin{array}{lcl}
+        \tm{\piNew{x}{(\piPar{\piBoundSend{x}{y}{(\piPar{P}{Q})}}{\piRecv{x}{z}{R}})}}
+        & \Longrightarrow & \text{by \hccpRedBetaTensParr}
+        \\
+        \tm{\piNew{x}{\piNew{y}{(\piPar{(\piPar{P}{Q})}{\cpSub{y}{z}{R}})}}}
+        & \equiv & \text{by \hccpEquivNewComm}
+        \\
+        \tm{\piNew{y}{\piNew{x}{(\piPar{(\piPar{P}{Q})}{\cpSub{y}{z}{R}})}}}
+        & \equiv & \text{by \hccpEquivMixAss1}
+        \\
+        \tm{\piNew{y}{\piNew{x}{(\piPar{P}{(\piPar{Q}{\cpSub{y}{z}{R}})})}}}
+        & \equiv & \text{by \hccpEquivScopeExt1}
+        \\
+        \tm{\piNew{y}{(\piPar{P}{\piNew{x}{(\piPar{Q}{\cpSub{y}{z}{R}})}})}}
+      \end{array}
+    \end{gather*}
+  \item
+    Case \cpRedBetaOneBot.
+    \begin{gather*}
+      \begin{array}{lcl}
+        \tm{\piNew{x}{(\piPar{\piBoundSend{x}{}{\piHalt}}{\piRecv{x}{}{\mtf{Q}}})}}
+        & \Longrightarrow & \text{by \hccpRedBetaOneBot}
+        \\
+        \tm{(\piPar{\piHalt}{\mtf{Q}})}
+        & \equiv & \text{by \hccpEquivMixHalt1}
+        \\
+        \tm{\mtf{Q}}
+      \end{array}
+    \end{gather*}
+  \end{itemize}
+  The other cases are trivial.
+\end{proof}
+%%% Local Variables:
+%%% TeX-master: "main"
+%%% End:

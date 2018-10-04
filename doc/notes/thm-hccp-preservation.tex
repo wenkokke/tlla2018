@@ -1,0 +1,185 @@
+\begin{theorem}[Preservation]\label{thm:hccp-preservation}
+  If $\reducesto{P}{Q}$ and $\seq[P]{\mathcal{G}}$, then $\seq[Q]{\mathcal{G}}$.
+\end{theorem}
+\begin{proof}
+  By induction on the structure of $\reducesto{P}{Q}$.
+  \begin{itemize}
+  \item
+    Case \hccpRedAxCut1.
+    We have to show $\seq[\piNew{x}{(\piPar{\cpLink{w}{x}}{P})}]{\mathcal{G}}
+    \Rightarrow \seq[\cpSub{w}{x}{P}]{\mathcal{G}}$.
+    We continue by inversion on the typing derivation of the premise.
+    The only typing derivation ends in \textsc{Cycle}, \textsc{Mix}, and
+    \textsc{Ax}.
+    We rewrite as follows:
+    \[
+      \begin{array}{c}
+        \AXC{}
+        \NOM{Ax}
+        \UIC{$\seq[\cpLink{w}{x}]{\tmty{w}{A}, \tmty{x}{A^\bot}}$}
+        \AXC{$\seq[P]{\mathcal{G} \hsep \tmty{x}{A}, \Gamma}$}
+        \NOM{H-Mix}
+        \BIC{$\seq[(\piPar{\cpLink{w}{x}}{P})]{\mathcal{G} \hsep \tmty{w}{A},
+        \tmty{x}{A^\bot} \hsep \tmty{x}{A}, \Gamma}$}
+        \NOM{H-Cycle}
+        \UIC{$\seq[\piNew{x}{(\piPar{\cpLink{w}{x}}{P})}]{\mathcal{G} \hsep
+        \tmty{w}{A}, \Gamma}$}
+        \DisplayProof
+        \\\\
+        \Downarrow
+        \\\\
+        \AXC{$\seq[P]{\mathcal{G} \hsep \tmty{x}{A}, \Gamma}$}
+        \NOM{\Cref{lem:hccp-preservation-subst}}
+        \UIC{$\seq[\cpSub{w}{x}{P}]{\mathcal{G} \hsep \tmty{w}{A}, \Gamma}$}
+        \DisplayProof
+      \end{array}
+    \]
+  \item
+    Case \hccpRedBetaTensParr.
+    We have to show
+    $\seq[\piNew{x}{(\piPar{\piBoundSend{x}{y}{P}}{\piRecv{x}{z}{Q}})}]{\mathcal{G}}
+    \Rightarrow \seq[\piNew{x}{\piNew{y}{(\piPar{P}{\cpSub{y}{z}{Q}})}}]{\mathcal{G}}$.
+    We continue by inversion on the typing derivation of the premise.
+    The only typing derivation ends in \textsc{Cycle}, \textsc{Mix}, $(\tens)$,
+    and $(\parr)$.
+    We rewrite as follows: 
+    \[
+      \begin{array}{c}
+        \AXC{$\seq[P]{
+        \mathcal{G} \hsep \tmty{y}{A}, \Gamma \hsep \tmty{x}{B}, \Delta}$}
+        \SYM{\tens}
+        \UIC{$\seq[\piBoundSend{x}{y}{P}]{
+        \mathcal{G} \hsep \tmty{x}{A \tens B}, \Gamma, \Delta}$}
+        \AXC{$\seq[Q]{
+        \mathcal{H} \hsep \tmty{z}{A^\bot}, \tmty{x}{B^\bot}, \Theta}$}
+        \SYM{\parr}
+        \UIC{$\seq[\piRecv{x}{z}{Q}]{
+        \mathcal{H} \hsep \tmty{x}{A^\bot \parr B^\bot}, \Theta}$}
+        \NOM{H-Mix}
+        \BIC{$\seq[\piPar{\piBoundSend{x}{y}{P}}{\piRecv{x}{z}{Q}}]{
+        \mathcal{G} \hsep \mathcal{H} \hsep
+        \tmty{x}{A \tens B}, \Gamma, \Delta \hsep \tmty{x}{A^\bot \parr B^\bot}, \Theta}$}
+        \NOM{H-Cycle}
+        \UIC{$\seq[\piNew{x}{(\piPar{\piBoundSend{x}{y}{P}}{\piRecv{x}{z}{Q}})}]{
+        \mathcal{G} \hsep \mathcal{H} \hsep \Gamma, \Delta, \Theta}$}
+        \DisplayProof
+        \\\\
+        \Downarrow
+        \\\\
+        \AXC{$\seq[P]{
+        \mathcal{G} \hsep \tmty{y}{A}, \Gamma \hsep \tmty{x}{B}, \Delta}$}
+        \AXC{$\seq[Q]{
+        \mathcal{H} \hsep \tmty{z}{A^\bot}, \tmty{x}{B^\bot}, \Theta}$}
+        \NOM{\Cref{lem:hccp-preservation-subst}}
+        \UIC{$\seq[\cpSub{y}{z}{Q}]{
+        \mathcal{H} \hsep \tmty{y}{A^\bot}, \tmty{x}{B^\bot}, \Theta}$}
+        \NOM{H-Mix}
+        \BIC{$\seq[\piPar{P}{\cpSub{y}{z}{Q}}]{
+        \mathcal{G} \hsep \mathcal{H} \hsep
+        \tmty{y}{A}, \Gamma \hsep \tmty{x}{B}, \Delta \hsep
+        \tmty{y}{A^\bot}, \tmty{x}{B^\bot}, \Theta}$}
+        \NOM{H-Cycle}
+        \UIC{$\seq[\piNew{y}{(\piPar{P}{\cpSub{y}{z}{Q}})}]{
+        \mathcal{G} \hsep \mathcal{H} \hsep
+        \tmty{x}{B}, \Delta \hsep \tmty{x}{B^\bot}, \Gamma, \Theta}$}
+        \NOM{H-Cycle}
+        \UIC{$\seq[\piNew{x}{\piNew{y}{(\piPar{P}{\cpSub{y}{z}{Q}})}}]{
+        \mathcal{G} \hsep \mathcal{H} \hsep \Gamma, \Delta, \Theta}$}
+        \DisplayProof
+      \end{array}
+    \]
+  \item
+    Case \hccpRedBetaOneBot.
+    We have to show
+    $\seq[\piNew{x}{(\piPar{\piSend{x}{}{P}}{\piRecv{x}{}{Q}})}]{\mathcal{G}}
+    \Rightarrow \seq[(\piPar{P}{Q})]{\mathcal{G}}$.
+    We continue by inversion on the typing derivation of the premise.
+    The only typing derivation ends in \textsc{Cycle}, \textsc{Mix}, $(\one)$,
+    and $(\bot)$.
+    We rewrite as follows: 
+    \[
+      \begin{array}{c}
+        \AXC{$\seq[P]{
+        \mathcal{G}}$}
+        \SYM{\one}
+        \UIC{$\seq[\piSend{x}{}{P}]{
+        \mathcal{G} \hsep \tmty{x}{\one}}$}
+        \AXC{$\seq[Q]{
+        \mathcal{H} \hsep \Delta}$}
+        \SYM{\bot}
+        \UIC{$\seq[\piRecv{x}{}{Q}]{
+        \mathcal{H} \hsep \tmty{x}{\bot}, \Delta}$}
+        \NOM{H-Mix}
+        \BIC{$\seq[(\piPar{\piSend{x}{}{P}}{\piRecv{x}{}{Q}})]{
+        \mathcal{G} \hsep \mathcal{H} \hsep \tmty{x}{\one} \hsep \tmty{x}{\bot}, \Delta}$}
+        \NOM{H-Cycle}
+        \UIC{$\seq[\piNew{x}{(\piPar{\piSend{x}{}{P}}{\piRecv{x}{}{Q}})}]{
+        \mathcal{G} \hsep \mathcal{H} \hsep \Delta}$}
+        \DisplayProof
+        \\\\
+        \Downarrow
+        \\\\
+        \AXC{$\seq[P]{\mathcal{G}}$}
+        \AXC{$\seq[Q]{
+        \mathcal{H} \hsep \Delta}$}
+        \NOM{H-Mix}
+        \BIC{$\seq[(\piPar{P}{Q})]{\mathcal{G} \hsep \mathcal{H} \hsep \Delta}$}
+        \DisplayProof
+      \end{array}
+    \]
+  \item
+    Case \hccpRedBetaPlusWith1.
+    We have to show
+    $\seq[\piNew{x}{(\piPar{\cpInl{x}{P}}{\cpCase{x}{Q}{R}})}]{\mathcal{G}}
+    \Rightarrow \seq[\piNew{x}{(\piPar{P}{Q})}]{\mathcal{G}}$.
+    We continue by inversion on the typing derivation of the premise.
+    The only typing derivation ends in \textsc{Cycle}, \textsc{Mix}, $(\plus_1)$,
+    and $(\with)$.
+    We rewrite as follows: 
+    \[
+      \begin{array}{c}
+        \AXC{$\seq[P]{
+        \mathcal{G} \hsep \tmty{x}{A}, \Gamma}$}
+        \SYM{\plus_1}
+        \UIC{$\seq[\cpInl{x}{P}]{
+        \mathcal{G} \hsep \tmty{x}{A \plus B}, \Gamma}$}
+        \AXC{$\seq[Q]{
+        \mathcal{H} \hsep \tmty{x}{A^\bot}, \Delta}$}
+        \AXC{$\seq[R]{
+        \mathcal{H} \hsep \tmty{x}{B^\bot}, \Delta}$}
+        \SYM{\with}
+        \BIC{$\seq[\cpCase{x}{Q}{R}]{
+        \mathcal{H} \hsep \tmty{x}{A^\bot \with B^\bot}, \Delta}$}
+        \NOM{H-Mix} 
+        \BIC{$\seq[(\piPar{\cpInl{x}{P}}{\cpCase{x}{Q}{R}})]{
+        \mathcal{G} \hsep \mathcal{H} \hsep
+        \tmty{x}{A \plus B}, \Gamma \hsep \tmty{x}{A^\bot \with B^\bot}, \Delta}$}
+        \NOM{H-Cycle}
+        \UIC{$\seq[\piNew{x}{(\piPar{\cpInl{x}{P}}{\cpCase{x}{Q}{R}})}]{
+        \mathcal{G} \hsep \mathcal{H} \hsep \Gamma, \Delta}$}
+        \DisplayProof
+        \\\\
+        \Downarrow
+        \\\\
+        \AXC{$\seq[P]{
+        \mathcal{G} \hsep \tmty{x}{A}, \Gamma}$}
+        \AXC{$\seq[Q]{
+        \mathcal{H} \hsep \tmty{x}{A^\bot}, \Delta}$}
+        \NOM{H-Mix}
+        \BIC{$\seq[(\piPar{P}{Q})]{
+        \mathcal{G} \hsep \mathcal{H} \hsep
+        \tmty{x}{A}, \Gamma \hsep \tmty{x}{A^\bot}, \Delta}$}
+        \NOM{H-Cycle}
+        \UIC{$\seq[\piNew{x}{(\piPar{P}{Q})}]{
+        \mathcal{G} \hsep \mathcal{H} \hsep \Gamma, \Delta}$}
+        \DisplayProof
+      \end{array}
+    \]
+  \item
+    Case \hccpRedBetaPlusWith2.
+    As above.
+  \end{itemize}
+\end{proof}
+%%% Local Variables:
+%%% TeX-master: "main"
+%%% End:

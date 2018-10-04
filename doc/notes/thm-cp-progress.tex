@@ -1,0 +1,59 @@
+\begin{theorem}[Progress]\label{thm:cp-progress}
+  If $\seq[P]{\Gamma}$, then there exists a $\tm{Q}$ such that either
+  $\tm{P}\equiv\tm{Q}$ and $\tm{Q}$ is in canonical form, or $\reducesto{P}{Q}$.
+\end{theorem}
+\begin{proof}
+  By induction on the structure of derivation for $\seq[P]{\Gamma}$.
+  The only interesting case is when the last rule of the derivation is
+  \textsc{Cut}---in every other case, the typing rule constructs a term which is
+  in canonical form.
+  \\
+  We consider the maximum evaluation prefix $\tm{G}$ of $\tm{P}$, such that $\tm{P}
+  = \tm{\cpPlug{G}{P_1 \dots P_{n+1}}}$ and each $\tm{P_i}$ is an action.
+  The prefix $\tm{G}$ consists of $n$ cuts, and introduces $n$ channels, but
+  composes $n+1$ actions. Therefore, one of the following must be true:
+  \begin{itemize}
+  \item
+    One of the actions composed by $\tm{G}$ is a link $\tm{\cpLink{x}{y}}$
+    acting on a bound channel.
+    Suppose that $\tm{x}$ is the bound channel.
+    There exist evaluation contexts $\tm{E}$ and $\tm{E'}$ such that
+    \[
+      \tm{P} =
+      \tm{\cpPlug{E}{\cpCut{x}{\cpPlug{E'}{\cpLink{x}{y}}}{R}}}.
+    \]
+    We rewrite by $\equiv$ to obtain
+    \[
+      \tm{P} =
+      \tm{\cpPlug{E}{\cpPlug{E'}{\cpCut{x}{\cpLink{x}{y}}{R}}}}.
+    \]
+    We then reduce by applying \cpRedAxCut1.
+    Similarly if $\tm{y}$ is the bound channel.
+  \item
+    Two of the actions composed by $\tm{G}$ are acting on the \emph{same} bound
+    channel.
+    Let the two actions be $\tm{P_i}$ and $\tm{P_j}$, and the bound channel
+    $\tm{x}$.
+    There exist evaluation contexts $\tm{E}$, $\tm{E_i}$, and $\tm{E_j}$ such
+    that
+    \[
+      \tm{P} =
+      \tm{\cpPlug{E}{\cpCut{x}{\cpPlug{E_i}{P_i}}{\cpPlug{E_j}{P_j}}}}
+    \]
+    We rewrite by $\equiv$ to obtain
+    \[
+      \tm{P} \equiv
+      \tm{\cpPlug{E}{\cpPlug{E_i}{\cpPlug{E_j}{\cpCut{x}{P_i}{P_j}}}}}
+    \]
+    We then reduce by applying the appropriate \textbeta-reduction.
+  \item
+    Otherwise (at least) one of the actions composed by $\tm{G}$ must be acting
+    on a free channel.
+    None of the actions composed by $\tm{G}$ is a link.
+    No two actions composed by $\tm{G}$ are acting on the same channel $\tm{x}$.
+    Therefore, $\tm{P}$ is equivalent to a process in canonical form.
+  \end{itemize}
+\end{proof}
+%%% Local Variables:
+%%% TeX-master: "main"
+%%% End:

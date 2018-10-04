@@ -1,0 +1,28 @@
+\begin{definition}[Typing judgements]\label{def:ccp-typing}
+  A typing judgement
+  $\cseq[P]{\tmty{x_1}{A_1}\dots\tmty{x_n}{A_n}}{\mathcal{C}}$ denotes that the
+  process $\tm{P}$ communicates along channels $\tm{x_1}\dots\tm{x_n}$ following
+  protocols $\ty{A_1}\dots\ty{A_n}$, and that $\tm{P}$ is free from deadlocks if
+  the constraint set $\cs{\mathcal{C}}$ is satisfiable.
+  Typing judgements can be constructed using the inference rules in
+  \cref{fig:ccp}, where $\cs{\cmin{o}{\Gamma}} = \cs{\{ o < \pr{\ty{A}} \mid
+    \ty{A} \in \ty{\Gamma} \}}$.
+\end{definition}
+\begin{figure*}[!htb]
+  Structural Rules.
+  \begin{center} \cccpInfAx    \cccpInfCycle \end{center}\vspace*{1\baselineskip}
+  \begin{center} \cccpInfMix   \cccpInfHalt  \end{center}\vspace*{1\baselineskip}
+  
+  Logical Rules.
+  \begin{center} \cccpInfTens  \cccpInfParr  \end{center}\vspace*{1\baselineskip}
+  \begin{center} \cccpInfOne   \cccpInfBot   \end{center}\vspace*{1\baselineskip}
+  \begin{center} \cccpInfPlus1 \cccpInfPlus2 \end{center}\vspace*{1\baselineskip}
+  \begin{center} \cccpInfWith                \end{center}\vspace*{1\baselineskip}
+  \begin{center} \cccpInfNil   \cccpInfTop   \end{center} 
+
+  \caption{Priority-based Classical Processes Revisited}
+  \label{fig:cccp}
+\end{figure*}
+%%% Local Variables:
+%%% TeX-master: "main"
+%%% End:

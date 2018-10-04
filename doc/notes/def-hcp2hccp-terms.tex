@@ -1,0 +1,34 @@
+\begin{definition}\label{def:hcp2hccp-terms}
+  We define a translation from terms in \hcp to terms in \hccp:
+  \begin{gather*}
+    \begin{array}{lcl}
+      \tm{\mtf{\cpLink{x}{y}}}
+      & := & \tm{\cpLink{x}{y}} \\
+      \tm{\mtf{\cpCut{x}{P}{Q}}}
+      & := & \tm{\piNew{x}{(\piPar{\mtf{P}}{\mtf{Q}})}} \\
+      \tm{\mtf{\cpSend{x}{y}{P}{Q}}}
+      & := & \tm{\piBoundSend{x}{y}{(\piPar{\mtf{P}}{\mtf{Q}})}} \\
+      \tm{\mtf{\cpRecv{x}{y}{P}}}
+      & := & \tm{\piRecv{x}{y}{\mtf{P}}} \\
+      \tm{\mtf{\cpHalt{x}}}
+      & := & \tm{\piBoundSend{x}{}{\piHalt}} \\
+      \tm{\mtf{\cpWait{x}{P}}}
+      & := & \tm{\piRecv{x}{}{\mtf{P}}} \\
+      \tm{\mtf{\cpInl{x}{P}}}
+      & := & \tm{\cpInl{x}{\mtf{P}}} \\
+      \tm{\mtf{\cpInr{x}{P}}}
+      & := & \tm{\cpInr{x}{\mtf{P}}} \\
+      \tm{\mtf{\cpCase{x}{P}{Q}}}
+      & := & \tm{\cpCase{x}{\mtf{P}}{\mtf{Q}}} \\
+      \tm{\mtf{\cpAbsurd{x}}}
+      & := & \tm{\cpAbsurd{x}} \\
+      \tm{\mtf{(\piPar{P}{Q})}}
+      & := & \tm{(\piPar{\mtf{P}}{\mtf{Q}})}
+    \end{array}
+  \end{gather*}
+  This translation breaks down the term constructs in \hcp into their more
+  atomic constructs in \hccp, and rewrites bound send in terms of unbound send.
+\end{definition}
+%%% Local Variables:
+%%% TeX-master: "main"
+%%% End:

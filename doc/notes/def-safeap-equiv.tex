@@ -1,0 +1,17 @@
+\begin{definition}[Structural congruence]\label{def:safeap-equiv}
+  We define the structural congruence $\equiv$ as the congruence closure over
+  terms which satisfies the axioms in \cref{def:ccp-equiv} and the following
+  additional axioms:
+  \begin{gather*}
+    \begin{array}{llcll}
+      \apEquivGCNew
+      & \tm{\piNew{xy}{P}}
+      & \equiv
+      & \tm{P}
+      & \text{if }\tm{x},\tm{y}\not\in\tm{P}
+    \end{array}
+  \end{gather*}
+\end{definition}
+%%% Local Variables:
+%%% TeX-master: "main"
+%%% End:

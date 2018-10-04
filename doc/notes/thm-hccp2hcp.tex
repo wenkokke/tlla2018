@@ -1,0 +1,92 @@
+\begin{theorem}\label{thm:hccp2hcp}
+  If $\seq{\mathcal{G}}$ in \hccp, then $\seq{\mathcal{G}}$ in \hcp.
+\end{theorem}
+\begin{proof}
+  By induction on the structure of the derivation of $\seq{\mathcal{G}}$.
+  \begin{itemize}
+  \item 
+    Case \textsc{H-Cycle}.\\
+    Each application of \textsc{H-Cycle} introduces one hypersequent separator,
+    which can only be eliminated by \textsc{H-Mix}.
+    Therefore, under each application of \textsc{H-Cycle}, there must be a
+    corresponding application of \textsc{H-Mix}.
+    We rewrite as follows:
+    \[
+      \begin{array}{lcl}
+        \pvar{$\rho_1$}\UIC{$\seq{\mathcal{G}_1 \hsep \ty{A}, \Gamma}$}
+        \pvar{$\rho_2$}\UIC{$\seq{\mathcal{G}_2 \hsep \ty{A^\bot}, \Delta}$}
+        \NOM{H-MIX}
+        \BIC{$\seq{\mathcal{G}_1 \hsep \mathcal{G}_2 \hsep
+        \ty{A}, \Gamma \hsep \ty{A^\bot}, \Delta}$}
+        \noLine\UIC{$\vphantom{\Gamma}\smash[t]{\vdots}$}
+        \noLine\UIC{$\rho_3$}
+        \noLine\UIC{$\vphantom{\Gamma}\smash[t]{\vdots}$}
+        \noLine\UIC{$\seq{\mathcal{G} \hsep \ty{A}, \Gamma' \hsep \ty{A^\bot}, \Delta'}$}
+        \NOM{H-Cycle}
+        \UIC{$\seq{\mathcal{G} \hsep \Gamma', \Delta'}$}
+        \DisplayProof
+        & \Rightarrow
+        & \pvar{$\rho_1$}\UIC{$\seq{\mathcal{G}_1 \hsep \ty{A}, \Gamma}$}
+          \pvar{$\rho_2$}\UIC{$\seq{\mathcal{G}_2 \hsep \ty{A^\bot}, \Delta}$}
+          \NOM{Cut}
+          \BIC{$\seq{\mathcal{G}_1 \hsep \mathcal{G}_2 \hsep \Gamma, \Delta}$}
+          \noLine\UIC{$\vphantom{\Gamma}\smash[t]{\vdots}$}
+          \noLine\UIC{$\rho_3$}
+          \noLine\UIC{$\vphantom{\Gamma}\smash[t]{\vdots}$}
+          \noLine\UIC{$\seq{\mathcal{G} \hsep \Gamma', \Delta'}$}
+          \DisplayProof
+      \end{array}
+    \]
+  \item
+    Case $(\tens)$.\\
+    We rewrite as follows:
+    \[
+      \begin{array}{lcl}
+        \pvar{$\rho_1$}\UIC{$\seq{\mathcal{G}_1 \hsep \ty{A}, \Gamma}$}
+        \pvar{$\rho_2$}\UIC{$\seq{\mathcal{G}_2 \hsep \ty{B}, \Delta}$}
+        \NOM{H-MIX}
+        \BIC{$\seq{\mathcal{G}_1 \hsep \mathcal{G}_2 \hsep
+        \ty{A}, \Gamma \hsep \ty{B}, \Delta}$}
+        \noLine\UIC{$\vphantom{\Gamma}\smash[t]{\vdots}$}
+        \noLine\UIC{$\rho_3$}
+        \noLine\UIC{$\vphantom{\Gamma}\smash[t]{\vdots}$}
+        \noLine\UIC{$\seq{\mathcal{G} \hsep \ty{A}, \Gamma' \hsep \ty{B}, \Delta'}$}
+        \SYM{\tens}
+        \UIC{$\seq{\mathcal{G} \hsep \ty{A \tens B}, \Gamma', \Delta'}$}
+        \DisplayProof
+        & \Rightarrow
+        & \pvar{$\rho_1$}\UIC{$\seq{\mathcal{G}_1 \hsep \ty{A}, \Gamma}$}
+          \pvar{$\rho_2$}\UIC{$\seq{\mathcal{G}_2 \hsep \ty{B}, \Delta}$}
+          \SYM{\tens}
+          \BIC{$\seq{\mathcal{G}_1 \hsep \mathcal{G}_2 \hsep
+          \ty{A \tens B}, \Gamma, \Delta}$}
+          \noLine\UIC{$\vphantom{\Gamma}\smash[t]{\vdots}$}
+          \noLine\UIC{$\rho_3$}
+          \noLine\UIC{$\vphantom{\Gamma}\smash[t]{\vdots}$}
+          \noLine\UIC{$\seq{\mathcal{G} \hsep \ty{A \tens B}, \Gamma', \Delta'}$}
+          \DisplayProof
+      \end{array}
+    \]
+  \item
+    Case $(\one)$.\\
+    We rewrite as follows:
+    \[
+      \begin{array}{lcl}
+        \pvar{$\rho$}\UIC{$\seq{\mathcal{G}}$}
+        \SYM{\one}
+        \UIC{$\seq{\mathcal{G} \hsep \ty{\one}}$}
+        \DisplayProof
+        & \Rightarrow
+        & \pvar{$\rho$}\UIC{$\seq{\mathcal{G}}$}
+          \AXC{}\SYM{\one}\UIC{$\seq{\ty{\one}}$}
+          \NOM{H-Mix}
+          \BIC{$\seq{\mathcal{G} \hsep \ty{\one}}$}
+          \DisplayProof 
+      \end{array}
+    \]
+  \end{itemize}
+  The other cases are trivial.
+\end{proof}
+%%% Local Variables:
+%%% TeX-master: "main"
+%%% End:

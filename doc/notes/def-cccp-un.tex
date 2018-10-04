@@ -1,0 +1,28 @@
+\begin{definition}[Point-wise priority unification]\label{def:cccp-un}
+  We define the function $\un{\cdot}{\cdot}$ which generates a constraint set to
+  point-wise unify the priorities in two dual types:
+  \begin{gather*}
+    \setlength{\arraycolsep}{1pt}
+    \begin{array}{lclclcl}
+      \un{\one^{\cs{o}}}{\bot^{\cs{o'}}}
+      & = & \cs{\{ o = o' \}} & \qquad
+      \un{( {A \tens^{\cs{o}} B} )}{( {A' \parr^{\cs{o'}} B'} )}
+      & = & \cs{\{ o = o' \} \cup (\un{A}{A'}) \cup (\un{B}{B'}) } \\
+      \un{\bot^{\cs{o}}}{\one^{\cs{o'}}}
+      & = & \cs{\{ o = o' \}} & \qquad
+      \un{( {A \parr^{\cs{o}} B} )}{( {A' \tens^{\cs{o'}} B'} )}
+      & = & \cs{\{ o = o' \} \cup (\un{A}{A'}) \cup (\un{B}{B'}) } \\
+      \un{\nil^{\cs{o}}}{\bot^{\cs{o'}}}
+      & = & \cs{\{ o = o' \}} & \qquad
+      \un{( {A \plus^{\cs{o}} B} )}{( {A' \with^{\cs{o'}} B'} )}
+      & = & \cs{\{ o = o' \} \cup (\un{A}{A'}) \cup (\un{B}{B'}) } \\
+      \un{\top^{\cs{o}}}{\one^{\cs{o'}}}
+      & = & \cs{\{ o = o' \}} & \qquad
+      \un{( {A \with^{\cs{o}} B} )}{( {A' \plus^{\cs{o'}} B'} )}
+      & = & \cs{\{ o = o' \} \cup (\un{A}{A'}) \cup (\un{B}{B'}) } 
+    \end{array}
+  \end{gather*}
+\end{definition}
+%%% Local Variables:
+%%% TeX-master: "main"
+%%% End:

@@ -1,0 +1,21 @@
+\begin{definition}[Canonical forms]\label{def:hcp-canonical-forms}
+  A process $\tm{P}$ is in canonical form if it is an action, or if it is of the
+  form
+  \[
+    \tm{(\piPar{
+        \piNew{x_1}{(\piPar{P_1}{\dots \piNew{x_n}{(\piPar{P_n}{P_{n+1}})} \dots})}
+      }{
+        Q_1 \ppar \dots \ppar Q_m
+      })},
+  \]
+  where each $\tm{P_i}$ and each $\tm{Q_i}$ is an action, no $\tm{P_i}$ is a
+  link acting on a bound channel, and no two actions $\tm{P_i}$ and $\tm{P_j}$
+  act on the same bound channel.
+
+  An immediate consequence of this definition is that if a process is in
+  canonical form, then at least one of the actions $\tm{P_i}$ and all of the
+  actions $\tm{Q_i}$ are acting on free channels.
+\end{definition}
+%%% Local Variables:
+%%% TeX-master: "main"
+%%% End:

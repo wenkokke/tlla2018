@@ -1,0 +1,214 @@
+\begin{lemma}\label{lem:hccp-preservation-equiv}
+  If $\tm{P}\equiv\tm{Q}$, then $\seq[P]{\mathcal{G}}$ iff $\seq[Q]{\mathcal{G}}$.
+\end{lemma}
+\begin{proof}
+  By induction on the structure of $\tm{P}\equiv\tm{Q}$.
+  \begin{itemize}
+  \item
+    Case \cpEquivLinkComm.
+    We have to show $\seq[\cpLink{x}{y}]{\mathcal{G}} \Leftrightarrow
+    \seq[\cpLink{y}{x}]{\mathcal{G}}$.
+    For each direction, we continue by inversion on the typing derivation of the premise.
+    The only typing derivation ends in \textsc{Ax}.
+    For each direction, we rewrite as follows:
+    \[
+      \begin{array}{lcl}
+        \AXC{}
+        \NOM{Ax}
+        \UIC{$\seq[\cpLink{x}{y}]{\tmty{x}{A}, \tmty{y}{A^\bot}}$}
+        \DisplayProof
+        & \Longrightarrow
+        & \AXC{}
+          \NOM{Ax}
+          \UIC{$\seq[\cpLink{y}{x}]{\tmty{y}{A^\bot}, \tmty{x}{A^{\bot\bot}}}$}
+          \NOM{\cref{lem:cp-negation-involutive}}
+          \UIC{$\seq[\cpLink{y}{x}]{\tmty{y}{A^\bot}, \tmty{x}{A}}$}
+          \DisplayProof
+      \end{array}
+    \]
+  \item
+    Case \hccpEquivMixComm.
+    We have to show $\seq[(\piPar{P}{Q})]{\mathcal{G}} \Leftrightarrow
+    \seq[(\piPar{Q}{P})]{\mathcal{G}}$.
+    For each direction, we continue by inversion on the typing derivation of the
+    premise.
+    The only typing derivation ends in \textsc{H-Mix}.
+    We rewrite as follows:
+    \[
+      \begin{array}{lcl}
+        \AXC{$\seq[P]{\mathcal{G}}$}
+        \AXC{$\seq[Q]{\mathcal{H}}$}
+        \NOM{H-Mix}
+        \BIC{$\seq[(\piPar{P}{Q})]{\mathcal{G} \hsep \mathcal{H}}$}
+        \DisplayProof
+        & \Leftrightarrow
+        & \AXC{$\seq[Q]{\mathcal{H}}$}
+          \AXC{$\seq[P]{\mathcal{G}}$}
+          \NOM{H-Mix}
+          \BIC{$\seq[(\piPar{Q}{P})]{\mathcal{H} \hsep \mathcal{G}}$}
+          \DisplayProof
+      \end{array}
+    \]
+  \item
+    Case \hccpEquivMixAss1.
+    We have to show $\seq[(\piPar{P}{(\piPar{Q}{R})})]{\mathcal{G}}
+    \Leftrightarrow \seq[(\piPar{(\piPar{P}{Q})}{R})]{\mathcal{G}}$.
+    For each direction, we continue by inversion on the typing derivation of the
+    premise. 
+    The only typing derivation ends in two applications of \textsc{H-Mix}.
+    We rewrite as follows:
+    \[
+      \begin{array}{c}
+        \AXC{$\seq[P]{\mathcal{G}_1}$}
+        \AXC{$\seq[Q]{\mathcal{G}_2}$}
+        \AXC{$\seq[R]{\mathcal{G}_3}$}
+        \NOM{H-Mix}
+        \BIC{$\seq[(\piPar{Q}{R})]{\mathcal{G}_2\hsep\mathcal{G}_3}$}
+        \NOM{H-Mix}
+        \BIC{$\seq[(\piPar{P}{(\piPar{Q}{R})})]{\mathcal{G}_1\hsep\mathcal{G}_2\hsep\mathcal{G}_3}$}
+        \DisplayProof
+        \\\\
+        \Updownarrow
+        \\\\
+        \AXC{$\seq[P]{\mathcal{G}_1}$}
+        \AXC{$\seq[Q]{\mathcal{G}_2}$}
+        \NOM{H-Mix}
+        \BIC{$\seq[(\piPar{P}{Q})]{\mathcal{G}_1\hsep\mathcal{G}_2}$}
+        \AXC{$\seq[R]{\mathcal{G}_3}$}
+        \NOM{H-Mix}
+        \BIC{$\seq[(\piPar{P}{(\piPar{Q}{R})})]{\mathcal{G}_1\hsep\mathcal{G}_2\hsep\mathcal{G}_3}$}
+        \DisplayProof
+      \end{array}
+    \]
+  \item
+    Case \hccpEquivNewComm.
+    We have to show $\seq[\piNew{x}{\piNew{y}{P}}]{\mathcal{G}} \Leftrightarrow
+    \seq[\piNew{y}{\piNew{x}{P}}]{\mathcal{G}}$.
+    For each direction, we continue by inversion on the typing derivation of the premise.
+    There are two typing derivations, each ends in two applications of \textsc{H-Cycle}.
+    \begin{itemize}
+    \item
+      If $\tm{x}$ and $\tm{y}$ occur together in the same environment, we
+      rewrite as follows:
+      \[
+        \begin{array}{c}
+          \AXC{$\seq[P]{\mathcal{G} \hsep \tmty{x}{A}, \Gamma \hsep
+          \tmty{x}{A^\bot}, \tmty{y}{B}, \Delta \hsep \tmty{y}{B^\bot},
+          \Theta}$} 
+          \NOM{H-Cycle}
+          \UIC{$\seq[\piNew{y}{P}]{\mathcal{G} \hsep \tmty{x}{A}, \Gamma \hsep
+          \tmty{x}{A^\bot}, \Delta, \Theta}$}
+          \NOM{H-Cycle}
+          \UIC{$\seq[\piNew{x}{\piNew{y}{P}}]{\mathcal{G} \hsep \Gamma, \Delta,
+          \Theta}$} 
+          \DisplayProof
+          \\\\
+          \Updownarrow
+          \\\\
+          \AXC{$\seq[P]{\mathcal{G} \hsep \tmty{x}{A}, \Gamma \hsep
+          \tmty{x}{A^\bot}, \tmty{y}{B}, \Delta \hsep \tmty{y}{B^\bot},
+          \Theta}$}
+          \NOM{H-Cycle}
+          \UIC{$\seq[\piNew{x}{P}]{\mathcal{G} \hsep \Gamma, \tmty{y}{B}, \Delta
+          \hsep \tmty{y}{B^\bot}, \Theta}$}
+          \NOM{H-Cycle}
+          \UIC{$\seq[\piNew{x}{\piNew{y}{P}}]{\mathcal{G} \hsep \Gamma, \Delta,
+          \Theta}$}
+          \DisplayProof
+        \end{array}
+      \]
+    \item
+      Otherwise, we rewrite as follows:
+      \[
+        \begin{array}{c}
+          \AXC{$\seq[P]{\mathcal{G} \hsep \tmty{x}{A}, \Gamma_1 \hsep
+          \tmty{x}{A^\bot}, \Gamma_2 \hsep \tmty{y}{B}, \Delta_1 \hsep
+          \tmty{y}{B^\bot}, \Delta_2}$}
+          \NOM{H-Cycle}
+          \UIC{$\seq[\piNew{y}{P}]{\mathcal{G} \hsep \tmty{x}{A}, \Gamma_1 \hsep
+          \tmty{x}{A^\bot}, \Gamma_2 \hsep \Delta_1, \Delta_2}$} 
+          \NOM{H-Cycle}
+          \UIC{$\seq[\piNew{x}{\piNew{y}{P}}]{\mathcal{G} \hsep \Gamma_1,
+          \Gamma_2 \hsep \Delta_1, \Delta_2}$}
+          \DisplayProof
+          \\\\
+          \Updownarrow
+          \\\\
+          \AXC{$\seq[P]{\mathcal{G} \hsep \tmty{x}{A}, \Gamma_1 \hsep
+          \tmty{x}{A^\bot}, \Gamma_2 \hsep \tmty{y}{B}, \Delta_1 \hsep
+          \tmty{y}{B^\bot}, \Delta_2}$}
+          \NOM{H-Cycle}
+          \UIC{$\seq[\piNew{x}{P}]{\mathcal{G} \hsep \Gamma_1, \Gamma_2 \hsep
+          \tmty{y}{B}, \Delta_1 \hsep \tmty{y}{B^\bot}, \Delta_2}$} 
+          \NOM{H-Cycle}
+          \UIC{$\seq[\piNew{x}{\piNew{y}{P}}]{\mathcal{G} \hsep \Gamma_1,
+          \Gamma_2 \hsep \Delta_1, \Delta_2}$}
+          \DisplayProof
+        \end{array}
+      \]
+    \end{itemize}
+  \item
+    Case \hccpEquivScopeExt1.
+    We have that $\notFreeIn{x}{P}$.
+    We have to show $\seq[\piNew{x}{(\piPar{P}{Q})}]{\mathcal{G}}
+    \Leftrightarrow \seq[(\piPar{P}{\piNew{x}{Q}})]{\mathcal{G}}$.
+    For each direction, we continue by inversion on the typing derivation of the
+    premise. 
+    The only derivation ends in \textsc{H-Cycle} and \textsc{H-Mix}.
+    We rewrite as follows:
+    \[
+      \begin{array}{c}
+        \AXC{$\seq[P]{\mathcal{G}}$}
+        \AXC{$\seq[Q]{\mathcal{H} \hsep \tmty{x}{A}, \Gamma \hsep
+        \tmty{x}{A^\bot}, \Delta}$}
+        \NOM{H-Mix}
+        \BIC{$\seq[(\piPar{P}{Q})]{\mathcal{G} \hsep \mathcal{H} \hsep
+        \tmty{x}{A}, \Gamma \hsep \tmty{x}{A^\bot}, \Delta}$} 
+        \NOM{H-Cycle}
+        \UIC{$\seq[\piNew{x}{(\piPar{P}{Q})}]{\mathcal{G} \hsep \mathcal{H}
+        \hsep \Gamma, \Delta}$}
+        \DisplayProof
+        \\\\
+        \Updownarrow
+        \\\\
+        \AXC{$\seq[P]{\mathcal{G}}$}
+        \AXC{$\seq[Q]{\mathcal{H} \hsep \tmty{x}{A}, \Gamma \hsep
+        \tmty{x}{A^\bot}, \Delta}$}
+        \NOM{H-Cycle}
+        \UIC{$\seq[\piNew{x}{Q}]{\mathcal{H} \hsep \tmty{x}{A}, \Gamma \hsep
+        \tmty{x}{A^\bot}, \Delta}$}
+        \NOM{H-Mix}
+        \BIC{$\seq[(\piPar{P}{\piNew{x}{Q}})]{\mathcal{G} \hsep \mathcal{H}
+        \hsep \Gamma, \Delta}$}
+        \DisplayProof
+      \end{array}
+    \]
+  \item
+    Case \hccpEquivMixHalt1.
+    We have to show that if $\seq[(\piPar{P}{\piHalt})]{\mathcal{G}}$, then
+    $\seq[P]{\mathcal{G}}$, and the converse.
+    In the $[\Rightarrow]$ direction, we proceed by inversion on the typing
+    derivation of the premise.
+    The only derivation ends in \textsc{H-Mix} and \textsc{H-Halt}.
+    In the $[\Leftarrow]$ direction, we rewrite immediately.
+    For either direction, we rewrite as follows:
+    \[
+      \begin{array}{lcl}
+        \AXC{$\seq[P]{\mathcal{G}}$}
+        \AXC{}
+        \NOM{H-Halt}
+        \UIC{$\seq[\piHalt]{\emptyhypercontext}$}
+        \NOM{H-Mix}
+        \BIC{$\seq[(\piPar{P}{\piHalt})]{\mathcal{G}}$}
+        \DisplayProof
+        & \Leftrightarrow
+        & \AXC{$\seq[P]{\mathcal{G}}$}
+          \DisplayProof
+      \end{array}
+    \]
+  \end{itemize}
+  The cases for reflexivity, transitivity, symmetry, and congruence are trivial.
+\end{proof}
+%%% Local Variables:
+%%% TeX-master: "main"
+%%% End:

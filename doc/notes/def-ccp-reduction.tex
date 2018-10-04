@@ -1,0 +1,58 @@
+\begin{definition}[Reduction]\label{def:hccp-reduction}
+  A reduction $\reducesto{P}{Q}$ denotes that the process $\tm{P}$ can reduce
+  to the process $\tm{Q}$ in a single step. Reductions can only be constructed
+  as follows:
+  \begin{gather*}
+    \begin{array}{llcll}
+      \cpRedAxCut1
+      & \tm{\cpCut{xy}{\cpLink{w}{x}}{P}}
+      & \Longrightarrow
+      & \tm{\cpSub{w}{y}{P}}
+      \\
+      \cpRedBetaTensParr
+      & \tm{\cpCut{xy}{\piBoundSend{x}{z}{P}}{\piRecv{y}{w}{R}}}
+      & \Longrightarrow
+      & \tm{\piNew{xy}{\piNew{zw}{(\piPar{P}{R})}}}
+      \\
+      \cpRedBetaOneBot
+      & \tm{\cpCut{xy}{\piBoundSend{x}{}{P}}{\piRecv{y}{}{P}}}
+      & \Longrightarrow
+      & \tm{\piPar{P}{Q}}
+      \\
+      \cpRedBetaPlusWith1
+      & \tm{\cpCut{xy}{\cpInl{x}{P}}{\cpCase{y}{Q}{R}}}
+      & \Longrightarrow
+      & \tm{\cpCut{xy}{P}{Q}}
+      \\
+      \cpRedBetaPlusWith2
+      & \tm{\cpCut{xy}{\cpInr{x}{P}}{\cpCase{y}{Q}{R}}}
+      & \Longrightarrow
+      & \tm{\cpCut{xy}{P}{R}}
+    \end{array}
+  \end{gather*}
+  \begin{center}
+    \begin{prooftree*}
+      \AXC{$\reducesto{P}{P^\prime}$}
+      \SYM{\hccpRedGammaNew}
+      \UIC{$\reducesto{\piNew{xy}{P}}{\piNew{xy}{P^\prime}}$}
+    \end{prooftree*}
+    \begin{prooftree*}
+      \AXC{$\reducesto{P}{P^\prime}$}
+      \SYM{\hccpRedGammaMix}
+      \UIC{$\reducesto{\piPar{P}{Q}}{\piPar{P^\prime}{Q}}$}
+    \end{prooftree*}
+  \end{center}
+  \begin{prooftree}
+    \AXC{$\tm{P}\equiv\tm{Q}$}
+    \AXC{$\reducesto{Q}{Q^\prime}$}
+    \AXC{$\tm{Q^\prime}\equiv\tm{P^\prime}$}
+    \SYM{\hccpRedGammaEquiv}
+    \TIC{$\reducesto{P}{P^\prime}$}
+  \end{prooftree}
+  The relations $\Longrightarrow^{?}$, $\Longrightarrow^{+}$, and
+  $\Longrightarrow^\star$ are the reflexive, the transitive, and the reflexive,
+  transitive closures of $\Longrightarrow$.
+\end{definition}
+%%% Local Variables:
+%%% TeX-master: "main"
+%%% End:
