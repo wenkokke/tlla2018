@@ -6,7 +6,6 @@
 \allowdisplaybreaks
 \usepackage{amsthm}
 \usepackage{amssymb}
-%\usepackage{mathtools}
 \def\Coloneqq{\mathbin{::=}}
 \def\coloneqq{\mathbin{:=}}
 \usepackage[inline]{enumitem}
@@ -153,48 +152,6 @@ Reductions relate processes with their reduced forms \eg a reduction $\reducesto
         & \tm{\cpCut{x}{\cpInr{x}{P}}{\cpCase{x}{Q}{R}}}
         & \Longrightarrow
         & \tm{\cpCut{x}{P}{R}}
-        \\
-        \cpRedKappaTens1
-        & \tm{\cpCut{x}{\cpSend{y}{z}{P}{Q}}{R}}
-        & \Longrightarrow \;
-        & \tm{\cpSend{y}{z}{\cpCut{x}{P}{R}}{Q}}
-          \quad \text{if} \; \notFreeIn{x}{Q}
-        \\
-        \cpRedKappaTens2
-        & \tm{\cpCut{x}{\cpSend{y}{z}{P}{Q}}{R}}
-        & \Longrightarrow \;
-        & \tm{\cpSend{y}{z}{P}{\cpCut{x}{Q}{R}}}
-          \quad \text{if} \; \notFreeIn{x}{P}
-        \\
-        \cpRedKappaParr
-        & \tm{\cpCut{x}{\cpRecv{y}{z}{P}}{R}}
-        & \Longrightarrow \;
-        & \tm{\cpRecv{y}{z}{\cpCut{x}{P}{R}}}
-        \\
-        \cpRedKappaBot
-        & \tm{\cpCut{x}{\cpWait{y}{P}}{R}}
-        & \Longrightarrow \;
-        & \tm{\cpWait{y}{\cpCut{x}{P}{R}}}
-        \\
-        \cpRedKappaPlus1
-        & \tm{\cpCut{x}{\cpInl{y}{P}}{R}}
-        & \Longrightarrow \;
-        & \tm{\cpInl{y}{\cpCut{x}{P}{R}}}
-        \\
-        \cpRedKappaPlus2
-        &\tm{\cpCut{x}{\cpInr{y}{P}}{R}}
-        & \Longrightarrow \;
-        & \tm{\cpInr{y}{\cpCut{x}{P}{R}}}
-        \\
-        \cpRedKappaWith
-        & \tm{\cpCut{x}{\cpCase{y}{P}{Q}}{R}}
-        & \Longrightarrow \;
-        & \tm{\cpCase{y}{\cpCut{x}{P}{R}}{\cpCut{x}{Q}{R}}}
-        \\
-        \cpRedKappaTop
-        & \tm{\cpCut{x}{\cpAbsurd{y}}{R}}
-        & \Longrightarrow \;
-        & \tm{\cpAbsurd{y}}
       \end{array}
     \\
       \begin{prooftree*}
@@ -263,23 +220,36 @@ An environment associates channels with types. Names in environments must be uni
 \end{definition}\noindent
 A typing judgement associates a process with collections of typed channels.
 \begin{definition}[Typing judgements]\label{def:cp}
-  A typing judgement $\seq[{ P }]{\tmty{x_1}{A_1}, \dots, \tmty{x_n}{A_n}}$ denotes that the process \tm{P} communicates along channels $\tm{x_1}$, \dots, $\tm{x_n}$ following protocols $\ty{A_1}$, \dots, $\ty{A_n}$. Typing judgements are derived using rules below. 
-  \begin{description}
-	  \item[Structural rules]
-  		\begin{gather*}\cpInfAx  \qquad  \cpInfCut   \end{gather*}
-	  \item[Logical rules]
-		  \begin{gather*}
-				\cpInfTens \qquad 
-				\cpInfParr \\
-				\cpInfBot \qquad 
-				\cpInfOne \\
-				\cpInfPlus1 \qquad 
-				\cpInfPlus2 \\
-				\cpInfWith \qquad
-				\cpInfNil \qquad 
-				\cpInfTop   
-			\end{gather*}
-	\end{description}
+  A typing judgement $\seq[{ P }]{\tmty{x_1}{A_1}, \dots, \tmty{x_n}{A_n}}$
+  denotes that the process \tm{P} communicates along channels $\tm{x_1}$, \dots,
+  $\tm{x_n}$ following protocols $\ty{A_1}$, \dots, $\ty{A_n}$. Typing
+  judgements are derived using rules below.
+  \\
+  {Structural rules}
+  \begin{center}
+    \cpInfAx
+    \cpInfCut
+  \end{center}
+	{Logical rules}
+  \begin{center}
+    \cpInfTens
+    \cpInfParr
+  \end{center}
+  \begin{center}
+    \cpInfBot
+    \cpInfOne
+  \end{center}
+  \begin{center}
+    \cpInfPlus1
+    \cpInfPlus2
+  \end{center}
+  \begin{center}
+    \cpInfWith
+  \end{center}
+  \begin{center}
+    \cpInfNil
+    \cpInfTop   
+  \end{center}
 \end{definition}
 
 \subsection{Metatheory}
@@ -296,32 +266,31 @@ A typing judgement associates a process with collections of typed channels.
 \begin{proof}
   By induction on the derivation of $\reducesto{P}{Q}$.
 \end{proof}
+\begin{definition}[Canonical forms]
+  A process $\tm{P}$ is in canonical form if
+  \(
+    \tm{P} \equiv \tm{\cpCut{x_1}{P_1}{\dots\cpCut{x_n}{P_n}{P_{n+1}}\dots}},
+  \)
+  such that: no process $\tm{P_i}$ is a cut; no process $\tm{P_i}$ is a link acting on a bound channel $\tm{x_i}$; and no two processes $\tm{P_i}$ and $\tm{P_j}$ are acting on the same bound channel $\tm{x_i}$.
+\end{definition}
+\begin{corollary}
+  If a process $\tm{P}$ is in canonical form, then it is blocked on an external communication.
+\end{corollary}
+\begin{proof}
+  We have $\tm{P} \equiv \tm{\cpCut{x_1}{P_1}{\dots\cpCut{x_n}{P_n}{P_{n+1}}\dots}}$ such that no $\tm{P_i}$ is a cut or a link, and no two processes $\tm{P_i}$ and $\tm{P_j}$ are acting on the same bound channel. The prefix of cuts introduces $n$ channels, and $n+1$ processes. Therefore, at least \emph{one} of the processes $\tm{P_i}$ must be acting on a free channel, i.e., blocked on an external communication.
+\end{proof}
+\begin{theorem}[Progress]\label{thm:cp-progress}
+  If $\seq[P]{\Gamma}$, then either $\tm{P}$ is in canonical form, or there exists a process $\tm{Q}$ such that $\tm{P}\Longrightarrow\tm{Q}$.
+\end{theorem} 
+\begin{proof}
+  We consider the maximum prefix of cuts of $\tm{P}$ such that $\tm{P} \equiv \tm{\cpCut{x_1}{P_1}{\dots\cpCut{x_n}{P_n}{P_{n+1}}\dots}}$ and no $\tm{P_i}$ is a cut. If any process $\tm{P_i}$ is a link, we reduce by $(\cpLink{}{})$. If any two processes $\tm{P_i}$ and $\tm{P_j}$ are acting on the same channel $\tm{x_i}$, we rewrite by $\equiv$ and reduce by the appropriate $\beta$-rule. Otherwise, $\tm{P}$ is in canonical form.
+\end{proof}
 \begin{theorem}[Termination]\label{thm:cp-termination}
   If $\seq[P]{\Gamma}$, then there are no infinite $\Longrightarrow$-reduction sequences.
 \end{theorem} 
 \begin{proof}
   Every reduction reduces a single cut to zero, one or two cuts. However, each of these cuts is smaller, measured in the size of the cut term. Furthermore, each instance of the structural congruence preserves the size of the cut. Therefore, there cannot be an infinite $\Longrightarrow$-reduction sequence.
 \end{proof}
-\begin{theorem}[Progress]\label{thm:cp-progress}
-  If $\seq[P]{\Gamma}$, then there exists a $\tm{Q}$ such that
-  $\tm{P}\Longrightarrow^\star\tm{Q}$ and $\tm{Q}$ is not a cut.
-\end{theorem} 
-\begin{proof}
-  By induction on the derivation of $\seq[P]{\Gamma}$. If the last rule is \textsc{Cut}, there are four cases:
-  \begin{enumerate*}[label={\alph*)}]
-  \item
-    if either side of the cut is an axiom, we apply \cpRedAxCut1;
-  \item
-    if either side of the cut is itself a cut, we recursively eliminate the cut;
-  \item
-    if both sides are logical rules acting on the cut formula, we apply
-    one of the $\beta$-rules;
-  \item
-    otherwise, at least one side is a logical rule acting on a formula other
-    than the cut formula, in which case we apply one of the $\kappa$-rules.
-  \end{enumerate*}
-\end{proof}
-
 
 \section{Hypersequent Classical Processes}
 \label{sec:hcp}
@@ -361,31 +330,31 @@ A pleasant effect of our updated syntax is that it makes our structural congruen
       & \tm{\cpLink{y}{x}}
       &
       &
-        \hccpEquivMixHalt1
+        \hcpEquivMixHalt1
       & \tm{\piPar{P}{\piHalt}}
       & \equiv
       & \tm{P}
       &
       \\
-        \hccpEquivMixComm
+        \hcpEquivMixComm
       & \tm{\piPar{P}{Q}}
       & \equiv
       & \tm{\piPar{Q}{P}}
       &
       &
-        \hccpEquivMixAss1
+        \hcpEquivMixAss1
       & \tm{\piPar{P}{( \piPar{Q}{R} )}}
       & \equiv
       & \tm{\piPar{( \piPar{P}{Q} )}{R}}
       &
       \\
-        \hccpEquivNewComm
+        \hcpEquivNewComm
       & \tm{\piNew{x}{\piNew{y}{P}}}
       & \equiv
       & \tm{\piNew{y}{\piNew{x}{P}}}
       &
       &
-        \hccpEquivScopeExt1
+        \hcpEquivScopeExt1
       & \tm{\piNew{x}{( \piPar{P}{Q} )}}
       & \equiv
       & \tm{\piPar{P}{\piNew{x}{Q}}}
@@ -401,121 +370,41 @@ There are two changes to the reduction system. First, since $\tm{\piBoundSend{x}
 \begin{figure}[htb]
   \begin{gather*}
     \begin{array}{llcll}
-      \hccpRedAxCut1
+      \hcpRedAxCut1
       & \tm{\cpCut{x}{\cpLink{w}{x}}{P}}
       & \Longrightarrow
       & \tm{\cpSub{w}{x}{P}}
       \\
-      \hccpRedBetaTensParr
+      \hcpRedBetaTensParr
       & \tm{\cpCut{x}{\piBoundSend{x}{y}{P}}{\piRecv{x}{y}{R}}}
       & \Longrightarrow
       & \tm{\piNew{x}{\piNew{y}{(\piPar{P}{R})}}}
       \\
-      \hccpRedBetaOneBot
+      \hcpRedBetaOneBot
       & \tm{\cpCut{x}{\piBoundSend{x}{}{P}}{\piRecv{x}{}{Q}}}
       & \Longrightarrow
       & \tm{\piPar{P}{Q}}
       \\
-      \hccpRedBetaPlusWith1
+      \hcpRedBetaPlusWith1
       & \tm{\cpCut{x}{\cpInl{x}{P}}{\cpCase{x}{Q}{R}}}
       & \Longrightarrow
       & \tm{\cpCut{x}{P}{Q}}
       \\
-      \hccpRedBetaPlusWith2
+      \hcpRedBetaPlusWith2
       & \tm{\cpCut{x}{\cpInr{x}{P}}{\cpCase{x}{Q}{R}}}
       & \Longrightarrow
       & \tm{\cpCut{x}{P}{R}}
-      \\
-      \hccpRedKappaNuTens
-      & \tm{\piNew{x}{\piBoundSend{y}{z}{P}}}
-      & \Longrightarrow
-      & \tm{\piBoundSend{y}{z}{\piNew{x}{P}}}
-      \\
-      \hccpRedKappaNuParr
-      & \tm{\piNew{x}{\piRecv{y}{z}{P}}}
-      & \Longrightarrow
-      & \tm{\piRecv{y}{z}{\piNew{x}{P}}}
-      \\
-      \hccpRedKappaNuOne
-      & \tm{\piNew{x}{\piBoundSend{y}{}{P}}}
-      & \Longrightarrow
-      & \tm{\piBoundSend{y}{}{\piNew{x}{P}}}
-      \\
-      \hccpRedKappaNuBot
-      & \tm{\piNew{x}{\piRecv{y}{}{P}}}
-      & \Longrightarrow
-      & \tm{\piRecv{y}{}{\piNew{x}{P}}}
-      \\
-      \hccpRedKappaNuPlus1
-      & \tm{\piNew{x}{\cpInl{y}{P}}}
-      & \Longrightarrow
-      & \tm{\cpInl{y}{\piNew{x}{P}}}
-      \\
-      \hccpRedKappaNuPlus2
-      & \tm{\piNew{x}{\cpInr{y}{P}}}
-      & \Longrightarrow
-      & \tm{\cpInr{y}{\piNew{x}{P}}}
-      \\
-      \hccpRedKappaNuWith
-      & \tm{\piNew{x}{\cpCase{y}{P}{Q}}}
-      & \Longrightarrow
-      & \tm{\cpCase{y}{\piNew{x}{P}}{\piNew{x}{Q}}}
-      \\
-      \hccpRedKappaNuTop
-      & \tm{\piNew{x}{\cpAbsurd{y}}}
-      & \Longrightarrow
-      & \tm{\cpAbsurd{y}}
-      \\
-      \hccpRedKappaMixTens
-      & \tm{(\piPar{\piBoundSend{y}{z}{P}}{R})}
-      & \Longrightarrow
-      & \tm{\piBoundSend{y}{z}{(\piPar{P}{R})}}
-      \\
-      \hccpRedKappaMixParr
-      & \tm{(\piPar{\piRecv{y}{z}{P}}{R})}
-      & \Longrightarrow
-      & \tm{\piRecv{y}{z}{(\piPar{P}{R})}}
-      \\
-      \hccpRedKappaMixOne
-      & \tm{(\piPar{\piBoundSend{y}{}{P}}{R})}
-      & \Longrightarrow
-      & \tm{\piBoundSend{y}{}{(\piPar{P}{R})}}
-      \\
-      \hccpRedKappaMixBot
-      & \tm{(\piPar{\piRecv{y}{}{P}}{R})}
-      & \Longrightarrow
-      & \tm{\piRecv{y}{}{(\piPar{P}{R})}}
-      \\
-      \hccpRedKappaMixPlus1
-      & \tm{(\piPar{\cpInl{y}{P}}{R})}
-      & \Longrightarrow
-      & \tm{\cpInl{y}{(\piPar{P}{R})}}
-      \\
-      \hccpRedKappaMixPlus2
-      & \tm{(\piPar{\cpInr{y}{P}}{R})}
-      & \Longrightarrow
-      & \tm{\cpInr{y}{(\piPar{P}{R})}}
-      \\
-      \hccpRedKappaMixWith
-      & \tm{(\piPar{\cpCase{y}{P}{Q}}{R})}
-      & \Longrightarrow
-      & \tm{\cpCase{y}{(\piPar{P}{R})}{(\piPar{Q}{R})}}
-      \\
-      \hccpRedKappaMixTop
-      & \tm{(\piPar{\cpAbsurd{y}}{R})}
-      & \Longrightarrow
-      & \tm{\cpAbsurd{y}}
     \end{array}
     \\
       \begin{prooftree*}
         \AXC{$\reducesto{P}{P^\prime}$}
-        \SYM{\hccpRedGammaNew}
+        \SYM{\hcpRedGammaNew}
         \UIC{$\reducesto{\piNew{x}{P}}{\piNew{x}{P^\prime}}$}
       \end{prooftree*}
       \qquad
       \begin{prooftree*}
         \AXC{$\reducesto{P}{P^\prime}$}
-        \SYM{\hccpRedGammaMix}
+        \SYM{\hcpRedGammaMix}
         \UIC{$\reducesto{\piPar{P}{Q}}{\piPar{P^\prime}{Q}}$}
       \end{prooftree*}
       \qquad
@@ -523,7 +412,7 @@ There are two changes to the reduction system. First, since $\tm{\piBoundSend{x}
         \AXC{$\tm{P}\equiv\tm{Q}$}
         \AXC{$\reducesto{Q}{Q^\prime}$}
         \AXC{$\tm{Q^\prime}\equiv\tm{P^\prime}$}
-        \SYM{\hccpRedGammaEquiv}
+        \SYM{\hcpRedGammaEquiv}
         \TIC{$\reducesto{P}{P^\prime}$}
       \end{prooftree*}
   \end{gather*}  
@@ -542,25 +431,39 @@ Typing judgements in \hcp associate processes with hyper-environments. \textsc{H
 \begin{definition}[Typing judgements]\label{def:hcp}
   A typing judgement $\seq[P]{\Gamma_1 \hsep \dots \hsep \Gamma_n}$ denotes that the process $\tm{P}$ consists of $n$ independent, but potentially entangled processes, each of which communicates according to its own protocol $\Gamma_i$. 
   Typing judgements can be constructed using the inference rules below. 
-  \begin{description}
-    \item[Structural rules]
-    \begin{gather*}
-			\hccpInfAx \qquad
-			\hccpInfCycle \\
-	    \hccpInfMix  \qquad
-	    \hccpInfHalt
-    \end{gather*}
-    \item[Logical rules]
-    \begin{gather*}
-    	\hccpInfBoundTens \qquad \hccpInfParr \\
-			\hccpInfOne  \qquad    \hccpInfBot \\  
-			\hccpInfPlus1 \qquad    \hccpInfPlus2 \\
-			\hccpInfWith \\    
-			\hccpInfNil   \qquad    \hccpInfTop
-    \end{gather*}
-  \end{description}
+  \\
+  {Structural rules}
+  \begin{center}
+    \hcpInfAx
+    \hcpInfCut
+  \end{center}
+  \begin{center}
+    \hcpInfMix
+    \hcpInfHalt
+  \end{center}
+  {Logical rules}
+  \begin{center}
+    \hcpInfBoundTens
+    \hcpInfParr
+  \end{center}
+  \begin{center}
+    \hcpInfOne
+    \hcpInfBot
+  \end{center}
+  \begin{center}
+    \hcpInfPlus1
+    \hcpInfPlus2
+  \end{center}
+  \begin{center}
+    \hcpInfWith
+  \end{center}
+  \begin{center}
+    \hcpInfNil
+    \hcpInfTop
+  \end{center}
   Furthermore, each logical rule has the side condition that $\tm{x} \not\in \ty{\mathcal{G}}$.
 \end{definition}\noindent
+
 
 \subsection{Metatheory}
 \hcp enjoys subject reduction, termination, and progress.
@@ -576,36 +479,32 @@ Typing judgements in \hcp associate processes with hyper-environments. \textsc{H
 \begin{proof}
   By induction on the derivation of $\reducesto{P}{Q}$.
 \end{proof}
+\begin{definition}[Canonical forms]
+  A process $\tm{P}$ is in canonical form if
+  \(
+    \tm{P} \equiv \tm{\cpCut{x_1}{P_1}{\dots\cpCut{x_n}{P_n}{P_{n+1}}\dots}},
+  \)
+  such that: no process $\tm{P_i}$ is a cut or a mix; no process $\tm{P_i}$ is a link acting on a bound channel $\tm{x_i}$; and no two processes $\tm{P_i}$ and $\tm{P_j}$ are acting on the same bound channel $\tm{x_i}$.
+\end{definition}
+\begin{corollary}
+  If a process $\tm{P}$ is in canonical form, then it is blocked on an external communication.
+\end{corollary}
+\begin{proof}
+  We have $\tm{P} \equiv \tm{\cpCut{x_1}{P_1}{\dots\cpCut{x_n}{P_n}{P_{n+1}}\dots}}$ such that no $\tm{P_i}$ is a cut or a link, and no two processes $\tm{P_i}$ and $\tm{P_j}$ are acting on the same bound channel. The prefix of cuts and mixes introduces $n$ channels. Each application of cut requires an application of mix, so the prefix introduces $n+m+1$ processes. Therefore, at least $\tm{m+1}$ of the processes $\tm{P_i}$ must be acting on a free channel, i.e., blocked on an external communication.
+\end{proof}
+\begin{theorem}[Progress]\label{thm:hcp-progress}
+  If $\seq[P]{\Gamma}$, then either $\tm{P}$ is in canonical form, or there exists a process $\tm{Q}$ such that $\tm{P}\Longrightarrow\tm{Q}$.
+\end{theorem} 
+\begin{proof}
+  We consider the maximum prefix of cuts of $\tm{P}$ such that $\tm{P} \equiv \tm{\cpCut{x_1}{P_1}{\dots\cpCut{x_n}{P_n}{P_{n+1}}\dots}}$ and no $\tm{P_i}$ is a cut. If any process $\tm{P_i}$ is a link, we reduce by $(\cpLink{}{})$. If any two processes $\tm{P_i}$ and $\tm{P_j}$ are acting on the same channel $\tm{x_i}$, we rewrite by $\equiv$ and reduce by the appropriate $\beta$-rule. Otherwise, $\tm{P}$ is in canonical form.
+\end{proof}
 \begin{theorem}[Termination]\label{thm:hcp-termination}
   If $\seq[P]{\mathcal{G}}$, then there are no infinite $\Longrightarrow$-reduction sequences.
 \end{theorem} 
 \begin{proof}
   As \cref{thm:cp-termination}.
 \end{proof}
-\begin{theorem}[Progress]\label{thm:hcp-progress}
-  If $\seq[P]{\mathcal{G}}$, then there exists a $\tm{Q}$ such that
-  $\tm{P}\Longrightarrow^\star\tm{Q}$ and $\tm{Q}$ is not a cut or a mix.
-\end{theorem} 
-\begin{proof}
-  By induction on the derivation of $\seq[P]{\mathcal{G}}$. If the last rule is a cut, there are three cases:
-  \begin{enumerate*}[label={\alph*)}]
-  \item
-    if the rule under the cut is the corresponding mix, we eliminate both as in
-    \cref{thm:cp-progress};
-  \item
-    if the rule under the cut is an unrelated mix, we rewrite by \hccpEquivScopeExt{}, and recursively eliminate the cut;
-  \item
-    if the rule under the cut is a logical rule, we apply one of the $\kappa\nu$-rules.
-  \end{enumerate*}
-  If the last rule is mix, there are two cases:
-  \begin{enumerate*}[label={\alph*)}]
-  \item
-    if the rule under the mix is a cut or another mix, we recursively eliminate it;
-  \item
-    if the rule under the mix is a logical rule, we apply one of the
-    $\kappa{\ppar}$-rules.
-  \end{enumerate*}
-\end{proof}
+
 
 
 \section{Relation between \cp and \hcp}
@@ -699,7 +598,7 @@ First, we prove that each \cp process can be translated by this trivial translat
         \DisplayProof
         & \Rightarrow
         & \AXC{}
-          \NOM{H-Halt}
+          \NOM{H-Mix$_0$}
           \UIC{$\seq[\piHalt]{\emptyhypercontext}$}
           \SYM{\one}
           \UIC{$\seq[\piBoundSend{x}{}{\piHalt}]{\tmty{x}{\one}}$}
@@ -725,7 +624,7 @@ First, we prove that each \cp process can be translated by this trivial translat
   If $\reducesto{\mtf{P}}{R}$ in \hcp, then there is a $\tm{Q}$ such that $\reducesto{P}{Q}$ in \cp and $\tm{R}\Longrightarrow^{+}\tm{\mtf{Q}}$ in \hcp.
 \end{theorem} 
 \begin{proof}
-  By induction on the derivation of $\reducesto{\mtf{P}}{R}$. The cases for \hccpRedAxCut1 and the $\beta$-rules are trivial. For the $\kappa\nu$-rules, we rewrite by the appropriate $\kappa{\ppar}$ rule, and vice versa.
+  By induction on the derivation of $\reducesto{\mtf{P}}{R}$. The cases for \hcpRedAxCut1 and the $\beta$-rules are trivial. For the $\kappa\nu$-rules, we rewrite by the appropriate $\kappa{\ppar}$ rule, and vice versa.
 \end{proof}\noindent
 
 \subsection{\hcp supports the same communication protocols as \cp}
@@ -839,27 +738,6 @@ We start off by defining a relation on derivations of \hcp, which we call ``dise
       \NOM{H-Mix}
       \BIC{$\seq{\mathcal{G}_1 \hsep \mathcal{G}_2 \hsep {A \plus B}, \Gamma}$}
       \DisplayProof
-    \\\\
-    \pvar{$\rho_1$}\UIC{$\seq{\mathcal{G}_1 \hsep {A}, \Gamma}$}
-    \pvar{$\rho_2$}\UIC{$\seq{\mathcal{G}_2}$}
-    \NOM{H-Mix}
-    \BIC{$\seq{\mathcal{G}_1 \hsep \mathcal{G}_2 \hsep {A}, \Gamma}$}
-    \pvar{$\rho_3$}\UIC{$\seq{\mathcal{G}_1 \hsep {B}, \Gamma}$}
-    \pvar{$\rho_4$}\UIC{$\seq{\mathcal{G}_2}$}
-    \NOM{H-Mix}
-    \BIC{$\seq{\mathcal{G}_1 \hsep \mathcal{G}_2 \hsep {B}, \Gamma}$}
-    \SYM{\with}
-    \BIC{$\seq{\mathcal{G}_1 \hsep \mathcal{G}_2 \hsep {A \with B}, \Gamma}$}
-    \DisplayProof
-    & \moveMixDown
-    & \pvar{$\rho_1$}\UIC{$\seq{\mathcal{G}_1 \hsep {A}, \Gamma}$}
-      \pvar{$\rho_3$}\UIC{$\seq{\mathcal{G}_1 \hsep {B}, \Gamma}$}
-      \SYM{\with}
-      \BIC{$\seq{\mathcal{G}_1 \hsep {A \with B}, \Gamma}$}
-      \pvar{$\rho_2$}\UIC{$\seq{\mathcal{G}_2}$}
-      \NOM{H-Mix}
-      \BIC{$\seq{\mathcal{G}_1 \hsep \mathcal{G}_2 \hsep {A \with B}, \Gamma}$}
-      \DisplayProof
   \end{array}
   \)
   \caption{The disentanglement relation for \hcp.}
@@ -894,7 +772,7 @@ Disentanglement is terminating, and confluent up to the associativity and commut
   \item
     otherwise, it moves all the way to the top.
   \end{enumerate*}
-  All applications of $(\one)$ are followed by an application of \textsc{H-Halt}, forming a \cp $(\one)$.
+  All applications of $(\one)$ are followed by an application of \textsc{H-Mix$_0$}, forming a \cp $(\one)$.
 \end{proof}
 An environment can be internalised as a type by collapsing it as a series of pars.
 \begin{definition}\label{def:bigparr}

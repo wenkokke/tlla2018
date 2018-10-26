@@ -13,26 +13,97 @@
 \providecommand{\hcpEquivMixAssNoParen}[1]{\ensuremath{{\ppar}\text{-assoc}}\xspace}
 \providecommand{\hcpEquivMixAss}[1]{\ensuremath{(\hcpEquivMixAssNoParen{#1})}\xspace}
 \providecommand{\hcpEquivMixHaltNoParen}[1]{\ensuremath{\text{halt}\xspace}}
-\providecommand{\hcpEquivMixHalt}[1]{\ensuremath{(\hccpEquivMixHaltNoParen{#1})}\xspace}
+\providecommand{\hcpEquivMixHalt}[1]{\ensuremath{(\hcpEquivMixHaltNoParen{#1})}\xspace}
 \providecommand{\hcpEquivMixCut}[1]{\ensuremath{(\text{scope-ext})}\xspace}
 \providecommand{\hcpRedGammaMix}{\ensuremath{\gamma{\ppar}}\xspace}
 
+
+
+
+%% Logical rules
+
+%% Depends on: preamble-typing, preamble-pi, preamble-hcp
+
+\providecommand{\hcp}{HCP\xspace}
+
+
+%% Names of rules
+\providecommand{\hcpEquivMixComm}{%
+  \ensuremath{({\ppar}\text{-comm})}\xspace}
+\providecommand{\hcpEquivMixAssNoParen}[1]{%
+  \ensuremath{{\ppar}\text{-assoc}}\xspace}
+\providecommand{\hcpEquivMixAss}[1]{%
+  \ensuremath{(\hcpEquivMixAssNoParen{#1})}\xspace}
+\providecommand{\hcpEquivScopeExtNoParen}[1]{%
+  \ensuremath{\text{scope-ext}\xspace}}
+\providecommand{\hcpEquivScopeExt}[1]{%
+  \ensuremath{(\hcpEquivScopeExtNoParen{#1})}\xspace}
+\providecommand{\hcpEquivMixHaltNoParen}[1]{%
+  \hcpEquivMixHaltNoParen{#1}}
+\providecommand{\hcpEquivMixHalt}[1]{%
+  \hcpEquivMixHalt{#1}}
+\providecommand{\hcpEquivNewComm}{%
+  \ensuremath{(\nu\text{-comm})}\xspace}
+\providecommand{\hcpEquivDelay}{%
+  \ensuremath{(\text{delay})}}
+
+\providecommand{\hcpRedAxCut}[1]{%
+  \ensuremath{(\cpLink{}{})}\xspace}
+\providecommand{\hcpRedBetaTensParr}{%
+  \ensuremath{(\beta{\tens}{\parr})}\xspace}
+\providecommand{\hcpRedBetaOneBot}{%
+  \ensuremath{(\beta{\one}{\bot})}\xspace}
+\providecommand{\hcpRedBetaPlusWith}[1]{%
+  \ensuremath{(\beta{\plus}{\with}_{#1})}\xspace}
+\providecommand{\hcpRedKappaNuTens}{%
+  \ensuremath{(\kappa\nu\tens)}\xspace}
+\providecommand{\hcpRedKappaNuParr}{%
+  \ensuremath{(\kappa\nu\parr)}\xspace}
+\providecommand{\hcpRedKappaNuOne}{%
+  \ensuremath{(\kappa\nu\one)}\xspace}
+\providecommand{\hcpRedKappaNuBot}{%
+  \ensuremath{(\kappa\nu\bot)}\xspace}
+\providecommand{\hcpRedKappaNuPlus}[1]{%
+  \ensuremath{(\kappa\nu\plus_{#1})}\xspace}
+\providecommand{\hcpRedKappaNuWith}{%
+  \ensuremath{(\kappa\nu\with)}\xspace}
+\providecommand{\hcpRedKappaNuTop}{%
+  \ensuremath{(\kappa\nu\top)}\xspace}
+\providecommand{\hcpRedKappaMixTens}{%
+  \ensuremath{(\kappa{\ppar}\tens)}\xspace}
+\providecommand{\hcpRedKappaMixParr}{%
+  \ensuremath{(\kappa{\ppar}\parr)}\xspace}
+\providecommand{\hcpRedKappaMixOne}{%
+  \ensuremath{(\kappa{\ppar}\one)}\xspace}
+\providecommand{\hcpRedKappaMixBot}{%
+  \ensuremath{(\kappa{\ppar}\bot)}\xspace}
+\providecommand{\hcpRedKappaMixPlus}[1]{%
+  \ensuremath{(\kappa{\ppar}\plus_{#1})}\xspace}
+\providecommand{\hcpRedKappaMixWith}{%
+  \ensuremath{(\kappa{\ppar}\with)}\xspace}
+\providecommand{\hcpRedKappaMixTop}{%
+  \ensuremath{(\kappa{\ppar}\top)}\xspace}
+\providecommand{\hcpRedGammaNew}{%
+  \ensuremath{\gamma{\nu}}\xspace}
+\providecommand{\hcpRedGammaMix}{%
+  \ensuremath{\gamma{\ppar}}\xspace}
+\providecommand{\hcpRedGammaEquiv}{%
+  \ensuremath{\gamma{\equiv}}\xspace}
 
 %% Structural rules
 \providecommand{\hcpInfAx}{\cpInfAx}
 \providecommand{\hcpInfCut}{%
   \begin{prooftree*}
-    \AXC{$\seq[ P ]{%
-        \mathcal{G} \hsep
-        \Gamma, \tmty{x}{A} }$}
-    \AXC{$\seq[ Q ]{%
-        \mathcal{H} \hsep
-        \Delta, \tmty{x}{A^\bot} }$}
+    \AXC{$\seq[{ P }]{
+        \mathcal{G}\hsep
+        \Gamma, \tmty{x}{A} \hsep
+        \Delta, \tmty{x}{A^\bot}
+      }$}
     \NOM{Cut}
-    \BIC{$\seq[ \cpCut{x}{P}{Q} ]{%
-        \mathcal{G} \hsep
-        \mathcal{H} \hsep
-        \Gamma, \Delta }$}
+    \UIC{$\seq[{ \piNew{x}{P} }]{
+        \mathcal{G}\hsep
+        \ty{\Gamma}, \ty{\Delta}
+      }$}
   \end{prooftree*}}
 \providecommand{\hcpInfMix}{%
   \begin{prooftree*}
@@ -51,18 +122,18 @@
 
 
 %% Logical rules
-\providecommand{\hcpInfTens}{%
+\providecommand{\hcpInfBoundTens}{%
   \begin{prooftree*}
-    \AXC{$\seq[ P ]{%
+    \AXC{$\seq[{ P }]{
         \mathcal{G} \hsep
-        \Gamma , \tmty{y}{A} }$}
-    \AXC{$\seq[ Q ]{%
-        \mathcal{H} \hsep
-        \Delta , \tmty{x}{B} }$}
-    \SYM{(\tens)}
-    \BIC{$\seq[ \cpSend{x}{y}{P}{Q} ]{%
-        \mathcal{G} \hsep \mathcal{H} \hsep
-        \Gamma , \Delta , \tmty{x}{A \tens B} }$}
+        \ty{\Gamma}, \tmty{y}{A} \hsep
+        \ty{\Delta}, \tmty{x}{B}
+      }$}
+    \SYM{\tens}
+    \UIC{$\seq[{ \piBoundSend{x}{y}{P} }]{
+        \mathcal{G} \hsep
+        \ty{\Gamma}, \ty{\Delta}, \tmty{x}{A \tens B}
+      }$}
   \end{prooftree*}}
 \providecommand{\hcpInfParr}{%
   \begin{prooftree*}
@@ -76,9 +147,11 @@
   \end{prooftree*}}
 \providecommand{\hcpInfOne}{%
   \begin{prooftree*}
-    \AXC{$\vphantom{\seq[ P ]{\mathcal{G}}}$}
-    \SYM{(\one)}
-    \UIC{$\seq[ \cpHalt{x} ]{ \tmty{x}{\one} }$}
+    \AXC{$\seq[{ P }]{\emptyhypercontext}$}
+    \SYM{\one}
+    \UIC{$\seq[{ \piBoundSend{x}{}{P} }]{
+        \tmty{x}{\one}
+      }$}
   \end{prooftree*}}
 \providecommand{\hcpInfBot}{%
   \begin{prooftree*}
@@ -117,18 +190,14 @@
 \providecommand{\hcpInfWith}{%
   \begin{prooftree*}
     \AXC{$\seq[ P ]{
-        \mathcal{G} \hsep
         \Gamma , \tmty{x}{A} }$}
     \AXC{$\seq[ Q ]{
-        \mathcal{G} \hsep
         \Gamma, \tmty{x}{B} }$}
     \SYM{(\with)}
     \BIC{$\seq[ \cpCase{x}{P}{Q} ]{
-        \mathcal{G} \hsep
         \Gamma , \tmty{x}{A \with B} }$}
   \end{prooftree*}}
-\providecommand{\hcpInfNil}{%
-  (no rule for \ty{\nil})}
+\providecommand{\hcpInfNil}{\cpInfNil}
 \providecommand{\hcpInfTop}{%
   \begin{prooftree*}
     \AXC{}
