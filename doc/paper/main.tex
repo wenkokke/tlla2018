@@ -42,7 +42,7 @@
 \maketitle
 
 \begin{abstract}
-  Process calculi based on logic, such as \piDILL and \cp, provide a foundation for deadlock-free concurrent programming. However, in previous work, there is a mismatch between the rules for constructing proofs and the term constructors of the \textpi-calculus. We introduce Hypersequent Classical Processes (\hcp), which addresses this mismatch using hypersequents (collections of sequents) to register parallelism in the typing judgements. We prove that \hcp enjoys deadlock-freedom and a series of properties that relate it back to \cp.
+% Process calculi based on logic, such as \piDILL and \cp, provide a foundation for deadlock-free concurrent programming. However, in previous work, there is a mismatch between the rules for constructing proofs and the term constructors of the \textpi-calculus. We introduce Hypersequent Classical Processes (\hcp), which addresses this mismatch using hypersequents (collections of sequents) to register parallelism in the typing judgements. We prove that \hcp enjoys deadlock-freedom and a series of properties that relate it back to \cp.
 \end{abstract}
 
 \section{Introduction}
@@ -70,8 +70,11 @@ There is no independent parallel term $\tm{(\piPar{P}{Q})}$ in the grammar of \c
 
 This syntactic mismatch has an effect on the semantics as well. For instance, the $\beta$-reduction for output and input in \cp is \(\reducesto {\cpCut{x}{\cpSend{x}{y}{P}{Q}}{\cpRecv{x}{y}{R}}} {\cpCut{y}{P}{\cpCut{x}{Q}{R}}}\). Here, the parallel composition $\tm{(\piPar{P}{Q})}$ is of no relevance to this communication, yet the rule needs to inspect it to be able to nest the name restrictions appropriately in the resulting term.
 
-In this paper, we introduce Hypersequent Classical Processes (\hcp), which addresses this mismatch. The key insight is to register parallelism in the typing judgements using hypersequents~\citep{avron1991}, a technique from logic which generalises judgements from one sequent to many. This allows us to take apart the term constructs used in Classical Processes (\cp) to more closely match those of the standard \textpi-calculus. We proceed as follows. We start by introducing \cp (\cref{sec:cp}). Then, we introduce \hcp and prove it enjoys subject reduction and progress (\cref{sec:hcp}). We prove that every \cp process is an \hcp process, and that \hcp supports the same communication protocols as \cp, and no more (\cref{sec:cp2hcp}). Finally, we discuss related work (\cref{sec:related-work}).
+\citet{kokke2019} introduced Hypersequent Classical Processes (\hcp), which addresses this mismatch. The key insight is to register parallelism in the typing judgements using hypersequents~\citep{avron1991}, a technique from logic which generalises judgements from one sequent to many. This allows us to take apart the term constructs used in Classical Processes (\cp) to more closely match those of the standard \textpi-calculus. \hcp has labelled transition semantics with delayed actions~\citep{merro2004} and a full abstraction result: bisimilarity, denotational equivalence, and barbed congruence coincide.
 
+However, the step from \cp to \hcp is a big one. As of yet, \hcp does not have reduction semantics, and the addition of delayed actions means that \cp processes interpreted as \hcp processes do not behave as they would in \cp.
+
+In this paper, we address these issues by introducing a variant of \hcp with reduction semantics and without delayed actions. We proceed as follows. We start by introducing \cp (\cref{sec:cp}). Then, we introduce our variant of \hcp and prove it enjoys subject reduction and progress (\cref{sec:hcp}). We prove that every \cp process is an \hcp process, relate processes in \hcp back to \cp, and restate the result that \hcp supports the same communication protocols as \cp (\cref{sec:cp2hcp}). Finally, we discuss related work (\cref{sec:related-work}).
 
 \section{Classical Processes}
 \label{sec:cp}
@@ -123,6 +126,8 @@ Terms in \cp are identified up to structural congruence, which states that links
     \end{array}
   \]
 \end{definition}\noindent
+The reduction semantics presented here are a variant of those presented by \citet{lindley2015}, who showed that reduction in \cp can be decomposed in two phases: one in which all \textbeta-reduction happens, and one in which an arbitrary action, blocked on an external communication, is moved to the top of the term using commuting conversions. We choose to stop after the first phase, and do away with the commuting conversions.
+
 Reductions relate processes with their reduced forms \eg a reduction $\reducesto{P}{Q}$ denotes that the process $\tm{P}$ can reduce to the process $\tm{Q}$ in a single step.
 \begin{definition}[Reduction]\label{def:cp-reduction}
   Reductions are described by the smallest relation $\Longrightarrow$ on process terms closed under rules below.
@@ -224,16 +229,14 @@ A typing judgement associates a process with collections of typed channels.
   denotes that the process \tm{P} communicates along channels $\tm{x_1}$, \dots,
   $\tm{x_n}$ following protocols $\ty{A_1}$, \dots, $\ty{A_n}$. Typing
   judgements are derived using rules below.
-  \\
+  \\[1\baselineskip]
   {Structural rules}
   \begin{center}
-    \cpInfAx
-    \cpInfCut
+    \cpInfAx \cpInfCut
   \end{center}
 	{Logical rules}
   \begin{center}
-    \cpInfTens
-    \cpInfParr
+    \cpInfTens \cpInfParr
   \end{center}
   \begin{center}
     \cpInfBot
@@ -295,7 +298,9 @@ A typing judgement associates a process with collections of typed channels.
 \section{Hypersequent Classical Processes}
 \label{sec:hcp}
 
-In this section, we introduce Hypersequent Classical Processes (\hcp), a variant of \cp which registers parallelism in the typing judgements using hypersequents, allowing us to take apart the monolithic term constructors of \cp (\eg $\tm{\cpSend{x}{y}{P}{Q}}$) into the corresponding \textpi-calculus term constructs.
+In this section, we introduce our variant of Hypersequent Classical Processes (\hcp), itself a variant of \cp which registers parallelism in the typing judgements using hypersequents, allowing us to take apart the monolithic term constructors of \cp (\eg $\tm{\cpSend{x}{y}{P}{Q}}$) into the corresponding \textpi-calculus term constructs.
+
+The crucial difference between \hcp as described here and \hcp as described by \citet{kokke2019} is in the absence of delayed actions. However, removing delayed actions introduces self-locking processes, which we rule out using an extra restriction in the type system (see \cref{sec:hcp-types}). Furthermore, we follow \cp in using the same name for both endpoints of a channel, writing, \eg $\tm{\cpCut{x}{\cpHalt{x}}{\cpWait{x}{P}}}$ as opposed to $\tm{\cpCut{xy}{\cpHalt{x}}{\cpWait{y}{P}}}$.
 
 \subsection{Terms}
 The term language of \hcp is a variant of \cp where the term constructs have been taken apart into primitives which more closely resemble the \textpi-calculus primitives.
@@ -420,7 +425,7 @@ There are two changes to the reduction system. First, since $\tm{\piBoundSend{x}
   \label{fig:hcp-reduction}
 \end{figure}
 
-\subsection{Types}
+\subsection{Types}\label{sec:hcp-types}
 We use the same definitions for types and environments for \hcp as we used for \cp. However, we introduce a new layer on top of sequents: hypersequents. As \cp is a one-sided logic, and it uses the left-hand side of the turnstile to write the process, the traditional hypersequent notation can look confusing: ``$\seq[P]{\Gamma_1}\hsep\dots\hsep\seq{\Gamma_n}$'' seems to claim that $\tm{P}$ acts according to protocol $\ty{\Gamma_1}$. What are all the other $\Gamma$s doing there? Are they typing empty processes? Therefore, we opt to leave out the repeated turnstile, and instead work with the notion of ``hyper-environments''. However, we will still refer to our system as a hypersequent system. A hyper-environment is either empty, or consist of a series of typing environments, separated by vertical bars. A hyper-environment $\ty{\Gamma_1 \hsep \dots \hsep \Gamma_n}$ types a series of $n$ entangled, but independent processes.
 \begin{definition}[Hyper-environments]\label{def:hcp-hyper-environment}
   $\ty{\mathcal{G}}, \ty{\mathcal{H}} \Coloneqq \ty{\emptyhypercontext} \, \mid \, \ty{\mathcal{G} \hsep \Gamma}$
@@ -431,7 +436,7 @@ Typing judgements in \hcp associate processes with hyper-environments. \textsc{H
 \begin{definition}[Typing judgements]\label{def:hcp}
   A typing judgement $\seq[P]{\Gamma_1 \hsep \dots \hsep \Gamma_n}$ denotes that the process $\tm{P}$ consists of $n$ independent, but potentially entangled processes, each of which communicates according to its own protocol $\Gamma_i$. 
   Typing judgements can be constructed using the inference rules below. 
-  \\
+  \\[1\baselineskip]
   {Structural rules}
   \begin{center}
     \hcpInfAx
@@ -510,7 +515,7 @@ Typing judgements in \hcp associate processes with hyper-environments. \textsc{H
 \section{Relation between \cp and \hcp}
 \label{sec:cp2hcp}
 
-In this section, we discuss the relationship between \cp and \hcp. We will prove two important theorems: every \cp process is an \hcp process; and \hcp supports the same protocols as \cp. We define a translation from terms in \cp to terms in \hcp which breaks down the term constructs in \cp into their more atomic constructs in \hcp.
+In this section, we discuss the relationship between \cp and \hcp. We prove two important theorems: every \cp process is an \hcp process; and \hcp supports the same protocols as \cp. We define a translation from terms in \cp to terms in \hcp which breaks down the term constructs in \cp into their more atomic constructs in \hcp.
 \begin{definition}\label{def:cp2hcp-terms}
   \[
     \begin{array}{lcllcl}
@@ -537,7 +542,7 @@ In this section, we discuss the relationship between \cp and \hcp. We will prove
     \end{array}
   \]
 \end{definition}\noindent
-We will use this relation in the first proof, and its analogue for derivations in the second.
+We use this relation in the first proof, and its analogue for derivations in the second.
 
 \subsection{Every \cp process is an \hcp process}
 First, we prove that each \cp process can be translated by this trivial translation to an \hcp process, and that this translation respects structural congruence and reduction. Reductions from \cp can be trivially translated to reductions in \hcp. However, as we took apart each $\kappa$-rule into two separate rules, the reduction relation of \hcp is a slight refinement over that of \cp.
@@ -628,118 +633,96 @@ First, we prove that each \cp process can be translated by this trivial translat
 \end{proof}\noindent
 
 \subsection{\hcp supports the same communication protocols as \cp}
-\hcp exhibits some behaviours which are impossible to directly translate back into \cp. For instance, in the process below, the choice sent on $\tm{x}$ will affect the choice between $\tm{P}$ and $\tm{P'}$, even though neither has access to the channel $\tm{x}$.
-\[
-\begin{prooftree*}
-  \AXC{}\noLine\UIC{$\seq[P]{ \Gamma }$}
-  \AXC{}\noLine\UIC{$\seq[Q]{ \Delta, \tmty{x}{A} }$}
-  \NOM{H-Mix}
-  \BIC{$\seq[\piPar{P}{Q}]{ \Gamma \hsep \Delta, \tmty{x}{A} }$}
-  \AXC{}\noLine\UIC{$\seq[P']{ \Gamma }$}
-  \AXC{}\noLine\UIC{$\seq[Q']{ \Delta, \tmty{x}{B} }$}
-  \NOM{H-Mix}
-  \BIC{$\seq[\piPar{P'}{Q'}]{ \Gamma \hsep \Delta, \tmty{x}{B} }$}
-  \SYM{\with}
-  \BIC{$\seq[\cpCase{x}{\piPar{P}{Q}}{\piPar{P'}{Q'}}]{ \Gamma \hsep \Delta, \tmty{x}{A \with B}}$}
-\end{prooftree*}
-\]
-Instead, we will prove that \hcp supports the same communication protocols as \cp. This is the same as saying that it inhabits the same session types, or that the associated logical systems derive the same theorems. We show this by proving that we can internalise the hyper-environments as formulas in the logic. This is a standard method for proving the soundness of a hypersequent calculus.
+In this section, we prove that \hcp supports the same communication protocols as \cp. This is the same as saying that it inhabits the same session types, or that the associated logical systems derive the same theorems. We show this by proving that we can internalise the hyper-environments as formulas in the logic. This is a standard method for proving the soundness of a hypersequent calculus.
 
 We start off by defining a relation on derivations of \hcp, which we call ``disentanglement''. This relation allows us to move applications of $\textsc{H-Mix}$ downwards in the proof tree. We can use this relation to rewrite any derivation to a form in which all mixes are either attached to their respective cuts or tensors, or at the top-level.
 \begin{definition}\label{def:hcp-disentangle}
-  Disentanglement is described by the smallest relation $\moveMixDown$ on proof derivations closed under the rules in \cref{fig:hcp-disentangle}, plus the associativity and commutativity of mixes. The relation $\moveMixDown^\star$ is the reflexive, transitive closure of $\moveMixDown$.
+  Disentanglement is described by the smallest relation $\moveMixDown$ on processes closed under the rules in \cref{fig:hcp-disentangle}, plus the associativity and commutativity of mixes. The relation $\moveMixDown^\star$ is the reflexive, transitive closure of $\moveMixDown$.
 \end{definition}\noindent
 \begin{sidewaysfigure} 
-  \(
+  \[
   \begin{array}{lcr}
-    \pvar{$\rho_1$}\UIC{$\seq{\mathcal{G}_1 \hsep {A}, \Gamma}$}
-    \pvar{$\rho_2$}\UIC{$\seq{\mathcal{G}_2}$}
+    \AXC{$\seq[P]{\mathcal{G} \hsep \Gamma, \tmty{x}{A} \hsep \Delta, \tmty{x}{A^\bot}}$}
+    \AXC{$\seq[Q]{\mathcal{H}}$}
     \NOM{H-Mix}
-    \BIC{$\seq{\mathcal{G}_1 \hsep \mathcal{G}_2}$}
-    \pvar{$\rho_3$}\UIC{$\seq{\mathcal{G}_3 \hsep {A^\bot}, \Delta}$}
+    \BIC{$\seq[(P \ppar Q)]{\mathcal{G} \hsep \mathcal{H} \hsep \Gamma, \tmty{x}{A} \hsep \Delta, \tmty{x}{A^\bot}}$}
     \NOM{H-Cut}
-    \BIC{$\seq{\mathcal{G}_1 \hsep \mathcal{G}_2 \hsep \mathcal{G}_3 \hsep \Gamma, \Delta}$}
+    \UIC{$\seq[\piNew{x}{(P \ppar Q)}]{\mathcal{G} \hsep \mathcal{H} \hsep \Gamma, \Delta}$}
     \DisplayProof
     & \moveMixDown
-    & \pvar{$\rho_1$}\UIC{$\seq{\mathcal{G}_1 \hsep {A}, \Gamma}$}
-      \pvar{$\rho_3$}\UIC{$\seq{\mathcal{G}_3 \hsep {A^\bot}, \Delta}$}
+    & \AXC{$\seq[P]{\mathcal{G} \hsep \Gamma, \tmty{x}{A} \hsep \Delta, \tmty{x}{A^\bot}}$}
       \NOM{H-Cut}
-      \BIC{$\seq{\mathcal{G}_1 \hsep \mathcal{G}_3 \hsep \Gamma, \Delta}$}
-      \pvar{$\rho_2$}\UIC{$\seq{\mathcal{G}_2}$}
+      \UIC{$\seq[\piNew{x}{P}]{\mathcal{G} \hsep \Gamma, \Delta}$}
+      \AXC{$\seq[Q]{\mathcal{H}}$}
       \NOM{H-Mix}
-      \BIC{$\seq{\mathcal{G}_1 \hsep \mathcal{G}_2 \hsep \mathcal{G}_3 \hsep \Gamma, \Delta}$}
+      \BIC{$\seq[(\piNew{x}{P} \ppar Q)]{\mathcal{G} \hsep \mathcal{H} \hsep \Gamma, \Delta}$}
       \DisplayProof
     \\\\
-    \pvar{$\rho_1$}\UIC{$\seq{\mathcal{G}_1 \hsep {A}, \Gamma}$}
-    \pvar{$\rho_2$}\UIC{$\seq{\mathcal{G}_2}$}
+    \AXC{$\seq[P]{\mathcal{G} \hsep \Gamma, \tmty{y}{A} \hsep \Delta, \tmty{x}{B}}$}
+    \AXC{$\seq[Q]{\mathcal{H}}$}
     \NOM{H-Mix}
-    \BIC{$\seq{\mathcal{G}_1 \hsep \mathcal{G}_2 \hsep {A}, \Gamma}$}
-    \pvar{$\rho_3$}\UIC{$\seq{\mathcal{G}_3 \hsep {B}, \Delta}$}
+    \BIC{$\seq[(P \ppar Q)]{\mathcal{G} \hsep \mathcal{H} \hsep \Gamma, \tmty{y}{A} \hsep \Delta, \tmty{x}{B}}$}
     \SYM{\tens}
-    \BIC{$\seq{\mathcal{G}_1 \hsep \mathcal{G}_2 \hsep \mathcal{G}_3
-    \hsep {A \tens B}, \Gamma, \Delta}$}
+    \UIC{$\seq[\piBoundSend{x}{y}{(P \ppar Q)}]{\mathcal{G} \hsep \mathcal{H} \hsep \Gamma, \Delta, \tmty{x}{A \tens B}}$}
     \DisplayProof
     & \moveMixDown
-    & \pvar{$\rho_1$}\UIC{$\seq{\mathcal{G}_1 \hsep {A}, \Gamma}$}
-      \pvar{$\rho_3$}\UIC{$\seq{\mathcal{G}_3 \hsep {B}, \Delta}$}
+    & \AXC{$\seq[P]{\mathcal{G} \hsep \Gamma, \tmty{y}{A} \hsep \Delta, \tmty{x}{B}}$}
       \SYM{\tens}
-      \BIC{$\seq{\mathcal{G}_1 \hsep \mathcal{G}_2 \hsep {A \tens B},
-      \Gamma, \Delta}$}
-      \pvar{$\rho_2$}\UIC{$\seq{\mathcal{G}_2}$}
+      \UIC{$\seq[\piBoundSend{x}{y}{P}]{\mathcal{G} \hsep \Gamma, \Delta}$}
+      \AXC{$\seq[Q]{\mathcal{H}}$}
       \NOM{H-Mix}
-      \BIC{$\seq{\mathcal{G}_1 \hsep \mathcal{G}_2 \hsep \mathcal{G}_3
-      \hsep {A \tens B}, \Gamma, \Delta}$}
+      \BIC{$\seq[(\piBoundSend{x}{y}{P} \ppar Q)]{\mathcal{G} \hsep \mathcal{H} \hsep \Gamma, \Delta, \tmty{x}{A \tens B}}$}
       \DisplayProof
     \\\\
-    \pvar{$\rho_1$}\UIC{$\seq{\mathcal{G}_1 \hsep {A}, {B}, \Gamma}$}
-    \pvar{$\rho_2$}\UIC{$\seq{\mathcal{G}_2}$}
+    \AXC{$\seq[P]{\mathcal{G} \hsep \Gamma, \tmty{y}{A}, \tmty{x}{B}}$}
+    \AXC{$\seq[Q]{\mathcal{H}}$}
     \NOM{H-Mix}
-    \BIC{$\seq{\mathcal{G}_1 \hsep \mathcal{G}_2 \hsep {A}, {B}, \Gamma}$}
+    \BIC{$\seq[(P \ppar Q)]{\mathcal{G} \hsep \mathcal{H} \hsep \Gamma, \tmty{y}{A}, \tmty{x}{B}}$}
     \SYM{\parr}
-    \UIC{$\seq{\mathcal{G}_1 \hsep \mathcal{G}_2 \hsep {A \parr B}, \Gamma}$}
+    \UIC{$\seq[(\piRecv{x}{y}{(P \ppar Q)})]{\mathcal{G} \hsep \mathcal{H} \hsep \Gamma \tmty{x}{A \parr B}}$}
     \DisplayProof
     & \moveMixDown
-    & \pvar{$\rho_1$}\UIC{$\seq{\mathcal{G}_1 \hsep {A}, {B}, \Gamma}$}
+    & \AXC{$\seq[P]{\mathcal{G} \hsep \Gamma, \tmty{y}{A}, \tmty{x}{B}}$}
       \SYM{\parr}
-      \UIC{$\seq{\mathcal{G}_1 \hsep \mathcal{G}_2 \hsep {A}, {B}, \Gamma}$}
-      \pvar{$\rho_2$}\UIC{$\seq{\mathcal{G}_2}$}
+      \UIC{$\seq[\piRecv{x}{y}{P}]{\mathcal{G} \hsep \mathcal{H} \hsep \Gamma, \tmty{x}{A \parr B}}$}
+      \AXC{$\seq[Q]{\mathcal{H}}$}
       \NOM{H-Mix}
-      \BIC{$\seq{\mathcal{G}_1 \hsep \mathcal{G}_2 \hsep {A \parr B}, \Gamma}$}
+      \BIC{$\seq[(\piRecv{x}{y}{P} \ppar Q)]{\mathcal{G} \hsep \mathcal{H} \hsep \Gamma, \tmty{x}{A \parr B}}$}
       \DisplayProof
     \\\\
-    \pvar{$\rho_1$}\UIC{$\seq{\mathcal{G}_1 \hsep \Gamma}$}
-    \pvar{$\rho_2$}\UIC{$\seq{\mathcal{G}_2}$}
+    \AXC{$\seq[P]{\mathcal{G} \hsep \Gamma}$}
+    \AXC{$\seq[Q]{\mathcal{H}}$}
     \NOM{H-Mix}
-    \BIC{$\seq{\mathcal{G}_1 \hsep \mathcal{G}_2 \hsep \Gamma}$}
+    \BIC{$\seq[(P \ppar Q)]{\mathcal{G} \hsep \mathcal{H} \hsep \Gamma}$}
     \SYM{\bot}
-    \UIC{$\seq{\mathcal{G}_1 \hsep \mathcal{G}_2 \hsep {\bot}, \Gamma}$}
+    \UIC{$\seq[\piRecv{x}{}{(P \ppar Q)}]{\mathcal{G} \hsep \mathcal{H} \hsep \Gamma, \tmty{x}{\bot}}$}
     \DisplayProof
     & \moveMixDown
-    & \pvar{$\rho_1$}\UIC{$\seq{\mathcal{G}_1 \hsep \Gamma}$}
+    & \AXC{$\seq[P]{\mathcal{G} \hsep \Gamma}$}
       \SYM{\bot}
-      \UIC{$\seq{\mathcal{G}_1 \hsep {\bot}, \Gamma}$}
-      \pvar{$\rho_2$}\UIC{$\seq{\mathcal{G}_2}$}
+      \UIC{$\seq[\piRecv{x}{}{P}]{\mathcal{G} \hsep \Gamma, \tmty{x}{\bot}}$}
+      \AXC{$\seq[Q]{\mathcal{H}}$}
       \NOM{H-Mix}
-      \BIC{$\seq{\mathcal{G}_1 \hsep \mathcal{G}_2 \hsep \Gamma}$}
+      \BIC{$\seq[(\piRecv{x}{}{P} \ppar Q)]{\mathcal{G} \hsep \mathcal{H} \hsep \Gamma, \tmty{x}{\bot}}$}
       \DisplayProof
     \\\\
-    \pvar{$\rho_1$}\UIC{$\seq{\mathcal{G}_1 \hsep {A}, \Gamma}$}
-    \pvar{$\rho_2$}\UIC{$\seq{\mathcal{G}_2}$}
+    \AXC{$\seq[P]{\mathcal{G} \hsep \Gamma, \tmty{x}{A}}$}
+    \AXC{$\seq[Q]{\mathcal{H}}$}
     \NOM{H-Mix}
-    \BIC{$\seq{\mathcal{G}_1 \hsep \mathcal{G}_2 \hsep {A}, \Gamma}$}
+    \BIC{$\seq[(P \ppar Q)]{\mathcal{G} \hsep \mathcal{H} \hsep \Gamma, \tmty{x}{A}}$}
     \SYM{\plus_1}
-    \UIC{$\seq{\mathcal{G}_1 \hsep \mathcal{G}_2 \hsep {A \plus B}, \Gamma}$}
+    \UIC{$\seq[\cpInl{x}{(P \ppar Q)}]{\mathcal{G} \hsep \mathcal{H} \hsep \Gamma, \tmty{x}{A \plus B}}$}
     \DisplayProof
     & \moveMixDown
-    & \pvar{$\rho_1$}\UIC{$\seq{\mathcal{G}_1 \hsep {A}, \Gamma}$}
+    & \AXC{$\seq[P]{\mathcal{G} \hsep \Gamma, \tmty{x}{A}}$}
       \SYM{\plus_1}
-      \UIC{$\seq{\mathcal{G}_1 \hsep {A \plus B}, \Gamma}$}
-      \pvar{$\rho_2$}\UIC{$\seq{\mathcal{G}_2}$}
+      \UIC{$\seq[\cpInl{x}{P}]{\mathcal{G} \hsep \Gamma, \tmty{x}{A \plus B}}$}
+      \AXC{$\seq[Q]{\mathcal{H}}$}
       \NOM{H-Mix}
-      \BIC{$\seq{\mathcal{G}_1 \hsep \mathcal{G}_2 \hsep {A \plus B}, \Gamma}$}
+      \BIC{$\seq[(\cpInl{x}{P} \ppar Q)]{\mathcal{G} \hsep \mathcal{H} \hsep \Gamma, \tmty{x}{A \plus B}}$}
       \DisplayProof
   \end{array}
-  \)
+  \]
   \caption{The disentanglement relation for \hcp.}
   \label{fig:hcp-disentangle}
 \end{sidewaysfigure}
@@ -748,17 +731,19 @@ We named this relation ``disentanglement'' to reflect the intuition that proof i
 
 Disentanglement is terminating, and confluent up to the associativity and commutativity of mixes.
 \begin{lemma}[Disentangle]\label{lem:hcp-disentangle}
-  If there exists a derivation $\rho$ of $\seq{\Gamma_1 \hsep \dots \hsep \Gamma_n}$ in \hcp, then there exist derivations $\rho_1, \dots, \rho_n$ of $\seq{\Gamma_1}, \dots, \seq{\Gamma_n}$ in \cp such that
+  If $\seq[P]{\Gamma_1 \hsep \dots \hsep \Gamma_n}$ in \hcp, then there exist processes $\tm{P_1}, \dots, \tm{P_n}$ in \cp such that $\seq[P_1]{\Gamma_1}, \dots, \seq[P_n]{\Gamma_n}$ and
   \[
-  \rho
-  \moveMixDown^\star
-  \begin{prooftree*}
-    \AXC{}\noLine\UIC{$\mtf{\rho_1}$}
-    \AXC{}\noLine\UIC{$\dots$}
-    \AXC{}\noLine\UIC{$\mtf{\rho_n}$}
-    \NOM{H-Mix}
-    \TIC{$\seq{\Gamma_1 \hsep \dots \hsep \Gamma_n}$}
-  \end{prooftree*}
+    \begin{prooftree*}
+      \AXC{\seq[P]{\Gamma_1 \hsep \dots \hsep \Gamma_n}}
+    \end{prooftree*}
+    \moveMixDown^\star
+    \begin{prooftree*}
+      \AXC{$\seq[\mtf{P_1}]{\Gamma_1}$}
+      \AXC{$\dots$}
+      \AXC{$\seq[\mtf{P_n}]{\Gamma_n}$}
+      \NOM{H-Mix$^\star$}
+      \TIC{$\seq[(P_1 \ppar \dots \ppar P_n)]{\Gamma_1 \hsep \dots \hsep \Gamma_n}$}
+    \end{prooftree*}
   \]
 \end{lemma} 
 \begin{proof}
@@ -833,3 +818,5 @@ The idea of using hypersequents to capture parallelism in linear logic judgement
 %%% Local Variables:
 %%% TeX-master: "main"
 %%% End:
+
+% LocalWords:  labelled
