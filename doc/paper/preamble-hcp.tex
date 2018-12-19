@@ -15,7 +15,6 @@
 \providecommand{\hcpEquivMixHaltNoParen}[1]{\ensuremath{\text{halt}\xspace}}
 \providecommand{\hcpEquivMixHalt}[1]{\ensuremath{(\hcpEquivMixHaltNoParen{#1})}\xspace}
 \providecommand{\hcpEquivMixCut}[1]{\ensuremath{(\text{scope-ext})}\xspace}
-\providecommand{\hcpRedGammaMix}{\ensuremath{\gamma{\ppar}}\xspace}
 
 
 
@@ -55,40 +54,12 @@
   \ensuremath{(\beta{\one}{\bot})}\xspace}
 \providecommand{\hcpRedBetaPlusWith}[1]{%
   \ensuremath{(\beta{\plus}{\with}_{#1})}\xspace}
-\providecommand{\hcpRedKappaNuTens}{%
-  \ensuremath{(\kappa\nu\tens)}\xspace}
-\providecommand{\hcpRedKappaNuParr}{%
-  \ensuremath{(\kappa\nu\parr)}\xspace}
-\providecommand{\hcpRedKappaNuOne}{%
-  \ensuremath{(\kappa\nu\one)}\xspace}
-\providecommand{\hcpRedKappaNuBot}{%
-  \ensuremath{(\kappa\nu\bot)}\xspace}
-\providecommand{\hcpRedKappaNuPlus}[1]{%
-  \ensuremath{(\kappa\nu\plus_{#1})}\xspace}
-\providecommand{\hcpRedKappaNuWith}{%
-  \ensuremath{(\kappa\nu\with)}\xspace}
-\providecommand{\hcpRedKappaNuTop}{%
-  \ensuremath{(\kappa\nu\top)}\xspace}
-\providecommand{\hcpRedKappaMixTens}{%
-  \ensuremath{(\kappa{\ppar}\tens)}\xspace}
-\providecommand{\hcpRedKappaMixParr}{%
-  \ensuremath{(\kappa{\ppar}\parr)}\xspace}
-\providecommand{\hcpRedKappaMixOne}{%
-  \ensuremath{(\kappa{\ppar}\one)}\xspace}
-\providecommand{\hcpRedKappaMixBot}{%
-  \ensuremath{(\kappa{\ppar}\bot)}\xspace}
-\providecommand{\hcpRedKappaMixPlus}[1]{%
-  \ensuremath{(\kappa{\ppar}\plus_{#1})}\xspace}
-\providecommand{\hcpRedKappaMixWith}{%
-  \ensuremath{(\kappa{\ppar}\with)}\xspace}
-\providecommand{\hcpRedKappaMixTop}{%
-  \ensuremath{(\kappa{\ppar}\top)}\xspace}
 \providecommand{\hcpRedGammaNew}{%
-  \ensuremath{\gamma{\nu}}\xspace}
+  \ensuremath{(\gamma{\nu})}\xspace}
 \providecommand{\hcpRedGammaMix}{%
-  \ensuremath{\gamma{\ppar}}\xspace}
+  \ensuremath{(\gamma{\ppar})}\xspace}
 \providecommand{\hcpRedGammaEquiv}{%
-  \ensuremath{\gamma{\equiv}}\xspace}
+  \ensuremath{(\gamma{\equiv})}\xspace}
 
 %% Structural rules
 \providecommand{\hcpInfAx}{\cpInfAx}
@@ -116,7 +87,7 @@
 \providecommand{\hcpInfHalt}{%
   \begin{prooftree*}
     \AXC{$\vphantom{\seq[ Q ]{ \Delta, \tmty{y}{A^\bot} }}$}
-    \NOM{H-Halt}
+    \NOM{H-Mix$_0$}
     \UIC{$\seq[{ \piHalt }]{ \emptyhypercontext }$}
   \end{prooftree*}}
 
@@ -202,7 +173,7 @@
   \begin{prooftree*}
     \AXC{}
     \SYM{(\top)}
-    \UIC{$\seq[ \cpAbsurd{x} ]{ \mathcal{G} \hsep \Gamma, \tmty{x}{\top} }$}
+    \UIC{$\seq[ \cpAbsurd{x} ]{ \Gamma, \tmty{x}{\top} }$}
   \end{prooftree*}}
 
 %%% Local Variables:

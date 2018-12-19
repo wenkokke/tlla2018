@@ -292,7 +292,7 @@ A typing judgement associates a process with collections of typed channels.
   If $\seq[P]{\Gamma}$, then there are no infinite $\Longrightarrow$-reduction sequences.
 \end{theorem} 
 \begin{proof}
-  Every reduction reduces a single cut to zero, one or two cuts. However, each of these cuts is smaller, measured in the size of the cut term. Furthermore, each instance of the structural congruence preserves the size of the cut. Therefore, there cannot be an infinite $\Longrightarrow$-reduction sequence.
+  Every reduction reduces a single cut to zero, one or two cuts. However, each of these cuts is smaller, measured in the size of the cut formula. Furthermore, each instance of the structural congruence preserves the size of the cut. Therefore, there cannot be an infinite $\Longrightarrow$-reduction sequence.
 \end{proof}
 
 \section{Hypersequent Classical Processes}
@@ -367,7 +367,7 @@ A pleasant effect of our updated syntax is that it makes our structural congruen
     \end{array}
   \]
 \end{definition}\noindent
-There are two changes to the reduction system. First, since $\tm{\piBoundSend{x}{y}{P}}$ and $\tm{\piBoundSend{x}{}{P}}$ are now terms in their own right, the $\cpRedBetaTensParr$ and $\cpRedBetaOneBot$ rules are simpler. Second, since we decomposed $\tm{\cpCut{x}{P}{Q}}$ into an independent name restriction and parallel composition, the $\kappa$-rules and the relevant $\gamma$-rule all decompose as well.
+There are two changes to the reduction system. First, since $\tm{\piBoundSend{x}{y}{P}}$ and $\tm{\piBoundSend{x}{}{P}}$ are now terms in their own right, the $\cpRedBetaTensParr$ and $\cpRedBetaOneBot$ rules are simpler. Second, since we decomposed $\tm{\cpCut{x}{P}{Q}}$ into an independent name restriction and parallel composition, the relevant $\gamma$-rule all decompose as well.
 \begin{definition}[Reduction]\label{def:hcp-reduction}
   Reductions are described by the smallest relation $\Longrightarrow$ on process terms closed under the rules in \cref{fig:hcp-reduction}. 
   Relations $\Longrightarrow^{+}$ and $\Longrightarrow^\star$ are the transitive, and the reflexive, transitive closures of $\Longrightarrow$, respectively.
@@ -487,7 +487,7 @@ Typing judgements in \hcp associate processes with hyper-environments. \textsc{H
 \begin{definition}[Canonical forms]
   A process $\tm{P}$ is in canonical form if
   \(
-    \tm{P} \equiv \tm{\cpCut{x_1}{P_1}{\dots\cpCut{x_n}{P_n}{P_{n+1}}\dots}},
+  \tm{P} \equiv \tm{\piNew{x_1}{\dots\piNew{x_n}{(P_1 \mid \dots \mid P_{n+m+1})}}},
   \)
   such that: no process $\tm{P_i}$ is a cut or a mix; no process $\tm{P_i}$ is a link acting on a bound channel $\tm{x_i}$; and no two processes $\tm{P_i}$ and $\tm{P_j}$ are acting on the same bound channel $\tm{x_i}$.
 \end{definition}
@@ -495,7 +495,11 @@ Typing judgements in \hcp associate processes with hyper-environments. \textsc{H
   If a process $\tm{P}$ is in canonical form, then it is blocked on an external communication.
 \end{corollary}
 \begin{proof}
-  We have $\tm{P} \equiv \tm{\cpCut{x_1}{P_1}{\dots\cpCut{x_n}{P_n}{P_{n+1}}\dots}}$ such that no $\tm{P_i}$ is a cut or a link, and no two processes $\tm{P_i}$ and $\tm{P_j}$ are acting on the same bound channel. The prefix of cuts and mixes introduces $n$ channels. Each application of cut requires an application of mix, so the prefix introduces $n+m+1$ processes. Therefore, at least $\tm{m+1}$ of the processes $\tm{P_i}$ must be acting on a free channel, i.e., blocked on an external communication.
+  We have
+  \(
+  \tm{P} \equiv \tm{\piNew{x_1}{\dots\piNew{x_n}{(P_1 \ppar \dots \ppar P_{n+m+1})}}},
+  \)
+  such that no $\tm{P_i}$ is a cut or a link, and no two processes $\tm{P_i}$ and $\tm{P_j}$ are acting on the same bound channel. The prefix of cuts and mixes introduces $n$ channels. Each application of cut requires an application of mix, so the prefix introduces $n+m+1$ processes. Therefore, at least $m+1$ of the processes $\tm{P_i}$ must be acting on a free channel, i.e., blocked on an external communication.
 \end{proof}
 \begin{theorem}[Progress]\label{thm:hcp-progress}
   If $\seq[P]{\Gamma}$, then either $\tm{P}$ is in canonical form, or there exists a process $\tm{Q}$ such that $\tm{P}\Longrightarrow\tm{Q}$.
@@ -545,7 +549,7 @@ In this section, we discuss the relationship between \cp and \hcp. We prove two 
 We use this relation in the first proof, and its analogue for derivations in the second.
 
 \subsection{Every \cp process is an \hcp process}
-First, we prove that each \cp process can be translated by this trivial translation to an \hcp process, and that this translation respects structural congruence and reduction. Reductions from \cp can be trivially translated to reductions in \hcp. However, as we took apart each $\kappa$-rule into two separate rules, the reduction relation of \hcp is a slight refinement over that of \cp.
+First, we prove that each \cp process can be translated by this trivial translation to an \hcp process, and that this translation respects structural congruence and reduction. Reductions from \cp can be trivially translated to reductions in \hcp. 
 \begin{theorem}\label{thm:cp2hcp-typing}
   If $\seq[P]{\Gamma}$ in \cp, then $\seq[\mtf{P}]{\Gamma}$ in \hcp.
 \end{theorem} 
@@ -620,16 +624,16 @@ First, we prove that each \cp process can be translated by this trivial translat
   By induction on the derivation of $\tm{P}\equiv\tm{Q}$.
 \end{proof}
 \begin{theorem}\label{thm:cp2hcp-reduction}
-  If $\reducesto{P}{Q}$ in \cp, then $\tm{\mtf{P}}\Longrightarrow^{+}\tm{\mtf{Q}}$ in \hcp.
+  If $\reducesto{P}{Q}$ in \cp, then $\reducesto{\mtf{P}}{\mtf{Q}}$ in \hcp.
 \end{theorem} 
 \begin{proof}
   By induction on the the derivation of $\reducesto{P}{Q}$.
 \end{proof}
 \begin{theorem}\label{hcp2cp-reduction}
-  If $\reducesto{\mtf{P}}{R}$ in \hcp, then there is a $\tm{Q}$ such that $\reducesto{P}{Q}$ in \cp and $\tm{R}\Longrightarrow^{+}\tm{\mtf{Q}}$ in \hcp.
+  If $\reducesto{\mtf{P}}{R}$ in \hcp, then there is a $\tm{Q}$ such that $\reducesto{P}{Q}$ in \cp and $\reducesto{R}{\mtf{Q}}$ or $\tm{R}\equiv\tm{\mtf{Q}}$ in \hcp.
 \end{theorem} 
 \begin{proof}
-  By induction on the derivation of $\reducesto{\mtf{P}}{R}$. The cases for \hcpRedAxCut1 and the $\beta$-rules are trivial. For the $\kappa\nu$-rules, we rewrite by the appropriate $\kappa{\ppar}$ rule, and vice versa.
+  By induction on the derivation of $\reducesto{\mtf{P}}{R}$.
 \end{proof}\noindent
 
 \subsection{\hcp supports the same communication protocols as \cp}
@@ -637,7 +641,7 @@ In this section, we prove that \hcp supports the same communication protocols as
 
 We start off by defining a relation on derivations of \hcp, which we call ``disentanglement''. This relation allows us to move applications of $\textsc{H-Mix}$ downwards in the proof tree. We can use this relation to rewrite any derivation to a form in which all mixes are either attached to their respective cuts or tensors, or at the top-level.
 \begin{definition}\label{def:hcp-disentangle}
-  Disentanglement is described by the smallest relation $\moveMixDown$ on processes closed under the rules in \cref{fig:hcp-disentangle}, plus the associativity and commutativity of mixes. The relation $\moveMixDown^\star$ is the reflexive, transitive closure of $\moveMixDown$.
+  Disentanglement is described by the smallest relation $\moveMixDown$ on processes closed under the rules in \cref{fig:hcp-disentangle}, plus the structural congruence $\equiv$. The relation $\moveMixDown^\star$ is the reflexive, transitive closure of $\moveMixDown$.
 \end{definition}\noindent
 \begin{sidewaysfigure} 
   \[
@@ -668,7 +672,7 @@ We start off by defining a relation on derivations of \hcp, which we call ``dise
     & \moveMixDown
     & \AXC{$\seq[P]{\mathcal{G} \hsep \Gamma, \tmty{y}{A} \hsep \Delta, \tmty{x}{B}}$}
       \SYM{\tens}
-      \UIC{$\seq[\piBoundSend{x}{y}{P}]{\mathcal{G} \hsep \Gamma, \Delta}$}
+      \UIC{$\seq[\piBoundSend{x}{y}{P}]{\mathcal{G} \hsep \Gamma, \Delta, \tmty{x}{A \tens B}}$}
       \AXC{$\seq[Q]{\mathcal{H}}$}
       \NOM{H-Mix}
       \BIC{$\seq[(\piBoundSend{x}{y}{P} \ppar Q)]{\mathcal{G} \hsep \mathcal{H} \hsep \Gamma, \Delta, \tmty{x}{A \tens B}}$}
@@ -679,7 +683,7 @@ We start off by defining a relation on derivations of \hcp, which we call ``dise
     \NOM{H-Mix}
     \BIC{$\seq[(P \ppar Q)]{\mathcal{G} \hsep \mathcal{H} \hsep \Gamma, \tmty{y}{A}, \tmty{x}{B}}$}
     \SYM{\parr}
-    \UIC{$\seq[(\piRecv{x}{y}{(P \ppar Q)})]{\mathcal{G} \hsep \mathcal{H} \hsep \Gamma \tmty{x}{A \parr B}}$}
+    \UIC{$\seq[(\piRecv{x}{y}{(P \ppar Q)})]{\mathcal{G} \hsep \mathcal{H} \hsep \Gamma, \tmty{x}{A \parr B}}$}
     \DisplayProof
     & \moveMixDown
     & \AXC{$\seq[P]{\mathcal{G} \hsep \Gamma, \tmty{y}{A}, \tmty{x}{B}}$}
@@ -727,7 +731,7 @@ We start off by defining a relation on derivations of \hcp, which we call ``dise
   \label{fig:hcp-disentangle}
 \end{sidewaysfigure}
 \noindent
-We named this relation ``disentanglement'' to reflect the intuition that proof in \hcp represent multiple entangled \cp proofs, which we can disentangle. However, this is not entirely accurate. The proof structure of \hcp is slightly richer than that of \cp. This can be seen in the example process above. In this case, when disentangling, we are forced to forget some of the proof structure. This can be seen in the last rule in \cref{fig:hcp-disentangle}. Nonetheless, the relation is type preserving, and so it suffices for showing that \hcp supports the same communication protocols as \cp.
+We named this relation ``disentanglement'' to reflect the intuition that proof in \hcp represent multiple entangled \cp proofs, which we can disentangle. 
 
 Disentanglement is terminating, and confluent up to the associativity and commutativity of mixes.
 \begin{lemma}[Disentangle]\label{lem:hcp-disentangle}
@@ -742,7 +746,7 @@ Disentanglement is terminating, and confluent up to the associativity and commut
       \AXC{$\dots$}
       \AXC{$\seq[\mtf{P_n}]{\Gamma_n}$}
       \NOM{H-Mix$^\star$}
-      \TIC{$\seq[(P_1 \ppar \dots \ppar P_n)]{\Gamma_1 \hsep \dots \hsep \Gamma_n}$}
+      \TIC{$\seq[(\mtf{P_1} \ppar \dots \ppar \mtf{P_n})]{\Gamma_1 \hsep \dots \hsep \Gamma_n}$}
     \end{prooftree*}
   \]
 \end{lemma} 
@@ -751,11 +755,11 @@ Disentanglement is terminating, and confluent up to the associativity and commut
   There are three cases:
   \begin{enumerate*}[label={\alph*)}]
   \item
-    if a mix gets stuck under a cut, it forms a \cp cut;
+    if a mix gets stuck above a cut, it forms a \cp cut;
   \item
-    if a mix gets stuck under a $(\tens)$, it forms a \cp $(\tens)$;
+    if a mix gets stuck above a $(\tens)$, it forms a \cp $(\tens)$;
   \item
-    otherwise, it moves all the way to the top.
+    otherwise, it moves all the way to the bottom.
   \end{enumerate*}
   All applications of $(\one)$ are followed by an application of \textsc{H-Mix$_0$}, forming a \cp $(\one)$.
 \end{proof}
