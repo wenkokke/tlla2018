@@ -42,6 +42,12 @@
 \maketitle
 
 \begin{abstract}
+  Process calculi based on logic, such as \piDILL and \cp, provide a foundation for deadlock-free concurrent programming. However, in previous work, there is a mismatch between the rules for constructing proofs and the term constructors of the \textpi-calculus: the fundamental operator for parallel composition does not correspond to any rule of linear logic.
+
+  \citet{kokke2019} introduced Hypersequent Classical Processes (\hcp), which addresses this mismatch using hypersequents (collections of sequents) to register parallelism in the typing judgements.
+  However, the step from \cp to \dhcp is a big one. As of yet, \dhcp does not have reduction semantics, and the addition of delayed actions means that \cp processes interpreted as \dhcp processes do not behave as they would in \cp.
+
+  We introduce \hcp, a variant of \dhcp with reduction semantics and without delayed actions. We prove progress, preservation, and termination, and show that \hcp supports the same communication protocols as \cp.
 \end{abstract}
 
 \section{Introduction}
