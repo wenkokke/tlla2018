@@ -1,6 +1,7 @@
 %% Depends on: xspace, amsmath, bussproofs, rotating, preamble-typing, preamble-cp
 
-\providecommand{\hcp}{HCP\xspace}
+\providecommand{\dhcp}{HCP\xspace}
+\providecommand{\hcp}{HCP$^{{-}}$\xspace}
 \providecommand{\hsep}{\ensuremath{\mid}}
 \providecommand{\emptyhypercontext}{\varnothing}
 
@@ -118,10 +119,10 @@
   \end{prooftree*}}
 \providecommand{\hcpInfOne}{%
   \begin{prooftree*}
-    \AXC{$\seq[{ P }]{\emptyhypercontext}$}
+    \AXC{$\seq[{ P }]{\mathcal{G}}$}
     \SYM{\one}
     \UIC{$\seq[{ \piBoundSend{x}{}{P} }]{
-        \tmty{x}{\one}
+        \mathcal{G} \hsep \tmty{x}{\one}
       }$}
   \end{prooftree*}}
 \providecommand{\hcpInfBot}{%

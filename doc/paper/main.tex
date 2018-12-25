@@ -42,7 +42,6 @@
 \maketitle
 
 \begin{abstract}
-Process calculi based on logic, such as \piDILL and \cp, provide a foundation for deadlock-free concurrent programming. However, in previous work, there is a mismatch between the rules for constructing proofs and the term constructors of the \textpi-calculus: the fundamental operator for parallel composition does not correspond to any rule of linear logic. We introduce Hypersequent Classical Processes (\hcp), which addresses this mismatch using hypersequents (collections of sequents) to register parallelism in the typing judgements. We prove that \hcp enjoys deadlock-freedom and a series of properties that relate it back to \cp.
 \end{abstract}
 
 \section{Introduction}
@@ -70,11 +69,11 @@ There is no independent parallel term $\tm{(\piPar{P}{Q})}$ in the grammar of \c
 
 This syntactic mismatch has an effect on the semantics as well. For instance, the $\beta$-reduction for output and input in \cp is \(\reducesto {\cpCut{x}{\cpSend{x}{y}{P}{Q}}{\cpRecv{x}{y}{R}}} {\cpCut{y}{P}{\cpCut{x}{Q}{R}}}\). Here, the parallel composition $\tm{(\piPar{P}{Q})}$ is of no relevance to this communication, yet the rule needs to inspect it to be able to nest the name restrictions appropriately in the resulting term.
 
-\citet{kokke2019} introduced Hypersequent Classical Processes (\hcp), which addresses this mismatch. The key insight is to register parallelism in the typing judgements using hypersequents~\citep{avron1991}, a technique from logic which generalises judgements from one sequent to many. This allows us to take apart the term constructs used in Classical Processes (\cp) to more closely match those of the standard \textpi-calculus. \hcp has labelled transition semantics with delayed actions~\citep{merro2004} and a full abstraction result: bisimilarity, denotational equivalence, and barbed congruence coincide.
+\citet{kokke2019} introduced Hypersequent Classical Processes (\dhcp), which addresses this mismatch. The key insight is to register parallelism in the typing judgements using hypersequents~\citep{avron1991}, a technique from logic which generalises judgements from one sequent to many. This allows us to take apart the term constructs used in Classical Processes (\cp) to more closely match those of the standard \textpi-calculus. \dhcp has labelled transition semantics with delayed actions~\citep{merro2004} and a full abstraction result: bisimilarity, denotational equivalence, and barbed congruence coincide.
 
-However, the step from \cp to \hcp is a big one. As of yet, \hcp does not have reduction semantics, and the addition of delayed actions means that \cp processes interpreted as \hcp processes do not behave as they would in \cp.
+However, the step from \cp to \dhcp is a big one. As of yet, \dhcp does not have reduction semantics, and the addition of delayed actions means that \cp processes interpreted as \dhcp processes do not behave as they would in \cp.
 
-In this paper, we address these issues by introducing a variant of \hcp with reduction semantics and without delayed actions. We proceed as follows. We start by introducing \cp (\cref{sec:cp}). Then, we introduce our variant of \hcp and prove it enjoys subject reduction and progress (\cref{sec:hcp}). We prove that every \cp process is an \hcp process, relate processes in \hcp back to \cp, and restate the result that \hcp supports the same communication protocols as \cp (\cref{sec:cp2hcp}). Finally, we discuss related work (\cref{sec:related-work}).
+In this paper, we address these issues by introducing \hcp, a variant of \dhcp with reduction semantics and without delayed actions. We proceed as follows. We start by introducing \cp (\cref{sec:cp}). Then, we introduce our variant of \hcp and prove it enjoys subject reduction and progress (\cref{sec:hcp}). We prove that every \cp process is an \hcp process, relate processes in \hcp back to \cp, and prove that \hcp supports the same communication protocols as \cp (\cref{sec:cp2hcp}). Finally, we discuss related work (\cref{sec:related-work}).
 
 \section{Classical Processes}
 \label{sec:cp}
@@ -174,8 +173,9 @@ Reductions relate processes with their reduced forms \eg a reduction $\reducesto
       \end{prooftree*}
     \end{gather*}
   Relations $\Longrightarrow^{+}$ and $\Longrightarrow^\star$ are the transitive, and the reflexive, transitive closures of $\Longrightarrow$, respectively.
-\end{definition}
-Note that we do not need to add a side condition to $\cpRedBetaTensParr$ to restrict its usage to the case where $\tm{y}$ is bound in $\tm{P}$ and $\tm{x}$ is bound in $\tm{Q}$, as this is true by definition of the send construct $\tm{\cpSend{x}{y}{P}{Q}}$.
+\end{definition}\noindent
+
+Note that we do not need to add a side condition to $\cpRedBetaTensParr$ to restrict its usage to the case where $\tm{y}$ is bound in $\tm{P}$ and $\tm{x}$ is bound in $\tm{Q}$, as this is required by the definition of the send construct $\tm{\cpSend{x}{y}{P}{Q}}$.
 
 \subsection{Types}
 Channels in \cp are typed using a session type system which corresponds to classical linear logic.
@@ -301,7 +301,7 @@ A typing judgement associates a process with collections of typed channels.
 
 In this section, we introduce our variant of Hypersequent Classical Processes (\hcp), itself a variant of \cp which registers parallelism in the typing judgements using hypersequents, allowing us to take apart the monolithic term constructors of \cp (\eg $\tm{\cpSend{x}{y}{P}{Q}}$) into the corresponding \textpi-calculus term constructs.
 
-The crucial difference between \hcp as described here and \hcp as described by \citet{kokke2019} is in the absence of delayed actions. However, removing delayed actions introduces self-locking processes, which we rule out using an extra restriction in the type system (see \cref{sec:hcp-types}). Furthermore, we follow \cp in using the same name for both endpoints of a channel, writing, \eg $\tm{\cpCut{x}{\cpHalt{x}}{\cpWait{x}{P}}}$ as opposed to $\tm{\cpCut{xy}{\cpHalt{x}}{\cpWait{y}{P}}}$.
+The crucial difference between \hcp as described here and \dhcp as described by \citet{kokke2019} is in the absence of delayed actions. However, removing delayed actions introduces self-locking processes, which we rule out using an extra restriction in the type system (see \cref{sec:hcp-types}). Furthermore, we follow \cp in using the same name for both endpoints of a channel, writing, \eg $\tm{\cpCut{x}{\cpHalt{x}}{\cpWait{x}{P}}}$ as opposed to $\tm{\cpCut{xy}{\cpHalt{x}}{\cpWait{y}{P}}}$.
 
 \subsection{Terms}
 The term language of \hcp is a variant of \cp where the term constructs have been taken apart into primitives which more closely resemble the \textpi-calculus primitives.
@@ -433,7 +433,7 @@ We use the same definitions for types and environments for \hcp as we used for \
 \end{definition}\noindent
 A hyper-environment is a multiset of environments. While names within environments must be unique, names may be shared between multiple environments in a hyper-environment. We write $\ty{\mathcal{G} \hsep \mathcal{H}}$ to combine two hyper-environments.
 
-Typing judgements in \hcp associate processes with hyper-environments. \textsc{H-Mix} composes two processes in parallel, but remembers that they are independent in the sequent. \textsc{H-Cut} and $(\tens)$ take as their premise a process which consists of at least two independent processes, and connects them, eliminating the vertical bar. Each logical rule has the side condition that $\tm{x} \not\in \ty{\mathcal{G}}$, which can be read as ``you cannot act on one end-point of $x$ if you are also holding its other end-point''. This prevents self-locking processes, \eg $\tm{\piBoundSend{x}{}{\piRecv{x}{}{\piHalt}}}$.
+Typing judgements in \hcp associate processes with hyper-environments. \textsc{H-Mix} composes two processes in parallel, but remembers that they are independent in the sequent. \textsc{H-Cut} and $(\tens)$ take as their premise a process which consists of at least two independent processes, and connects them, eliminating the vertical bar. Each logical rule has the side condition that $\tm{x} \not\in \ty{\mathcal{G}}$, which can be read as ``you cannot act on one end-point of $x$ if you are also holding its other end-point''. This prevents self-locking processes, \eg $\tm{\piRecv{x}{}{\piBoundSend{x}{}{\piHalt}}}$.
 \begin{definition}[Typing judgements]\label{def:hcp}
   A typing judgement $\seq[P]{\Gamma_1 \hsep \dots \hsep \Gamma_n}$ denotes that the process $\tm{P}$ consists of $n$ independent, but potentially entangled processes, each of which communicates according to its own protocol $\Gamma_i$. 
   Typing judgements can be constructed using the inference rules below. 
@@ -470,6 +470,36 @@ Typing judgements in \hcp associate processes with hyper-environments. \textsc{H
   Furthermore, each logical rule has the side condition that $\tm{x} \not\in \ty{\mathcal{G}}$.
 \end{definition}\noindent
 
+Note that the rules $(\with)$ and $(\top)$ disallow hyperenvironments. Allowing hyperenvironments in $(\with)$ would allow us to derive processes which are struck. For instance, the following process would be well-typed, but is stuck---even in the presence of delayed actions:
+\[
+\seq[{
+  \tm{\piNew{x^{\ty{\one \with \one}}}{\piNew{y^{\ty{\bot \plus \bot}}}{\left(
+          \begin{array}{l}
+            x \triangleright
+            \left\{
+            \begin{array}{l}
+              \texttt{inl}: (\cpInl{y}{\cpWait{y}{\cpHalt{z}}} \ppar \cpHalt{x});
+              \\
+              \texttt{inr}: (\cpInr{y}{\cpWait{y}{\cpHalt{z}}} \ppar \cpHalt{x})
+            \end{array}
+            \right\}
+            \ppar
+            \\
+            y \triangleright
+            \left\{
+            \begin{array}{l}
+              \texttt{inl}: (\cpInl{x}{\cpWait{x}{\cpHalt{w}}} \ppar \cpHalt{y});
+              \\
+              \texttt{inr}: (\cpInr{x}{\cpWait{x}{\cpHalt{w}}} \ppar \cpHalt{y})
+            \end{array}
+            \right\}
+          \end{array}
+        \right)}}}
+}]{
+  \tmty{z}{\one} \hsep \tmty{w}{\one}
+}
+\]
+Allowing hypersequents in $(\top)$ would lead to problems with \cref{lem:hcp-disentangle}. Intuitively, if we allowed the derivation $\seq[\cpAbsurd{x}]{\mathcal{G} \hsep \Gamma, \tmty{x}{\top}}$, we would claim that $\tm{\cpAbsurd{x}}$ ``consistst of $n$ independent, but potentially entangled processes'', which is clearly false.
 
 \subsection{Metatheory}
 \hcp enjoys subject reduction, termination, and progress.
@@ -492,7 +522,7 @@ Typing judgements in \hcp associate processes with hyper-environments. \textsc{H
   \)
   such that: no process $\tm{P_i}$ is a cut or a mix; no process $\tm{P_i}$ is a link acting on a bound channel $\tm{x_i}$; and no two processes $\tm{P_i}$ and $\tm{P_j}$ are acting on the same bound channel $\tm{x_i}$.
 \end{definition}
-Note that we have added the restriction ``acting on a bound channel'' to the case for links. This was not necessary for \cp, as all links in \cp act on at least one bound channel. Consequently, processes such as $\tm{\cpLink{x}{y}}$ and $\tm{(\piPar{\cpLink{x}{y}}{\cpLink{z}{w}})}$ are considered to be in canonical form. If this is objectionable, the reduction system can be extended with identity expansion, expanding, \eg the process $\tm{\cpLink{x^{\ty{\bot}}}{y}}$ to $\tm{\cpWait{x}{\cpHalt{y}}}$.
+Note that we have added the restriction ``acting on a bound channel'' to the case for links. This was not necessary for \cp, as all links in \cp act on at least one bound channel. Consequently, processes such as $\tm{\cpLink{x}{y}}$ and $\tm{(\piPar{\cpLink{x}{y}}{\cpLink{z}{w}})}$ are considered to be in canonical form. This is a generalisation of \cp, where $\tm{\cpLink{x}{y}}$ is considered to be in canonical form. If this is objectionable, the reduction system can be extended with identity expansion, expanding, \eg the process $\tm{\cpLink{x^{\ty{\bot}}}{y}}$ to $\tm{\cpWait{x}{\cpHalt{y}}}$.
 \begin{corollary}
   If a process $\tm{P}$ is in canonical form, then it is blocked on an external communication.
 \end{corollary}
@@ -636,7 +666,8 @@ First, we prove that each \cp process can be translated by this trivial translat
   By induction on the the derivation of $\reducesto{P}{Q}$.
 \end{proof}
 \begin{theorem}\label{hcp2cp-reduction}
-  If $\reducesto{\mtf{P}}{R}$ in \hcp, then there is a $\tm{Q}$ such that $\reducesto{P}{Q}$ in \cp and $\reducesto{R}{\mtf{Q}}$ or $\tm{R}\equiv\tm{\mtf{Q}}$ in \hcp.
+  If $\reducesto{\mtf{P}}{R}$ in \hcp, then there is a $\tm{Q}$ such that $\reducesto{P}{Q}$ in \cp and $\tm{R}\equiv\tm{\mtf{Q}}$ in \hcp.
+
 \end{theorem} 
 \begin{proof}
   By induction on the derivation of $\reducesto{\mtf{P}}{R}$.
@@ -698,6 +729,22 @@ We start off by defining a relation on derivations of \hcp, which we call ``dise
       \AXC{$\seq[Q]{\mathcal{H}}$}
       \NOM{H-Mix}
       \BIC{$\seq[(\piRecv{x}{y}{P} \ppar Q)]{\mathcal{G} \hsep \mathcal{H} \hsep \Gamma, \tmty{x}{A \parr B}}$}
+      \DisplayProof
+    \\\\
+    \AXC{$\seq[P]{\mathcal{G}}$}
+    \AXC{$\seq[Q]{\mathcal{H}}$}
+    \NOM{H-Mix}
+    \BIC{$\seq[(P \ppar Q)]{\mathcal{G} \hsep \mathcal{H}}$}
+    \SYM{\one}
+    \UIC{$\seq[\piBoundSend{x}{}{(P \ppar Q)}]{\mathcal{G} \hsep \mathcal{H} \hsep \tmty{x}{\one}}$}
+    \DisplayProof
+    & \moveMixDown
+    & \AXC{$\seq[P]{\mathcal{G}}$}
+      \SYM{\one}
+      \UIC{$\seq[\piBoundSend{x}{}{P}]{\mathcal{G} \hsep \tmty{x}{\one}}$}
+      \AXC{$\seq[Q]{\mathcal{H}}$}
+      \NOM{H-Mix}
+      \BIC{$\seq[(\piBoundSend{x}{}{P} \ppar Q)]{\mathcal{G} \hsep \mathcal{H} \hsep \Gamma, \tmty{x}{\one}}$}
       \DisplayProof
     \\\\
     \AXC{$\seq[P]{\mathcal{G} \hsep \Gamma}$}
