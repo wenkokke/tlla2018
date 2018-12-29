@@ -874,6 +874,12 @@ It took more than ten years for a formal correspondence between linear logic and
 
 The idea of using hypersequents to capture parallelism in linear logic judgements is not novel: \citet{carbone2018} extended the multiplicative-additive fragment of intuitionistic linear logic with hypersequents to type global descriptions of process communications known as choreographies. This work is distinct from our approach in that \hcp is based on classical linear logic and manipulates hypersequents differently: in \citet{carbone2018}, hypersequents can be formed only when sequents share resources (\cf \textsc{H-Mix}), and resource sharing is then tracked using an additional connection modality (which is not present in \hcp).
 
+\section{Conclusions and Future Work}
+\label{sec:conclusion}
+In this paper, we introduced \hcp, a variant of \dhcp which sits in between \cp and \dhcp. It has reduction semantics, and does not allow for delayed actions, like \cp, but registers parallelism using hypersequents, like \dhcp. This results in a calculus which structurally resembles \dhcp, but which is behaviourally much more like \cp: all \cp processes can be translated to \hcp processes, and this translation preserves the reduction behaviour of the process. The key insight to making this calculus work is to add a side condition to the logical rules in the type system which rules out self-locking processes---processes which act on both endpoints of a channel, \eg $\tm{\piRecv{x}{}{\piBoundSend{x}{}{\piHalt}}}$.
+
+\hcp focuses on the basic features of \cp, corresponding to multiplicative applicative linear logic. In the future, we intend to study the full version of \hcp, which includes exponentials and quantifiers. Furthermore, we intend to study extensions to \hcp which capture more behaviours, such as recursive types~\citep{lindley2016} and access points~\citep{gay2009}. Separately, we would like to extend the reduction semantics of \hcp to cover all of \dhcp by adding delayed actions.
+
 \clearpage
 \bibliographystyle{apalike}
 \bibliography{main}
