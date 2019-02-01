@@ -738,19 +738,18 @@ We start off by defining a relation on derivations of \hcp, which we call ``dise
       \DisplayProof
     \\\\
     \AXC{$\seq[P]{\mathcal{G}}$}
-    \AXC{$\seq[Q]{\mathcal{H}}$}
-    \NOM{H-Mix}
-    \BIC{$\seq[(P \ppar Q)]{\mathcal{G} \hsep \mathcal{H}}$}
     \SYM{\one}
-    \UIC{$\seq[\piBoundSend{x}{}{(P \ppar Q)}]{\mathcal{G} \hsep \mathcal{H} \hsep \tmty{x}{\one}}$}
+    \UIC{$\seq[\piBoundSend{x}{}{P}]{\mathcal{G} \hsep \tmty{x}{\one}}$}
     \DisplayProof
     & \moveMixDown
-    & \AXC{$\seq[P]{\mathcal{G}}$}
+    & \AXC{}
+      \NOM{H-Mix$_0$}
+      \UIC{$\seq[\piHalt]{\emptyhypercontext}$}
       \SYM{\one}
-      \UIC{$\seq[\piBoundSend{x}{}{P}]{\mathcal{G} \hsep \tmty{x}{\one}}$}
-      \AXC{$\seq[Q]{\mathcal{H}}$}
+      \UIC{$\seq[\piBoundSend{x}{}{0}]{\tmty{x}{\one}}$}
+      \AXC{$\seq[P]{\mathcal{G}}$}
       \NOM{H-Mix}
-      \BIC{$\seq[(\piBoundSend{x}{}{P} \ppar Q)]{\mathcal{G} \hsep \mathcal{H} \hsep \Gamma, \tmty{x}{\one}}$}
+      \BIC{$\seq[(\piBoundSend{x}{}{\piHalt} \ppar P)]{\mathcal{G} \hsep \tmty{x}{\one}}$}
       \DisplayProof
     \\\\
     \AXC{$\seq[P]{\mathcal{G} \hsep \Gamma}$}
@@ -880,7 +879,6 @@ In this paper, we introduced \hcp, a variant of \dhcp which sits in between \cp 
 
 \hcp focuses on the basic features of \cp, corresponding to multiplicative applicative linear logic. In the future, we intend to study the full version of \hcp, which includes exponentials and quantifiers. Furthermore, we intend to study extensions to \hcp which capture more behaviours, such as recursive types~\citep{lindley2016} and access points~\citep{gay2009}. Separately, we would like to extend the reduction semantics of \hcp to cover all of \dhcp by adding delayed actions.
 
-\clearpage
 \bibliographystyle{apalike}
 \bibliography{main}
 \end{document}
