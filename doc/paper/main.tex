@@ -55,7 +55,7 @@
 
 Classical Processes (\cp) \citep{wadler2012} is a process calculus inspired by the correspondence between the session-typed \textpi-calculus and linear logic \citep{caires2010}, where processes correspond to proofs, session types (communication protocols) to propositions, and communication to cut elimination. This correspondence allows for exchanging methods between the two fields. For example, the proof theory of linear logic can be used to guarantee progress for processes \citep{caires2010,wadler2012}.
 
-The main attraction of \cp is that its semantics are \emph{prescribed} by the cut elimination procedure of Classical Linear Logic (CLL). This permits us to reuse the metatheory of linear logic ``as is'' to reason about the behaviour of processes. However, there is a mismatch between the structure of the proof terms of CLL and the term constructs of the standard \textpi-calculus~\citep{milner1992a,milner1992b}. For instance, the term for output of a linear name is $\tm{\cpSend{x}{y}{P}{Q}}$, which is read ``send $y$ over $x$ and proceed as $P$ in parallel to $Q$''. Note that this is a single term constructor, which takes all four arguments at the same time. This is caused by directly adopting the $(\tens)$-rule from CLL as the process calculus construct for sending: the $(\tens)$-rule has two premises (corresponding to $\tm P$ and $\tm Q$ in the output term), and checks that they share no resources (in the output term, $\tm x$ can be used only by $\tm P$, and $\tm y$ can be used only by $\tm Q$).
+The main attraction of \cp is that its semantics are \emph{prescribed} by the cut elimination procedure of Classical Linear Logic (CLL). This permits us to reuse the metatheory of linear logic ``as is'' to reason about the behaviour of processes. However, there is a mismatch between the structure of the proof terms of CLL and the term constructs of the standard \textpi-calculus~\citep{milner1992a,milner1992b}. For instance, the term for output of a linear name is $\tm{\cpSend{x}{y}{P}{Q}}$, which is read ``send $y$ over $x$ and proceed as $P$ in parallel to $Q$''. Note that this is a single term constructor, which takes all four arguments at the same time. This is caused by directly adopting the $(\tens)$-rule from CLL as the process calculus construct for sending: the $(\tens)$-rule has two premises (corresponding to $\tm P$ and $\tm Q$ in the output term), and checks that they share no resources (in the output term, $\tm y$ can be used only by $\tm P$, and $\tm x$ can be used only by $\tm Q$).
 
 There is no independent parallel term $\tm{(\piPar{P}{Q})}$ in the grammar of \cp terms. Instead, parallel composition shows up in any term which corresponds to a typing rule which splits the context. Even if we were to add an independent parallel composition via the \textsc{Mix}-rule, as suggested in the original presentation of \cp~\citep{wadler2012}, there would be no way to allow the composed process $\tm{P}$ and $\tm{Q}$ to communicate as in the standard \textpi-calculus, as there is no independent name restriction either! Instead, synchronisation is governed by the ``cut'' operator $\tm{\piNew{x}{(\piPar{P}{Q})}}$, which composes $\tm{P}$ and $\tm{Q}$, enabling them to communicate along $\tm{x}$. Worse, if we naively add an independent parallel composition as well as a name restriction, using the rules shown below, we lose cut elimination, and therefore deadlock-freedom!
 \[
@@ -276,6 +276,12 @@ A typing judgement associates a process with collections of typed channels.
 \begin{proof}
   By induction on the derivation of $\reducesto{P}{Q}$.
 \end{proof}
+\begin{definition}[Actions]
+  A process $\tm{P}$ acts on $\tm{x}$ whenever $\tm{x}$ is free in the outermost
+  term constructor of $\tm{P}$, \eg $\tm{\cpSend{x}{y}{P}{Q}}$ acts on $\tm{x}$
+  but not on $\tm{y}$, and $\tm{\cpLink{x}{y}}$ acts on both $\tm{x}$ and $\tm{y}$.
+  A process $\tm{P}$ is an action if it acts on some channel $\tm{x}$.
+\end{definition}
 \begin{definition}[Canonical forms]
   A process $\tm{P}$ is in canonical form if
   \(
@@ -476,7 +482,7 @@ Typing judgements in \hcp associate processes with hyper-environments. \textsc{H
   Furthermore, each logical rule has the side condition that $\tm{x} \not\in \ty{\mathcal{G}}$.
 \end{definition}\noindent
 
-Note that the rules $(\with)$ and $(\top)$ disallow hyperenvironments. Allowing hyperenvironments in $(\with)$ would allow us to derive processes which are struck. For instance, the following process would be well-typed, but is stuck---even in the presence of delayed actions:
+Note that the rules $(\with)$ and $(\top)$ disallow hyperenvironments. Allowing hyperenvironments in $(\with)$ would allow us to derive processes which are stuck. For instance, the following process would be well-typed, but is stuck---even in the presence of delayed actions:
 \[
 \seq[{
   \tm{\piNew{x^{\ty{\one \with \one}}}{\piNew{y^{\ty{\bot \plus \bot}}}{\left(
@@ -521,6 +527,12 @@ Allowing hypersequents in $(\top)$ would lead to problems with \cref{lem:hcp-dis
 \begin{proof}
   By induction on the derivation of $\reducesto{P}{Q}$.
 \end{proof}
+\begin{definition}[Actions]
+  A process $\tm{P}$ acts on $\tm{x}$ whenever $\tm{x}$ is free in the outermost
+  term constructor of $\tm{P}$, \eg $\tm{\cpSend{x}{y}{P}{Q}}$ acts on $\tm{x}$
+  but not on $\tm{y}$, and $\tm{\cpLink{x}{y}}$ acts on both $\tm{x}$ and $\tm{y}$.
+  A process $\tm{P}$ is an action if it acts on some channel $\tm{x}$.
+\end{definition}
 \begin{definition}[Canonical forms]
   A process $\tm{P}$ is in canonical form if
   \(
