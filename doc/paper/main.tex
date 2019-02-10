@@ -2,17 +2,20 @@
 \providecommand{\event}{Linearity and TLLA 2018}
 \usepackage[british]{babel}
 \usepackage[all]{foreign}
-\usepackage{amsmath}
+\usepackage{amsmath,amsthm,amssymb}
 \allowdisplaybreaks
-\usepackage{amsthm}
-\usepackage{amssymb}
 \def\Coloneqq{\mathbin{::=}}
 \def\coloneqq{\mathbin{:=}}
 \usepackage[inline]{enumitem}
 \usepackage{breakurl} % Not needed if you use pdflatex only.
-\usepackage{underscore} % Only needed if you use pdflatex.
-\usepackage{textcomp,textgreek,upgreek}
+\usepackage{textcomp,textgreek,upgreek,stmaryrd}
 \usepackage{nameref,hyperref}
+\usepackage[dvipsnames,table]{xcolor}
+\usepackage{scalerel}
+\usepackage{rotating}
+\usepackage{centernot}
+\usepackage{xspace}
+\xspaceaddexceptions{]\}}
 \usepackage[nameinlink,noabbrev,capitalize]{cleveref}
 \hypersetup{hidelinks,final}
 \newtheorem{lemma}{Lemma}[section]
@@ -163,7 +166,7 @@ Reductions relate processes with their reduced forms \eg a reduction $\reducesto
         & \Longrightarrow
         & \tm{\cpCut{x}{P}{R}}
       \end{array}
-    \\
+      \\[1\baselineskip]
       \begin{prooftree*}
         \AXC{$\reducesto{P}{P^\prime}$}
         \SYM{\cpRedGammaCut}
@@ -284,16 +287,20 @@ A typing judgement associates a process with collections of typed channels.
 \end{definition}
 \begin{definition}[Canonical forms]
   A process $\tm{P}$ is in canonical form if
-  \(
+  \[
     \tm{P} \equiv \tm{\cpCut{x_1}{P_1}{\dots\cpCut{x_n}{P_n}{P_{n+1}}\dots}},
-  \)
+  \]
   such that: no process $\tm{P_i}$ is a cut; no process $\tm{P_i}$ is a link acting on a bound channel $\tm{x_i}$; and no two processes $\tm{P_i}$ and $\tm{P_j}$ are acting on the same bound channel $\tm{x_i}$.
 \end{definition}
 \begin{corollary}
   If a process $\tm{P}$ is in canonical form, then it is blocked on an external communication.
 \end{corollary}
 \begin{proof}
-  We have $\tm{P} \equiv \tm{\cpCut{x_1}{P_1}{\dots\cpCut{x_n}{P_n}{P_{n+1}}\dots}}$ such that no $\tm{P_i}$ is a cut or a link, and no two processes $\tm{P_i}$ and $\tm{P_j}$ are acting on the same bound channel. The prefix of cuts introduces $n$ channels, and $n+1$ processes. Therefore, at least \emph{one} of the processes $\tm{P_i}$ must be acting on a free channel, i.e., blocked on an external communication.
+  We have
+  \[
+  \tm{P} \equiv \tm{\cpCut{x_1}{P_1}{\dots\cpCut{x_n}{P_n}{P_{n+1}}\dots}}
+  \]
+  such that no $\tm{P_i}$ is a cut or a link, and no two processes $\tm{P_i}$ and $\tm{P_j}$ are acting on the same bound channel. The prefix of cuts introduces $n$ channels, and $n+1$ processes. Therefore, at least \emph{one} of the processes $\tm{P_i}$ must be acting on a free channel, i.e., blocked on an external communication.
 \end{proof}
 \begin{theorem}[Progress]\label{thm:cp-progress}
   If $\seq[P]{\Gamma}$, then either $\tm{P}$ is in canonical form, or there exists a process $\tm{Q}$ such that $\tm{P}\Longrightarrow\tm{Q}$.
@@ -382,10 +389,8 @@ A pleasant effect of our updated syntax is that it makes our structural congruen
 \end{definition}\noindent
 There are two changes to the reduction system. First, since $\tm{\piBoundSend{x}{y}{P}}$ and $\tm{\piBoundSend{x}{}{P}}$ are now terms in their own right, the $\cpRedBetaTensParr$ and $\cpRedBetaOneBot$ rules are simpler. Second, since we decomposed $\tm{\cpCut{x}{P}{Q}}$ into an independent name restriction and parallel composition, the relevant $\gamma$-rule all decompose as well.
 \begin{definition}[Reduction]\label{def:hcp-reduction}
-  Reductions are described by the smallest relation $\Longrightarrow$ on process terms closed under the rules in \cref{fig:hcp-reduction}. 
-  Relations $\Longrightarrow^{+}$ and $\Longrightarrow^\star$ are the transitive, and the reflexive, transitive closures of $\Longrightarrow$, respectively.
-\end{definition}
-\begin{figure}[htb]
+  Reductions are described by the smallest relation $\Longrightarrow$ on process
+  terms closed under the rules below:
   \begin{gather*}
     \begin{array}{llcll}
       \hcpRedAxCut1
@@ -413,30 +418,29 @@ There are two changes to the reduction system. First, since $\tm{\piBoundSend{x}
       & \Longrightarrow
       & \tm{\cpCut{x}{P}{R}}
     \end{array}
-    \\
-      \begin{prooftree*}
-        \AXC{$\reducesto{P}{P^\prime}$}
-        \SYM{\hcpRedGammaNew}
-        \UIC{$\reducesto{\piNew{x}{P}}{\piNew{x}{P^\prime}}$}
-      \end{prooftree*}
-      \qquad
-      \begin{prooftree*}
-        \AXC{$\reducesto{P}{P^\prime}$}
-        \SYM{\hcpRedGammaMix}
-        \UIC{$\reducesto{\piPar{P}{Q}}{\piPar{P^\prime}{Q}}$}
-      \end{prooftree*}
-      \qquad
-      \begin{prooftree*}
-        \AXC{$\tm{P}\equiv\tm{Q}$}
-        \AXC{$\reducesto{Q}{Q^\prime}$}
-        \AXC{$\tm{Q^\prime}\equiv\tm{P^\prime}$}
-        \SYM{\hcpRedGammaEquiv}
-        \TIC{$\reducesto{P}{P^\prime}$}
-      \end{prooftree*}
+    \\[1\baselineskip]
+    \begin{prooftree*}
+      \AXC{$\reducesto{P}{P^\prime}$}
+      \SYM{\hcpRedGammaNew}
+      \UIC{$\reducesto{\piNew{x}{P}}{\piNew{x}{P^\prime}}$}
+    \end{prooftree*}
+    \qquad
+    \begin{prooftree*}
+      \AXC{$\reducesto{P}{P^\prime}$}
+      \SYM{\hcpRedGammaMix}
+      \UIC{$\reducesto{\piPar{P}{Q}}{\piPar{P^\prime}{Q}}$}
+    \end{prooftree*}
+    \qquad
+    \begin{prooftree*}
+      \AXC{$\tm{P}\equiv\tm{Q}$}
+      \AXC{$\reducesto{Q}{Q^\prime}$}
+      \AXC{$\tm{Q^\prime}\equiv\tm{P^\prime}$}
+      \SYM{\hcpRedGammaEquiv}
+      \TIC{$\reducesto{P}{P^\prime}$}
+    \end{prooftree*}
   \end{gather*}  
-  \caption{Hypersequent Classical Processes, reduction relation.}
-  \label{fig:hcp-reduction}
-\end{figure}
+  Relations $\Longrightarrow^{+}$ and $\Longrightarrow^\star$ are the transitive, and the reflexive, transitive closures of $\Longrightarrow$, respectively.
+\end{definition}
 
 \subsection{Types}\label{sec:hcp-types}
 We use the same definitions for types and environments for \hcp as we used for \cp. However, we introduce a new layer on top of sequents: hypersequents. As \cp is a one-sided logic, and it uses the left-hand side of the turnstile to write the process, the traditional hypersequent notation can look confusing: ``$\seq[P]{\Gamma_1}\hsep\dots\hsep\seq{\Gamma_n}$'' seems to claim that $\tm{P}$ acts according to protocol $\ty{\Gamma_1}$. What are all the other $\Gamma$s doing there? Are they typing empty processes? Therefore, we opt to leave out the repeated turnstile, and instead work with the notion of ``hyper-environments''. However, we will still refer to our system as a hypersequent system. A hyper-environment is either empty, or consist of a series of typing environments, separated by vertical bars. A hyper-environment $\ty{\Gamma_1 \hsep \dots \hsep \Gamma_n}$ types a series of $n$ entangled, but independent processes.
@@ -535,9 +539,9 @@ Allowing hypersequents in $(\top)$ would lead to problems with \cref{lem:hcp-dis
 \end{definition}
 \begin{definition}[Canonical forms]
   A process $\tm{P}$ is in canonical form if
-  \(
+  \[
   \tm{P} \equiv \tm{\piNew{x_1}{\dots\piNew{x_n}{(P_1 \mid \dots \mid P_{n+m+1})}}},
-  \)
+  \]
   such that: no process $\tm{P_i}$ is a cut or a mix; no process $\tm{P_i}$ is a link acting on a bound channel $\tm{x_i}$; and no two processes $\tm{P_i}$ and $\tm{P_j}$ are acting on the same bound channel $\tm{x_i}$.
 \end{definition}
 Note that we have added the restriction ``acting on a bound channel'' to the case for links. This was not necessary for \cp, as all links in \cp act on at least one bound channel. Consequently, processes such as $\tm{\cpLink{x}{y}}$ and $\tm{(\piPar{\cpLink{x}{y}}{\cpLink{z}{w}})}$ are considered to be in canonical form. This is a generalisation of \cp, where $\tm{\cpLink{x}{y}}$ is considered to be in canonical form. If this is objectionable, the reduction system can be extended with identity expansion, expanding, \eg the process $\tm{\cpLink{x^{\ty{\bot}}}{y}}$ to $\tm{\cpWait{x}{\cpHalt{y}}}$.
@@ -546,9 +550,9 @@ Note that we have added the restriction ``acting on a bound channel'' to the cas
 \end{corollary}
 \begin{proof}
   We have
-  \(
+  \[
   \tm{P} \equiv \tm{\piNew{x_1}{\dots\piNew{x_n}{(P_1 \ppar \dots \ppar P_{n+m+1})}}},
-  \)
+  \]
   such that no $\tm{P_i}$ is a cut or a link acting on a bound channel, and no two processes $\tm{P_i}$ and $\tm{P_j}$ are acting on the same bound channel. The prefix of cuts and mixes introduces $n$ channels. Each application of cut requires an application of mix, so the prefix introduces $n+m+1$ processes. Therefore, at least $m+1$ of the processes $\tm{P_i}$ must be acting on a free channel, i.e., blocked on an external communication.
 \end{proof}
 \begin{theorem}[Progress]\label{thm:hcp-progress}
@@ -556,9 +560,9 @@ Note that we have added the restriction ``acting on a bound channel'' to the cas
 \end{theorem} 
 \begin{proof}
   We consider the maximum prefix of cuts and mixes of $\tm{P}$ such that
-  \(
+  \[
   \tm{P} \equiv \tm{\piNew{x_1}{\dots\piNew{x_n}{(P_1 \ppar \dots \ppar P_{n+m+1})}}},
-  \)
+  \]
   and no $\tm{P_i}$ is a cut. If any process $\tm{P_i}$ is a link, we reduce by $(\cpLink{}{})$. If any two processes $\tm{P_i}$ and $\tm{P_j}$ are acting on the same channel $\tm{x_i}$, we rewrite by $\equiv$ and reduce by the appropriate $\beta$-rule. Otherwise, $\tm{P}$ is in canonical form.
 \end{proof}
 \begin{theorem}[Termination]\label{thm:hcp-termination}
