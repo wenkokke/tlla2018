@@ -1,6 +1,6 @@
 \documentclass[submission,copyright,creativecommons]{eptcs}
 \providecommand{\event}{Linearity and TLLA 2018}
-\usepackage{url}
+\usepackage{url,doi}
 \usepackage[british]{babel}
 \usepackage[all]{foreign}
 \usepackage{amsmath,amsthm,amssymb}
@@ -24,7 +24,7 @@
 \newtheorem{corollary}[lemma]{Corollary}
 \newtheorem{definition}[lemma]{Definition}
 \input{preamble-typing}
-\usepackage[sectionbib,sort&compress]{natbib}
+\usepackage[sectionbib,sort&compress,numbers]{natbib}
 
 \title{Taking Linear Logic Apart}
 \author{%
@@ -48,7 +48,7 @@
 \begin{abstract}
   Process calculi based on logic, such as \piDILL and \cp, provide a foundation for deadlock-free concurrent programming. However, in previous work, there is a mismatch between the rules for constructing proofs and the term constructors of the \textpi-calculus: the fundamental operator for parallel composition does not correspond to any rule of linear logic.
 
-  \citet{kokke2019} introduced Hypersequent Classical Processes (\dhcp), which addresses this mismatch using hypersequents (collections of sequents) to register parallelism in the typing judgements.
+  Kokke \etal~\cite{kokke2019} introduced Hypersequent Classical Processes (\dhcp), which addresses this mismatch using hypersequents (collections of sequents) to register parallelism in the typing judgements.
   However, the step from \cp to \dhcp is a big one. As of yet, \dhcp does not have reduction semantics, and the addition of delayed actions means that \cp processes interpreted as \dhcp processes do not behave as they would in \cp.
 
   We introduce \hcp, a variant of \dhcp with reduction semantics and without delayed actions. We prove progress, preservation, and termination, and show that \hcp supports the same communication protocols as \cp.
@@ -57,11 +57,11 @@
 \section{Introduction}
 \label{sec:introduction}
 
-Classical Processes (\cp) \citep{wadler2012} is a process calculus inspired by the correspondence between the session-typed \textpi-calculus and linear logic \citep{caires2010}, where processes correspond to proofs, session types (communication protocols) to propositions, and communication to cut elimination. This correspondence allows for exchanging methods between the two fields. For example, the proof theory of linear logic can be used to guarantee progress for processes \citep{caires2010,wadler2012}.
+Classical Processes (\cp) \cite{wadler2012} is a process calculus inspired by the correspondence between the session-typed \textpi-calculus and linear logic \cite{caires2010}, where processes correspond to proofs, session types (communication protocols) to propositions, and communication to cut elimination. This correspondence allows for exchanging methods between the two fields. For example, the proof theory of linear logic can be used to guarantee progress for processes \cite{caires2010,wadler2012}.
 
-The main attraction of \cp is that its semantics are \emph{prescribed} by the cut elimination procedure of Classical Linear Logic (CLL). This permits us to reuse the metatheory of linear logic ``as is'' to reason about the behaviour of processes. However, there is a mismatch between the structure of the proof terms of CLL and the term constructs of the standard \textpi-calculus~\citep{milner1992a,milner1992b}. For instance, the term for output of a linear name is $\tm{\cpSend{x}{y}{P}{Q}}$, which is read ``send $y$ over $x$ and proceed as $P$ in parallel to $Q$''. Note that this is a single term constructor, which takes all four arguments at the same time. This is caused by directly adopting the $(\tens)$-rule from CLL as the process calculus construct for sending: the $(\tens)$-rule has two premises (corresponding to $\tm P$ and $\tm Q$ in the output term), and checks that they share no resources (in the output term, $\tm y$ can be used only by $\tm P$, and $\tm x$ can be used only by $\tm Q$).
+The main attraction of \cp is that its semantics are \emph{prescribed} by the cut elimination procedure of Classical Linear Logic (CLL). This permits us to reuse the metatheory of linear logic ``as is'' to reason about the behaviour of processes. However, there is a mismatch between the structure of the proof terms of CLL and the term constructs of the standard \textpi-calculus~\cite{milner1992a,milner1992b}. For instance, the term for output of a linear name is $\tm{\cpSend{x}{y}{P}{Q}}$, which is read ``send $y$ over $x$ and proceed as $P$ in parallel to $Q$''. Note that this is a single term constructor, which takes all four arguments at the same time. This is caused by directly adopting the $(\tens)$-rule from CLL as the process calculus construct for sending: the $(\tens)$-rule has two premises (corresponding to $\tm P$ and $\tm Q$ in the output term), and checks that they share no resources (in the output term, $\tm y$ can be used only by $\tm P$, and $\tm x$ can be used only by $\tm Q$).
 
-There is no independent parallel term $\tm{(\piPar{P}{Q})}$ in the grammar of \cp terms. Instead, parallel composition shows up in any term which corresponds to a typing rule which splits the context. Even if we were to add an independent parallel composition via the \textsc{Mix}-rule, as suggested in the original presentation of \cp~\citep{wadler2012}, there would be no way to allow the composed process $\tm{P}$ and $\tm{Q}$ to communicate as in the standard \textpi-calculus, as there is no independent name restriction either! Instead, synchronisation is governed by the ``cut'' operator $\tm{\piNew{x}{(\piPar{P}{Q})}}$, which composes $\tm{P}$ and $\tm{Q}$, enabling them to communicate along $\tm{x}$. Worse, if we naively add an independent parallel composition as well as a name restriction, using the rules shown below, we lose cut elimination, and therefore deadlock-freedom!
+There is no independent parallel term $\tm{(\piPar{P}{Q})}$ in the grammar of \cp terms. Instead, parallel composition shows up in any term which corresponds to a typing rule which splits the context. Even if we were to add an independent parallel composition via the \textsc{Mix}-rule, as suggested in the original presentation of \cp~\cite{wadler2012}, there would be no way to allow the composed process $\tm{P}$ and $\tm{Q}$ to communicate as in the standard \textpi-calculus, as there is no independent name restriction either! Instead, synchronisation is governed by the ``cut'' operator $\tm{\piNew{x}{(\piPar{P}{Q})}}$, which composes $\tm{P}$ and $\tm{Q}$, enabling them to communicate along $\tm{x}$. Worse, if we naively add an independent parallel composition as well as a name restriction, using the rules shown below, we lose cut elimination, and therefore deadlock-freedom!
 \[
   \begin{prooftree*}
     \AXC{$\seq[ P ]{ \Gamma }$}
@@ -79,7 +79,7 @@ There is no independent parallel term $\tm{(\piPar{P}{Q})}$ in the grammar of \c
 
 This syntactic mismatch has an effect on the semantics as well. For instance, the $\beta$-reduction for output and input in \cp is \(\reducesto {\cpCut{x}{\cpSend{x}{y}{P}{Q}}{\cpRecv{x}{y}{R}}} {\cpCut{y}{P}{\cpCut{x}{Q}{R}}}\). Here, the parallel composition $\tm{(\piPar{P}{Q})}$ is of no relevance to this communication, yet the rule needs to inspect it to be able to nest the name restrictions appropriately in the resulting term.
 
-\citet{kokke2019} introduced Hypersequent Classical Processes (\dhcp), which addresses this mismatch. The key insight is to register parallelism in the typing judgements using hypersequents~\citep{avron1991}, a technique from logic which generalises judgements from one sequent to many. This allows us to take apart the term constructs used in Classical Processes (\cp) to more closely match those of the standard \textpi-calculus. \dhcp has labelled transition semantics with delayed actions~\citep{merro2004} and a full abstraction result: bisimilarity, denotational equivalence, and barbed congruence coincide.
+Kokke \etal~\cite{kokke2019} introduced Hypersequent Classical Processes (\dhcp), which addresses this mismatch. The key insight is to register parallelism in the typing judgements using hypersequents~\cite{avron1991}, a technique from logic which generalises judgements from one sequent to many. This allows us to take apart the term constructs used in Classical Processes (\cp) to more closely match those of the standard \textpi-calculus. \dhcp has labelled transition semantics with delayed actions~\cite{merro2004} and a full abstraction result: bisimilarity, denotational equivalence, and barbed congruence coincide.
 
 However, the step from \cp to \dhcp is a big one. As of yet, \dhcp does not have reduction semantics, and the addition of delayed actions means that \cp processes interpreted as \dhcp processes do not behave as they would in \cp.
 
@@ -91,7 +91,7 @@ In this paper, we address these issues by introducing \hcp, a variant of \dhcp w
 In this section, we introduce \cp. In order to keep the discussion of \hcp in \cref{sec:hcp} simple, we restrict ourselves to the multiplicative-additive subset of \cp. We foresee no problems in extending the proofs in \cref{sec:hcp} to cover the remaining features of \cp (polymophism and the exponentials).
 
 \subsection{Terms}
-The term language of \cp is a variant of the \textpi-calculus. The variables $\tm{x}$, $\tm{y}$, and $\tm{z}$ range over channel names. The construct $\tm{\cpLink{x}{y}}$ links two channels~\citep{sangiorgi1996,boreale1998}, forwarding messages received on $\tm{x}$ to $\tm{y}$ and vice versa. The construct $\tm{\cpCut{x}{P}{Q}}$ creates a new channel $\tm{x}$, and composes two processes, $\tm{P}$ and $\tm{Q}$, which communicate on $\tm{x}$, in parallel. Therefore, in $\tm{\cpCut{x}{P}{Q}}$ the name $\tm{x}$ is bound in both $\tm{P}$ and $\tm{Q}$. In $\tm{\cpRecv{x}{y}{P}}$ and $\tm{\cpSend{x}{y}{P}{Q}}$, round brackets denote input, square brackets denote output. \cp uses bound output~\citep{sangiorgi1996}, meaning that both input and output bind a new name. In $\tm{\cpRecv{x}{y}{P}}$ the new name $\tm{y}$ is bound in $\tm{P}$. In $\tm{\cpSend{x}{y}{P}{Q}}$, the new name $\tm{y}$ is only bound in $\tm{P}$, while $\tm{x}$ is only bound in $\tm{Q}$.
+The term language of \cp is a variant of the \textpi-calculus. The variables $\tm{x}$, $\tm{y}$, and $\tm{z}$ range over channel names. The construct $\tm{\cpLink{x}{y}}$ links two channels~\cite{sangiorgi1996,boreale1998}, forwarding messages received on $\tm{x}$ to $\tm{y}$ and vice versa. The construct $\tm{\cpCut{x}{P}{Q}}$ creates a new channel $\tm{x}$, and composes two processes, $\tm{P}$ and $\tm{Q}$, which communicate on $\tm{x}$, in parallel. Therefore, in $\tm{\cpCut{x}{P}{Q}}$ the name $\tm{x}$ is bound in both $\tm{P}$ and $\tm{Q}$. In $\tm{\cpRecv{x}{y}{P}}$ and $\tm{\cpSend{x}{y}{P}{Q}}$, round brackets denote input, square brackets denote output. \cp uses bound output~\cite{sangiorgi1996}, meaning that both input and output bind a new name. In $\tm{\cpRecv{x}{y}{P}}$ the new name $\tm{y}$ is bound in $\tm{P}$. In $\tm{\cpSend{x}{y}{P}{Q}}$, the new name $\tm{y}$ is only bound in $\tm{P}$, while $\tm{x}$ is only bound in $\tm{Q}$.
 \begin{definition}[Terms]\label{def:cp-terms}
   Process terms are given by the following grammar:
   \[
@@ -135,7 +135,8 @@ Terms in \cp are identified up to structural congruence, which states that links
     \end{array}
   \]
 \end{definition}\noindent
-The reduction semantics presented here are a variant of those presented by \citet{lindley2015}, who showed that reduction in \cp can be decomposed in two phases: one in which all \textbeta-reduction happens, and one in which an arbitrary action, blocked on an external communication, is moved to the top of the term using commuting conversions. We choose to stop after the first phase, and do away with the commuting conversions.
+The reduction semantics presented here are a variant of those presented by
+Lindley and Morris~\cite{lindley2015}, who showed that reduction in \cp can be decomposed in two phases: one in which all \textbeta-reduction happens, and one in which an arbitrary action, blocked on an external communication, is moved to the top of the term using commuting conversions. We choose to stop after the first phase, and do away with the commuting conversions.
 
 Reductions relate processes with their reduced forms \eg a reduction $\reducesto{P}{Q}$ denotes that the process $\tm{P}$ can reduce to the process $\tm{Q}$ in a single step.
 \begin{definition}[Reduction]\label{def:cp-reduction}
@@ -267,7 +268,7 @@ A typing judgement associates a process with collections of typed channels.
 \end{definition}
 
 \subsection{Metatheory}
-\cp enjoys subject reduction, termination, and progress~\citep{wadler2012}.
+\cp enjoys subject reduction, termination, and progress~\cite{wadler2012}.
 \begin{lemma}[Preservation for $\equiv$]\label{lem:cp-preservation-equiv}
   If $\tm{P}\equiv\tm{Q}$, then $\seq[P]{\Gamma}$ iff $\seq[Q]{\Gamma}$.
 \end{lemma} 
@@ -321,7 +322,7 @@ A typing judgement associates a process with collections of typed channels.
 
 In this section, we introduce our variant of Hypersequent Classical Processes (\hcp), itself a variant of \cp which registers parallelism in the typing judgements using hypersequents, allowing us to take apart the monolithic term constructors of \cp (\eg $\tm{\cpSend{x}{y}{P}{Q}}$) into the corresponding \textpi-calculus term constructs.
 
-The crucial difference between \hcp as described here and \dhcp as described by \citet{kokke2019} is in the absence of delayed actions. However, removing delayed actions introduces self-locking processes, which we rule out using an extra restriction in the type system (see \cref{sec:hcp-types}). Furthermore, we follow \cp in using the same name for both endpoints of a channel, writing, \eg $\tm{\cpCut{x}{\cpHalt{x}}{\cpWait{x}{P}}}$ as opposed to $\tm{\cpCut{xy}{\cpHalt{x}}{\cpWait{y}{P}}}$.
+The crucial difference between \hcp as described here and \dhcp as described by Kokke \etal~\cite{kokke2019} is in the absence of delayed actions. However, removing delayed actions introduces self-locking processes, which we rule out using an extra restriction in the type system (see \cref{sec:hcp-types}). Furthermore, we follow \cp in using the same name for both endpoints of a channel, writing, \eg $\tm{\cpCut{x}{\cpHalt{x}}{\cpWait{x}{P}}}$ as opposed to $\tm{\cpCut{xy}{\cpHalt{x}}{\cpWait{y}{P}}}$.
 
 \subsection{Terms}
 The term language of \hcp is a variant of \cp where the term constructs have been taken apart into primitives which more closely resemble the \textpi-calculus primitives.
@@ -884,17 +885,17 @@ Furthermore, a hyper-environment can be internalised as a type by collapsing it 
 \section{Related Work}
 \label{sec:related-work}
 
-Since its inception, linear logic has been described as the logic of concurrency \citep{girard1987}. Correspondences between the proof theory of linear logic and variants of the \textpi-calculus emerged soon afterwards \citep{abramsky1994,bellin1994}, by interpreting linear propositions as types for channels. Linearity inspired also the seminal theories of linear types for the \textpi-calculus \citep{kobayashi1999} and session types \citep{honda1998}. Even though the two theories do not have a direct correspondence with linear logic, the link is still strong enough that session types can be encoded into linear types \citep{dardha2017}.
+Since its inception, linear logic has been described as the logic of concurrency \cite{girard1987}. Correspondences between the proof theory of linear logic and variants of the \textpi-calculus emerged soon afterwards \cite{abramsky1994,bellin1994}, by interpreting linear propositions as types for channels. Linearity inspired also the seminal theories of linear types for the \textpi-calculus \cite{kobayashi1999} and session types \cite{honda1998}. Even though the two theories do not have a direct correspondence with linear logic, the link is still strong enough that session types can be encoded into linear types \cite{dardha2017}.
 
-It took more than ten years for a formal correspondence between linear logic and (a variant of) session types to emerge, with the seminal paper by \citet{caires2010}. This inspired the development of Classical Processes by \citet{wadler2012}.
+It took more than ten years for a formal correspondence between linear logic and (a variant of) session types to emerge, with the seminal paper by Caires and Pfenning~\cite{caires2010}. This inspired the development of Classical Processes by Wadler~\cite{wadler2012}.
 
-The idea of using hypersequents to capture parallelism in linear logic judgements is not novel: \citet{carbone2018} extended the multiplicative-additive fragment of intuitionistic linear logic with hypersequents to type global descriptions of process communications known as choreographies. This work is distinct from our approach in that \hcp is based on classical linear logic and manipulates hypersequents differently: in \citet{carbone2018}, hypersequents can be formed only when sequents share resources (\cf \textsc{H-Mix}), and resource sharing is then tracked using an additional connection modality (which is not present in \hcp).
+The idea of using hypersequents to capture parallelism in linear logic judgements is not novel: Carbone \etal~\cite{carbone2018} extended the multiplicative-additive fragment of intuitionistic linear logic with hypersequents to type global descriptions of process communications known as choreographies. This work is distinct from our approach in that \hcp is based on classical linear logic and manipulates hypersequents differently: in Carbone \etal~\cite{carbone2018}, hypersequents can be formed only when sequents share resources (\cf \textsc{H-Mix}), and resource sharing is then tracked using an additional connection modality (which is not present in \hcp).
 
 \section{Conclusions and Future Work}
 \label{sec:conclusion}
 In this paper, we introduced \hcp, a variant of \dhcp which sits in between \cp and \dhcp. It has reduction semantics, and does not allow for delayed actions, like \cp, but registers parallelism using hypersequents, like \dhcp. This results in a calculus which structurally resembles \dhcp, but which is behaviourally much more like \cp: all \cp processes can be translated to \hcp processes, and this translation preserves the reduction behaviour of the process. The key insight to making this calculus work is to add a side condition to the logical rules in the type system which rules out self-locking processes---processes which act on both endpoints of a channel, \eg $\tm{\piRecv{x}{}{\piBoundSend{x}{}{\piHalt}}}$.
 
-\hcp focuses on the basic features of \cp, corresponding to multiplicative applicative linear logic. In the future, we intend to study the full version of \hcp, which includes exponentials and quantifiers. Furthermore, we intend to study extensions to \hcp which capture more behaviours, such as recursive types~\citep{lindley2016} and access points~\citep{gay2009}. Separately, we would like to extend the reduction semantics of \hcp to cover all of \dhcp by adding delayed actions.
+\hcp focuses on the basic features of \cp, corresponding to multiplicative applicative linear logic. In the future, we intend to study the full version of \hcp, which includes exponentials and quantifiers. Furthermore, we intend to study extensions to \hcp which capture more behaviours, such as recursive types~\cite{lindley2016} and access points~\cite{gay2009}. Separately, we would like to extend the reduction semantics of \hcp to cover all of \dhcp by adding delayed actions.
 
 \bibliographystyle{eptcs}
 \bibliography{main}
