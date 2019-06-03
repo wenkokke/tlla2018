@@ -1,1 +1,0 @@
-# Hypersequent CP
