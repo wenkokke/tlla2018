@@ -97,62 +97,54 @@
 \providecommand{\hcpInfBoundTens}{%
   \begin{prooftree*}
     \AXC{$\seq[{ P }]{
-        \mathcal{G} \hsep
         \ty{\Gamma}, \tmty{y}{A} \hsep
         \ty{\Delta}, \tmty{x}{B}
       }$}
-    \SYM{\tens}
+    \SYM{(\tens)}
     \UIC{$\seq[{ \piBoundSend{x}{y}{P} }]{
-        \mathcal{G} \hsep
         \ty{\Gamma}, \ty{\Delta}, \tmty{x}{A \tens B}
       }$}
   \end{prooftree*}}
 \providecommand{\hcpInfParr}{%
   \begin{prooftree*}
     \AXC{$\seq[ P ]{%
-        \mathcal{G} \hsep
         \Gamma , \tmty{y}{A} , \tmty{x}{B} }$}
     \SYM{(\parr)}
     \UIC{$\seq[ \cpRecv{x}{y}{P} ]{
-        \mathcal{G} \hsep
         \Gamma , \tmty{x}{A \parr B} }$}
   \end{prooftree*}}
 \providecommand{\hcpInfOne}{%
   \begin{prooftree*}
-    \AXC{$\seq[{ P }]{\mathcal{G}}$}
-    \SYM{\one}
+    \AXC{$\seq[{ P }]{}$}
+    \SYM{(\one)}
     \UIC{$\seq[{ \piBoundSend{x}{}{P} }]{
-        \mathcal{G} \hsep \tmty{x}{\one}
+        \tmty{x}{\one}
       }$}
   \end{prooftree*}}
 \providecommand{\hcpInfBot}{%
   \begin{prooftree*}
     \AXC{$\seq[ P ]{
-        \mathcal{G} \hsep \Gamma }$}
+        \Gamma }$}
     \SYM{(\bot)}
     \UIC{$\seq[ \cpWait{x}{P} ]{
-        \mathcal{G} \hsep \Gamma , \tmty{x}{\bot} }$}
+        \Gamma , \tmty{x}{\bot} }$}
   \end{prooftree*}}
 \providecommand{\hcpInfPlus}[1]{%
   \ifdim#1pt=1pt
   \begin{prooftree*}
     \AXC{$\seq[ P ]{
-        \mathcal{G} \hsep
         \Gamma , \tmty{x}{A} }$}
     \SYM{(\plus_1)}
     \UIC{$\seq[{ \cpInl{x}{P} }]{
-        \mathcal{G} \hsep
         \Gamma , \tmty{x}{A \plus B} }$}
   \end{prooftree*}
   \else%
   \ifdim#1pt=2pt
   \begin{prooftree*}
     \AXC{$\seq[ P ]{
-        \mathcal{G} \hsep
         \Gamma , \tmty{x}{B} }$}
     \SYM{(\plus_2)}
     \UIC{$\seq[ \cpInr{x}{P} ]{
-        \mathcal{G} \hsep
         \Gamma , \tmty{x}{A \plus B} }$}
   \end{prooftree*}
   \else%

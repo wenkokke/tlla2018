@@ -268,7 +268,7 @@ A typing judgement associates a process with collections of typed channels.
 \end{definition}
 
 \subsection{Metatheory}
-\cp enjoys subject reduction, termination, and progress~\cite{wadler2012}.
+\cp enjoys subject reduction, termination, and progress~\cite{wadler2012,lindley2015}.
 \begin{lemma}[Preservation for $\equiv$]\label{lem:cp-preservation-equiv}
   If $\tm{P}\equiv\tm{Q}$, then $\seq[P]{\Gamma}$ iff $\seq[Q]{\Gamma}$.
 \end{lemma} 
@@ -485,39 +485,9 @@ Typing judgements in \hcp associate processes with hyper-environments. \textsc{H
     \hcpInfNil
     \hcpInfTop
   \end{center}
-  Furthermore, each logical rule has the side condition that $\tm{x} \not\in \ty{\mathcal{G}}$.
 \end{definition}\noindent
 
-Note that the rules $(\with)$ and $(\top)$ disallow hyperenvironments. Allowing hyperenvironments in $(\with)$ would allow us to derive processes which are stuck. For instance, the following process would be well-typed, but is stuck---even in the presence of delayed actions:
-\[
-\seq[{
-  \tm{\piNew{x^{\ty{\one \with \one}}}{\piNew{y^{\ty{\bot \plus \bot}}}{\left(
-          \begin{array}{l}
-            x \triangleright
-            \left\{
-            \begin{array}{l}
-              \texttt{inl}: (\cpInl{y}{\cpWait{y}{\cpHalt{z}}} \ppar \cpHalt{x});
-              \\
-              \texttt{inr}: (\cpInr{y}{\cpWait{y}{\cpHalt{z}}} \ppar \cpHalt{x})
-            \end{array}
-            \right\}
-            \ppar
-            \\
-            y \triangleright
-            \left\{
-            \begin{array}{l}
-              \texttt{inl}: (\cpInl{x}{\cpWait{x}{\cpHalt{w}}} \ppar \cpHalt{y});
-              \\
-              \texttt{inr}: (\cpInr{x}{\cpWait{x}{\cpHalt{w}}} \ppar \cpHalt{y})
-            \end{array}
-            \right\}
-          \end{array}
-        \right)}}}
-}]{
-  \tmty{z}{\one} \hsep \tmty{w}{\one}
-}
-\]
-Allowing hypersequents in $(\top)$ would lead to problems with \cref{lem:hcp-disentangle}. Intuitively, if we allowed the derivation $\seq[\cpAbsurd{x}]{\mathcal{G} \hsep \Gamma, \tmty{x}{\top}}$, we would claim that $\tm{\cpAbsurd{x}}$ ``consistst of $n$ independent, but potentially entangled processes'', which is clearly false.
+Note that the logical rules disallow hyperenvironments. 
 
 \subsection{Metatheory}
 \hcp enjoys subject reduction, termination, and progress.
@@ -643,7 +613,7 @@ First, we prove that each \cp process can be translated by this trivial translat
       \begin{array}{lcl}
         \AXC{$\seq[P]{\Gamma, \tmty{y}{A}}$}
         \AXC{$\seq[Q]{\Delta, \tmty{x}{B}}$}
-        \SYM{\tens}
+        \SYM{(\tens)}
         \BIC{$\seq[\cpSend{x}{y}{P}{Q}]{\Gamma, \Delta, \tmty{x}{A \tens B}}$}
         \DisplayProof
         & \Rightarrow
@@ -652,7 +622,7 @@ First, we prove that each \cp process can be translated by this trivial translat
           \NOM{H-Mix}
           \BIC{$\seq[\piPar{\mtf{P}}{\mtf{Q}}]{
           \Gamma, \tmty{y}{A} \hsep \Delta, \tmty{x}{B}}$}
-          \SYM{\tens}
+          \SYM{(\tens)}
           \UIC{$\seq[\piBoundSend{x}{y}{(\piPar{\mtf{P}}{\mtf{Q}})}]{
           \Gamma, \Delta, \tmty{x}{A \tens B}}$}
           \DisplayProof
@@ -662,14 +632,14 @@ First, we prove that each \cp process can be translated by this trivial translat
     Case $(\one)$. We rewrite as follows:
     \begin{gather*}
       \begin{array}{lcl}
-        \AXC{}\SYM{\one}
+        \AXC{}\SYM{(\one)}
         \UIC{$\seq[\cpHalt{x}]{\tmty{x}{\one}}$}
         \DisplayProof
         & \Rightarrow
         & \AXC{}
           \NOM{H-Mix$_0$}
           \UIC{$\seq[\piHalt]{\emptyhypercontext}$}
-          \SYM{\one}
+          \SYM{(\one)}
           \UIC{$\seq[\piBoundSend{x}{}{\piHalt}]{\tmty{x}{\one}}$}
           \DisplayProof
       \end{array}
@@ -727,12 +697,12 @@ We start off by defining a relation on derivations of \hcp, which we call ``dise
     \AXC{$\seq[Q]{\mathcal{H}}$}
     \NOM{H-Mix}
     \BIC{$\seq[(P \ppar Q)]{\mathcal{G} \hsep \mathcal{H} \hsep \Gamma, \tmty{y}{A} \hsep \Delta, \tmty{x}{B}}$}
-    \SYM{\tens}
+    \SYM{(\tens)}
     \UIC{$\seq[\piBoundSend{x}{y}{(P \ppar Q)}]{\mathcal{G} \hsep \mathcal{H} \hsep \Gamma, \Delta, \tmty{x}{A \tens B}}$}
     \DisplayProof
     & \moveMixDown
     & \AXC{$\seq[P]{\mathcal{G} \hsep \Gamma, \tmty{y}{A} \hsep \Delta, \tmty{x}{B}}$}
-      \SYM{\tens}
+      \SYM{(\tens)}
       \UIC{$\seq[\piBoundSend{x}{y}{P}]{\mathcal{G} \hsep \Gamma, \Delta, \tmty{x}{A \tens B}}$}
       \AXC{$\seq[Q]{\mathcal{H}}$}
       \NOM{H-Mix}
@@ -743,12 +713,12 @@ We start off by defining a relation on derivations of \hcp, which we call ``dise
     \AXC{$\seq[Q]{\mathcal{H}}$}
     \NOM{H-Mix}
     \BIC{$\seq[(P \ppar Q)]{\mathcal{G} \hsep \mathcal{H} \hsep \Gamma, \tmty{y}{A}, \tmty{x}{B}}$}
-    \SYM{\parr}
+    \SYM{(\parr)}
     \UIC{$\seq[(\piRecv{x}{y}{(P \ppar Q)})]{\mathcal{G} \hsep \mathcal{H} \hsep \Gamma, \tmty{x}{A \parr B}}$}
     \DisplayProof
     & \moveMixDown
     & \AXC{$\seq[P]{\mathcal{G} \hsep \Gamma, \tmty{y}{A}, \tmty{x}{B}}$}
-      \SYM{\parr}
+      \SYM{(\parr)}
       \UIC{$\seq[\piRecv{x}{y}{P}]{\mathcal{G} \hsep \mathcal{H} \hsep \Gamma, \tmty{x}{A \parr B}}$}
       \AXC{$\seq[Q]{\mathcal{H}}$}
       \NOM{H-Mix}
@@ -756,14 +726,14 @@ We start off by defining a relation on derivations of \hcp, which we call ``dise
       \DisplayProof
     \\\\
     \AXC{$\seq[P]{\mathcal{G}}$}
-    \SYM{\one}
+    \SYM{(\one)}
     \UIC{$\seq[\piBoundSend{x}{}{P}]{\mathcal{G} \hsep \tmty{x}{\one}}$}
     \DisplayProof
     & \moveMixDown
     & \AXC{}
       \NOM{H-Mix$_0$}
       \UIC{$\seq[\piHalt]{\emptyhypercontext}$}
-      \SYM{\one}
+      \SYM{(\one)}
       \UIC{$\seq[\piBoundSend{x}{}{0}]{\tmty{x}{\one}}$}
       \AXC{$\seq[P]{\mathcal{G}}$}
       \NOM{H-Mix}
@@ -774,12 +744,12 @@ We start off by defining a relation on derivations of \hcp, which we call ``dise
     \AXC{$\seq[Q]{\mathcal{H}}$}
     \NOM{H-Mix}
     \BIC{$\seq[(P \ppar Q)]{\mathcal{G} \hsep \mathcal{H} \hsep \Gamma}$}
-    \SYM{\bot}
+    \SYM{(\bot)}
     \UIC{$\seq[\piRecv{x}{}{(P \ppar Q)}]{\mathcal{G} \hsep \mathcal{H} \hsep \Gamma, \tmty{x}{\bot}}$}
     \DisplayProof
     & \moveMixDown
     & \AXC{$\seq[P]{\mathcal{G} \hsep \Gamma}$}
-      \SYM{\bot}
+      \SYM{(\bot)}
       \UIC{$\seq[\piRecv{x}{}{P}]{\mathcal{G} \hsep \Gamma, \tmty{x}{\bot}}$}
       \AXC{$\seq[Q]{\mathcal{H}}$}
       \NOM{H-Mix}
@@ -790,12 +760,12 @@ We start off by defining a relation on derivations of \hcp, which we call ``dise
     \AXC{$\seq[Q]{\mathcal{H}}$}
     \NOM{H-Mix}
     \BIC{$\seq[(P \ppar Q)]{\mathcal{G} \hsep \mathcal{H} \hsep \Gamma, \tmty{x}{A}}$}
-    \SYM{\plus_1}
+    \SYM{(\plus_1)}
     \UIC{$\seq[\cpInl{x}{(P \ppar Q)}]{\mathcal{G} \hsep \mathcal{H} \hsep \Gamma, \tmty{x}{A \plus B}}$}
     \DisplayProof
     & \moveMixDown
     & \AXC{$\seq[P]{\mathcal{G} \hsep \Gamma, \tmty{x}{A}}$}
-      \SYM{\plus_1}
+      \SYM{(\plus_1)}
       \UIC{$\seq[\cpInl{x}{P}]{\mathcal{G} \hsep \Gamma, \tmty{x}{A \plus B}}$}
       \AXC{$\seq[Q]{\mathcal{H}}$}
       \NOM{H-Mix}
