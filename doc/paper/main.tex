@@ -548,6 +548,7 @@ Note that the logical rules disallow hyperenvironments. If they did not, the fol
       {\tmty{z}{\one}}$}
   \end{prooftree*}
 \end{center}
+
 The first process is self-locking, in that it holds both endpoints of a channel in the same process, and hence communication can never happen. Self-locking processes can be ruled out by requiring that the two endpoints of a channel are held in different processes.
 
 The second term is more complicated: it is not a self-lock, and not a traditional deadlock, where two processes are waiting on each other. However, it is definitely stuck. The problem lies with readiness: a process typed under a hyperenvironment $\ty{\Gamma_1}\hsep\dots\hsep\ty{\Gamma_n}$, it promises to act as, essentially, $n$ independent processes, each of which ready to act on a channel from $\ty{\Gamma_i}$. However, the process $\tm{\piBoundSend{x}{}{\piBoundSend{y}{}{\piHalt}}}$, a single process, can be typed under the hyperenvironment $\ty{\tmty{x}{\one} \hsep \tmty{y}{\one}}$, which consists of \emph{two} environments. We can abuse this failure of readiness by asking the process to communicate on $\tm{y}$, which it is incapable of doing immediately. This is not a property of the $(\one)$ rule allowing hyperenvironments. For instance, a similar example can be constructed using the $(\tens)$ rule.
