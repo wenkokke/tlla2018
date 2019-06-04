@@ -320,9 +320,10 @@ A typing judgement associates a process with collections of typed channels.
 \section{Hypersequent Classical Processes}
 \label{sec:hcp}
 
-In this section, we introduce our variant of Hypersequent Classical Processes (\hcp), itself a variant of \cp which registers parallelism in the typing judgements using hypersequents, allowing us to take apart the monolithic term constructors of \cp (\eg $\tm{\cpSend{x}{y}{P}{Q}}$) into the corresponding \textpi-calculus term constructs.
+We introduce our variant of Hypersequent Classical Processes (\hcp), itself a variant of \cp which registers parallelism in the typing judgements using hypersequents, allowing us to take apart the monolithic term constructors of \cp (\eg $\tm{\cpSend{x}{y}{P}{Q}}$) into the corresponding \textpi-calculus term constructs.
 
-The crucial difference between \hcp as described here and \dhcp as described by Kokke \etal~\cite{kokke2019} is in the absence of delayed actions. However, removing delayed actions introduces self-locking processes, which we rule out using an extra restriction in the type system (see \cref{sec:hcp-types}). Furthermore, we follow \cp in using the same name for both endpoints of a channel, writing, \eg $\tm{\cpCut{x}{\cpHalt{x}}{\cpWait{x}{P}}}$ as opposed to $\tm{\cpCut{xy}{\cpHalt{x}}{\cpWait{y}{P}}}$.
+The crucial difference between \hcp as described here and \dhcp as described by Kokke \etal~\cite{kokke2019} is in the absence of delayed actions. However, removing delayed actions from \dhcp introduces self-locking processes, which we rule out by adopting (with minor changes) the type system first introduced by Montesi and Peressotti in \cite{montesi2018} (see \cref{sec:hcp-types}).
+Differently from \loccit, we follow \cp in using the same name for both endpoints of a channel, writing, \eg $\tm{\cpCut{x}{\cpHalt{x}}{\cpWait{x}{P}}}$ as opposed to $\tm{\cpCut{xy}{\cpHalt{x}}{\cpWait{y}{P}}}$.
 
 \subsection{Terms}
 The term language of \hcp is a variant of \cp where the term constructs have been taken apart into primitives which more closely resemble the \textpi-calculus primitives.
@@ -456,7 +457,7 @@ Typing judgements in \hcp associate processes with hyper-environments. \textsc{H
   A typing judgement $\seq[P]{\Gamma_1 \hsep \dots \hsep \Gamma_n}$ denotes that the process $\tm{P}$ consists of $n$ independent, but potentially entangled processes, each of which communicates according to its own protocol $\Gamma_i$. 
   Typing judgements can be constructed using the inference rules below. 
   \\[1\baselineskip]
-  {Structural rules}
+  {Structural rules} %\vspace{-3ex}
   \begin{center}
     \hcpInfAx
     \hcpInfCut
@@ -465,7 +466,8 @@ Typing judgements in \hcp associate processes with hyper-environments. \textsc{H
     \hcpInfMix
     \hcpInfHalt
   \end{center}
-  {Logical rules}
+%  \vspace{.3ex}
+  {Logical rules} %\vspace{-3ex}
   \begin{center}
     \hcpInfBoundTens
     \hcpInfParr
@@ -486,7 +488,7 @@ Typing judgements in \hcp associate processes with hyper-environments. \textsc{H
     \hcpInfTop
   \end{center}
 \end{definition}
-Note that the logical rules disallow hyperenvironments. If they did not, the following processes would be well-typed, even though they are stuck:
+Note that the logical rules disallow hyperenvironments. If they did not, the following processes would be well-typed, even though they are stuck (unless we allow delayed actions as in \dhcp):
 \begin{center}
   \begin{prooftree*}
     \noLine\AXC{$\vphantom{\Gamma}$}\UIC{$\vphantom{\Gamma}$}
@@ -547,11 +549,11 @@ Note that the logical rules disallow hyperenvironments. If they did not, the fol
       [\piNew{x}{\piNew{y}{(\piPar{\piBoundSend{x}{}{\piBoundSend{y}{}{\piHalt}}}{\piRecv{y}{}{\cpLink{x}{z}}})}}]
       {\tmty{z}{\one}}$}
   \end{prooftree*}
-\end{center}
+\end{center}\vspace{.5\belowdisplayskip}
 
-The first process is self-locking, in that it holds both endpoints of a channel in the same process, and hence communication can never happen. Self-locking processes can be ruled out by requiring that the two endpoints of a channel are held in different processes.
+The first process is self-locking, in that it holds both endpoints of a channel in the same process, and hence communication can never happen in a semantic without delayed and self-synchronising actions. Self-locking processes can be ruled out by requiring that the two endpoints of a channel are held in different processes \ie appear in distinct hypersequents.
 
-The second term is more complicated: it is not a self-lock, and not a traditional deadlock, where two processes are waiting on each other. However, it is definitely stuck. The problem lies with readiness: a process typed under a hyperenvironment $\ty{\Gamma_1}\hsep\dots\hsep\ty{\Gamma_n}$, it promises to act as, essentially, $n$ independent processes, each of which ready to act on a channel from $\ty{\Gamma_i}$. However, the process $\tm{\piBoundSend{x}{}{\piBoundSend{y}{}{\piHalt}}}$, a single process, can be typed under the hyperenvironment $\ty{\tmty{x}{\one} \hsep \tmty{y}{\one}}$, which consists of \emph{two} environments. We can abuse this failure of readiness by asking the process to communicate on $\tm{y}$, which it is incapable of doing immediately. This is not a property of the $(\one)$ rule allowing hyperenvironments. For instance, a similar example can be constructed using the $(\tens)$ rule.
+The second term is not self-locked, nor a deadlock where two processes are waiting on each other. However, it is definitely stuck. The problem lies with readiness: a process typed under a hyperenvironment $\ty{\Gamma_1}\hsep\dots\hsep\ty{\Gamma_n}$, it promises to act as, essentially, $n$ independent processes, each of which ready to act on a channel from $\ty{\Gamma_i}$. However, the process $\tm{\piBoundSend{x}{}{\piBoundSend{y}{}{\piHalt}}}$, a single process, can be typed under the hyperenvironment $\ty{\tmty{x}{\one} \hsep \tmty{y}{\one}}$, which consists of \emph{two} environments. We can abuse this failure of readiness by asking the process to communicate on $\tm{y}$, which it is incapable of doing immediately. This is not a property of the $(\one)$ rule allowing hyperenvironments. Similar examples can be constructed using the $(\tens)$ rule.
 
 \subsection{Metatheory}
 \hcp enjoys subject reduction, termination, and progress.
@@ -575,9 +577,9 @@ The second term is more complicated: it is not a self-lock, and not a traditiona
 \end{definition}
 \begin{definition}[Canonical forms]
   A process $\tm{P}$ is in canonical form if
-  \[
+ $
   \tm{P} \equiv \tm{\piNew{x_1}{\dots\piNew{x_n}{(P_1 \mid \dots \mid P_{n+m+1})}}},
-  \]
+  $
   such that: no process $\tm{P_i}$ is a cut or a mix; no process $\tm{P_i}$ is a link acting on a bound channel $\tm{x_i}$; and no two processes $\tm{P_i}$ and $\tm{P_j}$ are acting on the same bound channel $\tm{x_i}$.
 \end{definition}
 Note that we have added the restriction ``acting on a bound channel'' to the case for links. This was not necessary for \cp, as all links in \cp act on at least one bound channel. Consequently, processes such as $\tm{\cpLink{x}{y}}$ and $\tm{(\piPar{\cpLink{x}{y}}{\cpLink{z}{w}})}$ are considered to be in canonical form. This is a generalisation of \cp, where $\tm{\cpLink{x}{y}}$ is considered to be in canonical form. If this is objectionable, the reduction system can be extended with identity expansion, expanding, \eg the process $\tm{\cpLink{x^{\ty{\bot}}}{y}}$ to $\tm{\cpWait{x}{\cpHalt{y}}}$.
@@ -586,9 +588,9 @@ Note that we have added the restriction ``acting on a bound channel'' to the cas
 \end{corollary}
 \begin{proof}
   We have
-  \[
+  $
   \tm{P} \equiv \tm{\piNew{x_1}{\dots\piNew{x_n}{(P_1 \ppar \dots \ppar P_{n+m+1})}}},
-  \]
+  $
   such that no $\tm{P_i}$ is a cut or a link acting on a bound channel, and no two processes $\tm{P_i}$ and $\tm{P_j}$ are acting on the same bound channel. The prefix of cuts and mixes introduces $n$ channels. Each application of cut requires an application of mix, so the prefix introduces $n+m+1$ processes. Therefore, at least $m+1$ of the processes $\tm{P_i}$ must be acting on a free channel, i.e., blocked on an external communication.
 \end{proof}
 \begin{theorem}[Progress]\label{thm:hcp-progress}
@@ -736,7 +738,7 @@ In this section, we prove that \hcp supports the same communication protocols as
 
 We start off by defining a relation on derivations of \hcp, which we call ``disentanglement''. This relation allows us to move applications of $\textsc{H-Mix}$ downwards in the proof tree. We can use this relation to rewrite any derivation to a form in which all mixes are either attached to their respective cuts or tensors, or at the top-level.
 \begin{definition}\label{def:hcp-disentangle}
-  Disentanglement is described by the smallest relation $\moveMixDown$ on processes closed under the rules in \cref{fig:hcp-disentangle}, plus the structural congruence $\equiv$. The relation $\moveMixDown^\star$ is the reflexive, transitive closure of $\moveMixDown$.
+  Disentanglement is the smallest relation $\moveMixDown$ on processes closed under the rules in \cref{fig:hcp-disentangle}, plus the structural congruence $\equiv$. The relation $\moveMixDown^\star$ is the reflexive, transitive closure of $\moveMixDown$.
 \end{definition}\noindent
 \begin{sidewaysfigure} 
   \[
@@ -924,6 +926,7 @@ Since its inception, linear logic has been described as the logic of concurrency
 It took more than ten years for a formal correspondence between linear logic and (a variant of) session types to emerge, with the seminal paper by Caires and Pfenning~\cite{caires2010}. This inspired the development of Classical Processes by Wadler~\cite{wadler2012}.
 
 The idea of using hypersequents to capture parallelism in linear logic judgements is not novel: Carbone \etal~\cite{carbone2018} extended the multiplicative-additive fragment of intuitionistic linear logic with hypersequents to type global descriptions of process communications known as choreographies. This work is distinct from our approach in that \hcp is based on classical linear logic and manipulates hypersequents differently: in Carbone \etal~\cite{carbone2018}, hypersequents can be formed only when sequents share resources (\cf \textsc{H-Mix}), and resource sharing is then tracked using an additional connection modality (which is not present in \hcp).
+Montesi and Peressotti \cite{montesi2018} revisited \cp in the light of hypersequents to derive the first correspondence between the labelled transition system semantics on proof transformations, later refined in \cite{kokke2019}. The type system of \hcp is that of \cite{montesi2018} save for rule \textsc{H-Mix\textsubscript{0}} which is from \cite{kokke2019}. This is difference means that \cite{montesi2018} does not enjoy the translation to CLL that \hcp and \dhcp enjoy. 
 
 \section{Conclusions and Future Work}
 \label{sec:conclusion}
