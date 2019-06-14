@@ -71,8 +71,9 @@
         \Gamma, \tmty{x}{A} \hsep
         \Delta, \tmty{x}{A^\bot}
       }$}
+    \AXC{$\tm{x} \not\in \ty{\mathcal{G}}$}
     \NOM{Cut}
-    \UIC{$\seq[{ \piNew{x}{P} }]{
+    \BIC{$\seq[{ \piNew{x}{P} }]{
         \mathcal{G}\hsep
         \ty{\Gamma}, \ty{\Delta}
       }$}
@@ -115,7 +116,7 @@
   \end{prooftree*}}
 \providecommand{\hcpInfOne}{%
   \begin{prooftree*}
-    \AXC{$\seq[{ P }]{}$}
+    \AXC{$\seq[{ P }]{ \emptyhypercontext }$}
     \SYM{(\one)}
     \UIC{$\seq[{ \piBoundSend{x}{}{P} }]{
         \tmty{x}{\one}

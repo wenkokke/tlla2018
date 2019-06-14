@@ -1,4 +1,4 @@
-\documentclass[submission,copyright,creativecommons]{eptcs}
+\documentclass[copyright,creativecommons]{eptcs}
 \providecommand{\event}{Linearity and TLLA 2018}
 \usepackage{url,doi}
 \usepackage[british]{babel}
@@ -25,6 +25,11 @@
 \newtheorem{definition}[lemma]{Definition}
 \input{preamble-typing}
 \usepackage[sectionbib,sort&compress,numbers]{natbib}
+
+\usepackage[framemethod=tikz]{mdframed}
+\newenvironment{changed}
+	{\mdframed[hidealllines=true,backgroundcolor=black!20]}
+	{\endmdframed}
 
 \title{Taking Linear Logic Apart}
 \author{%
@@ -452,7 +457,8 @@ We use the same definitions for types and environments for \hcp as we used for \
 \end{definition}\noindent
 A hyper-environment is a multiset of environments. While names within environments must be unique, names may be shared between multiple environments in a hyper-environment. We write $\ty{\mathcal{G} \hsep \mathcal{H}}$ to combine two hyper-environments.
 
-Typing judgements in \hcp associate processes with hyper-environments. \textsc{H-Mix} composes two processes in parallel, but remembers that they are independent in the sequent. \textsc{H-Cut} and $(\tens)$ take as their premise a process which consists of at least two independent processes, and connects them, eliminating the vertical bar. Each logical rule has the side condition that $\tm{x} \not\in \ty{\mathcal{G}}$, which can be read as ``you cannot act on one end-point of $x$ if you are also holding its other end-point''. This prevents self-locking processes, \eg $\tm{\piRecv{x}{}{\piBoundSend{x}{}{\piHalt}}}$.
+Typing judgements in \hcp associate processes with hyper-environments. \textsc{H-Mix} composes two processes in parallel, but remembers that they are independent in the sequent. \textsc{H-Cut} and $(\tens)$ take as their premise a process which consists of at least two independent processes, and connects them, eliminating the vertical bar (the side condition $\tm{x} \not\in \ty{\mathcal{G}}$ ensures that sessions are binary). 
+%This prevents self-locking processes, \eg $\tm{\piRecv{x}{}{\piBoundSend{x}{}{\piHalt}}}$.
 \begin{definition}[Typing judgements]\label{def:hcp}
   A typing judgement $\seq[P]{\Gamma_1 \hsep \dots \hsep \Gamma_n}$ denotes that the process $\tm{P}$ consists of $n$ independent, but potentially entangled processes, each of which communicates according to its own protocol $\Gamma_i$. 
   Typing judgements can be constructed using the inference rules below. 
