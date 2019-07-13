@@ -303,10 +303,7 @@ A typing judgement associates a process with collections of typed channels.
   If a process $\tm{P}$ is in canonical form, then it is blocked on an external communication.
 \end{corollary}
 \begin{proof}
-  We have
-  \[
-  \tm{P} \equiv \tm{\cpCut{x_1}{P_1}{\dots\cpCut{x_n}{P_n}{P_{n+1}}\dots}}
-  \]
+  We have $\tm{P} \equiv \tm{\cpCut{x_1}{P_1}{\dots\cpCut{x_n}{P_n}{P_{n+1}}\dots}}$
   such that no $\tm{P_i}$ is a cut or a link, and no two processes $\tm{P_i}$ and $\tm{P_j}$ are acting on the same bound channel. The prefix of cuts introduces $n$ channels, and $n+1$ processes. Therefore, at least \emph{one} of the processes $\tm{P_i}$ must be acting on a free channel, i.e., blocked on an external communication.
 \end{proof}
 \begin{theorem}[Progress]\label{thm:cp-progress}
@@ -458,7 +455,6 @@ We use the same definitions for types and environments for \hcp as we used for \
 A hyper-environment is a multiset of environments. While names within environments must be unique, names may be shared between multiple environments in a hyper-environment. We write $\ty{\mathcal{G} \hsep \mathcal{H}}$ to combine two hyper-environments.
 
 Typing judgements in \hcp associate processes with hyper-environments. \textsc{H-Mix} composes two processes in parallel, but remembers that they are independent in the sequent. \textsc{H-Cut} and $(\tens)$ take as their premise a process which consists of at least two independent processes, and connects them, eliminating the vertical bar (the side condition $\tm{x} \not\in \ty{\mathcal{G}}$ ensures that sessions are binary). 
-%This prevents self-locking processes, \eg $\tm{\piRecv{x}{}{\piBoundSend{x}{}{\piHalt}}}$.
 \begin{definition}[Typing judgements]\label{def:hcp}
   A typing judgement $\seq[P]{\Gamma_1 \hsep \dots \hsep \Gamma_n}$ denotes that the process $\tm{P}$ consists of $n$ independent, but potentially entangled processes, each of which communicates according to its own protocol $\Gamma_i$. 
   Typing judgements can be constructed using the inference rules below. 
@@ -493,6 +489,7 @@ Typing judgements in \hcp associate processes with hyper-environments. \textsc{H
     \hcpInfNil
     \hcpInfTop
   \end{center}
+We shall omit the side condition $\tm{x} \not\in \ty{\mathcal{G}}$ in applications of rule \textsc{H-Cut} whenever $\ty{\mathcal{G}}$ is empty.
 \end{definition}
 Note that the logical rules disallow hyperenvironments. If they did not, the following processes would be well-typed, even though they are stuck (unless we allow delayed actions as in \dhcp):
 \begin{center}
@@ -514,11 +511,11 @@ Note that the logical rules disallow hyperenvironments. If they did not, the fol
     \UIC{$\seq
       [\piRecv{x}{}{\piBoundSend{x}{}{\piBoundSend{z}{}{\piHalt}}}]
       {\tmty{x}{\one} \hsep \tmty{x}{\bot}, \tmty{z}{\one}}$}
-    \NOM{Cut}
+    \NOM{H-Cut}
     \UIC{$\seq
       [\piNew{x}{(\piRecv{x}{}{\piBoundSend{x}{}{\piBoundSend{z}{}{\piHalt}}})}]
       {\tmty{z}{\one}}$}
-  \end{prooftree*}\hspace*{-1.75em}%
+  \end{prooftree*}\hspace*{-1.85em}%
   \begin{prooftree*}
     \AXC{}
     \NOM{H-Mix$_0$}
@@ -546,11 +543,11 @@ Note that the logical rules disallow hyperenvironments. If they did not, the fol
     \BIC{$\seq
       [(\piPar{\piBoundSend{x}{}{\piBoundSend{y}{}{\piHalt}}}{\piRecv{y}{}{\cpLink{x}{z}}})]
       {\tmty{x}{\one} \hsep \tmty{y}{\one} \hsep \tmty{x}{\bot}, \tmty{y}{\bot}, \tmty{z}{\one}}$}
-    \NOM{Cut}
+    \NOM{H-Cut}
     \UIC{$\seq
       [\piNew{y}{(\piPar{\piBoundSend{x}{}{\piBoundSend{y}{}{\piHalt}}}{\piRecv{y}{}{\cpLink{x}{z}}})}]
       {\tmty{x}{\one} \hsep \tmty{x}{\bot}, \tmty{z}{\one}}$}
-    \NOM{Cut}
+    \NOM{H-Cut}
     \UIC{$\seq
       [\piNew{x}{\piNew{y}{(\piPar{\piBoundSend{x}{}{\piBoundSend{y}{}{\piHalt}}}{\piRecv{y}{}{\cpLink{x}{z}}})}}]
       {\tmty{z}{\one}}$}
@@ -604,9 +601,7 @@ Note that we have added the restriction ``acting on a bound channel'' to the cas
 \end{theorem} 
 \begin{proof}
   We consider the maximum prefix of cuts and mixes of $\tm{P}$ such that
-  \[
-  \tm{P} \equiv \tm{\piNew{x_1}{\dots\piNew{x_n}{(P_1 \ppar \dots \ppar P_{n+m+1})}}},
-  \]
+  $\tm{P} \equiv \tm{\piNew{x_1}{\dots\piNew{x_n}{(P_1 \ppar \dots \ppar P_{n+m+1})}}}$,
   and no $\tm{P_i}$ is a cut. If any process $\tm{P_i}$ is a link, we reduce by $(\cpLink{}{})$. If any two processes $\tm{P_i}$ and $\tm{P_j}$ are acting on the same channel $\tm{x_i}$, we rewrite by $\equiv$ and reduce by the appropriate $\beta$-rule. Otherwise, $\tm{P}$ is in canonical form.
 \end{proof}
 \begin{theorem}[Termination]\label{thm:hcp-termination}
@@ -749,17 +744,19 @@ We start off by defining a relation on derivations of \hcp, which we call ``dise
 \begin{sidewaysfigure} 
   \[
   \begin{array}{lcr}
+    \AXC{$\tm{x} \not\in \ty{(\mathcal{G} \hsep \mathcal{H})}$}
     \AXC{$\seq[P]{\mathcal{G} \hsep \Gamma, \tmty{x}{A} \hsep \Delta, \tmty{x}{A^\bot}}$}
     \AXC{$\seq[Q]{\mathcal{H}}$}
     \NOM{H-Mix}
     \BIC{$\seq[(P \ppar Q)]{\mathcal{G} \hsep \mathcal{H} \hsep \Gamma, \tmty{x}{A} \hsep \Delta, \tmty{x}{A^\bot}}$}
     \NOM{H-Cut}
-    \UIC{$\seq[\piNew{x}{(P \ppar Q)}]{\mathcal{G} \hsep \mathcal{H} \hsep \Gamma, \Delta}$}
+    \BIC{$\seq[\piNew{x}{(P \ppar Q)}]{\mathcal{G} \hsep \mathcal{H} \hsep \Gamma, \Delta}$}
     \DisplayProof
     & \moveMixDown
     & \AXC{$\seq[P]{\mathcal{G} \hsep \Gamma, \tmty{x}{A} \hsep \Delta, \tmty{x}{A^\bot}}$}
+      \AXC{$\tm{x} \not\in \ty{\mathcal{G}}$}
       \NOM{H-Cut}
-      \UIC{$\seq[\piNew{x}{P}]{\mathcal{G} \hsep \Gamma, \Delta}$}
+      \BIC{$\seq[\piNew{x}{P}]{\mathcal{G} \hsep \Gamma, \Delta}$}
       \AXC{$\seq[Q]{\mathcal{H}}$}
       \NOM{H-Mix}
       \BIC{$\seq[(\piNew{x}{P} \ppar Q)]{\mathcal{G} \hsep \mathcal{H} \hsep \Gamma, \Delta}$}
@@ -863,7 +860,8 @@ Disentanglement is terminating, and confluent up to the associativity and commut
       \AXC{$\seq[\mtf{P_1}]{\Gamma_1}$}
       \AXC{$\dots$}
       \AXC{$\seq[\mtf{P_n}]{\Gamma_n}$}
-      \NOM{H-Mix$^\star$}
+      \doubleLine
+      \NOM{H-Mix}
       \TIC{$\seq[(\mtf{P_1} \ppar \dots \ppar \mtf{P_n})]{\Gamma_1 \hsep \dots \hsep \Gamma_n}$}
     \end{prooftree*}
   \]

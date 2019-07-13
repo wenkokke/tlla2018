@@ -11,6 +11,9 @@
 %% Proof trees
 \usepackage{bussproofs}
 \EnableBpAbbreviations
+% bussproofs spacing conf
+\def\labelSpacing{3pt}
+\def\defaultHypSeparation{\hspace*{2ex}}
 
 \providecommand{\seq}[2][]{\ensuremath{\tm{#1}\;\vdash\;\ty{#2}}}
 \providecommand{\cseq}[3][]{\ensuremath{\seq[{#1}]{#2}\mathbin{\triangleright}\cs{#3}}}
