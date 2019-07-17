@@ -16,6 +16,7 @@
 \usepackage{rotating}
 \usepackage{centernot}
 \usepackage{xspace}
+\usepackage[normalem]{ulem}
 \xspaceaddexceptions{]\}}
 \usepackage[nameinlink,noabbrev,capitalize]{cleveref}
 \hypersetup{hidelinks,final}
@@ -26,7 +27,7 @@
 \input{preamble-typing}
 \usepackage[sectionbib,sort&compress,numbers]{natbib}
 
-\title{Taking Linear Logic Apart\\{\large Revised version}}
+\title{Taking Linear Logic Apart\\{\large Post-publication version: 2019-07-17}}
 \author{%
   Wen Kokke
   \institute{University of Edinburgh\\ Edinburgh, Scotland}
@@ -596,7 +597,7 @@ Note that we have added the restriction ``acting on a bound channel'' to the cas
 \end{theorem} 
 \begin{proof}
   We consider the maximum prefix of cuts and mixes of $\tm{P}$ such that
-  $\tm{P} \equiv \tm{\piNew{x_1}{\dots\piNew{x_n}{(P_1 \ppar \dots \ppar P_{n+m+1})}}}$,
+  \[\tm{P} \equiv \tm{\piNew{x_1}{\dots\piNew{x_n}{(P_1 \ppar \dots \ppar P_{n+m+1})}}}\text{,}\]
   and no $\tm{P_i}$ is a cut. If any process $\tm{P_i}$ is a link, we reduce by $(\cpLink{}{})$. If any two processes $\tm{P_i}$ and $\tm{P_j}$ are acting on the same channel $\tm{x_i}$, we rewrite by $\equiv$ and reduce by the appropriate $\beta$-rule. Otherwise, $\tm{P}$ is in canonical form.
 \end{proof}
 \begin{theorem}[Termination]\label{thm:hcp-termination}
@@ -605,7 +606,6 @@ Note that we have added the restriction ``acting on a bound channel'' to the cas
 \begin{proof}
   As \cref{thm:cp-termination}.
 \end{proof}
-
 
 
 \section{Relation between \cp and \hcp}
@@ -935,6 +935,140 @@ In this paper, we introduced \hcp, a variant of \dhcp which sits in between \cp 
 
 \bibliographystyle{eptcs}
 \bibliography{main}
+
+\appendix
+\clearpage
+\pagenumbering{Roman} 
+\setcounter{page}{1}
+
+\section*{Erratum}
+
+\makeatletter
+\def\cb#1#2#3{{\fboxsep=0pt\colorbox{#1}{\vphantom{\uline{#3}}#2{#3}}}}
+\def\defann#1#2{%
+	\expandafter\def\csname#1\endcsname{%
+		\def\ann@####1{\hbox{#2{\ensuremath{####1}}}}%
+		\def\ann@@####1{#2{####1}}%
+		\@ifstar{\ann@}{\ann@@}%
+	}}
+\defann{added}{\cb{green!20}\uline}
+\defann{removed}{\cb{red!20}\sout}
+\makeatother
+
+Since publishing this paper we discovered that \cref{thm:hcp-progress,thm:hcp-termination} do not hold for the version of \hcp in the published version of this paper.
+There are two solutions to this problem: 
+\begin{enumerate*}[label={\alph*)}]
+	\item introduce delayed actions as in \cite{kokke2019};
+	\item remove hypersequents from all logical rules as in \cite{montesi2018}.
+\end{enumerate*}
+For this revision, we opted for the second solution as it only required minimal changes to \cref{def:hcp} (all other definitions and theorems in the paper are unchanged).
+Below we include the published version of the type system of \hcp highlighting \added{additions} and \removed{deletions} introduced by this revision.
+{\renewcommand\thelemma{\ref{def:hcp}}
+\begin{definition}[Typing judgements]
+  A typing judgement $\seq[P]{\Gamma_1 \hsep \dots \hsep \Gamma_n}$ denotes that the process $\tm{P}$ consists of $n$ independent, but potentially entangled processes, each of which communicates according to its own protocol $\Gamma_i$. 
+  Typing judgements can be constructed using the inference rules below. 
+  \\[1\baselineskip]
+  {Structural rules} %\vspace{-3ex}
+  \begin{center}
+    \hcpInfAx
+    %
+    \begin{prooftree*}
+        \AXC{$\seq[{ P }]{
+            \mathcal{G}\hsep
+            \Gamma, \tmty{x}{A} \hsep
+            \Delta, \tmty{x}{A^\bot}
+          }$}
+        \AXC{\added{$\tm{x} \not\in \ty{\mathcal{G}}$}}
+        \NOM{H-Cut}
+        \BIC{$\seq[{ \piNew{x}{P} }]{
+            \mathcal{G}\hsep
+            \ty{\Gamma}, \ty{\Delta}
+          }$}
+      \end{prooftree*}
+  \end{center}
+  \begin{center}
+    \hcpInfMix
+    \hcpInfHalt
+  \end{center}
+%  \vspace{.3ex}
+  {Logical rules} %\vspace{-3ex}
+  \begin{center}
+    \begin{prooftree*}
+      \AXC{$\seq[{ P }]{
+          \removed*{\mathcal{G} \hsep}\;
+          \ty{\Gamma}, \tmty{y}{A} \hsep
+          \ty{\Delta}, \tmty{x}{B}
+        }$}
+      \SYM{\tens}
+      \UIC{$\seq[{ \piBoundSend{x}{y}{P} }]{
+          \removed*{\mathcal{G} \hsep}\;
+          \ty{\Gamma}, \ty{\Delta}, \tmty{x}{A \tens B}
+        }$}
+    \end{prooftree*}
+    \begin{prooftree*}
+      \AXC{$\seq[ P ]{%
+          \removed*{\mathcal{G} \hsep}\;
+          \Gamma , \tmty{y}{A} , \tmty{x}{B} }$}
+      \SYM{(\parr)}
+      \UIC{$\seq[ \cpRecv{x}{y}{P} ]{
+          \removed*{\mathcal{G} \hsep}\;
+          \Gamma , \tmty{x}{A \parr B} }$}
+    \end{prooftree*}
+  \end{center}
+  \begin{center}
+    \begin{prooftree*}
+      \AXC{$\seq[{ P }]{\removed*{\mathcal{G}}}\added*{\vphantom{\mathcal{G}}\emptyhypercontext}$}
+      \SYM{\one}
+      \UIC{$\seq[{ \piBoundSend{x}{}{P} }]{
+          \removed*{\mathcal{G} \hsep}\; \tmty{x}{\one}
+        }$}
+    \end{prooftree*}
+    \begin{prooftree*}
+      \AXC{$\seq[ P ]{
+          \removed*{\mathcal{G} \hsep}\; \Gamma }$}
+      \SYM{(\bot)}
+      \UIC{$\seq[ \cpWait{x}{P} ]{
+          \removed*{\mathcal{G} \hsep}\; \Gamma , \tmty{x}{\bot} }$}
+    \end{prooftree*}
+  \end{center}
+  \begin{center}
+    \begin{prooftree*}
+      \AXC{$\seq[ P ]{
+          \removed*{\mathcal{G} \hsep}\;
+          \Gamma , \tmty{x}{A} }$}
+      \SYM{(\plus_1)}
+      \UIC{$\seq[{ \cpInl{x}{P} }]{
+          \removed*{\mathcal{G} \hsep}\;
+          \Gamma , \tmty{x}{A \plus B} }$}
+    \end{prooftree*}
+    \begin{prooftree*}
+      \AXC{$\seq[ P ]{
+          \removed*{\mathcal{G} \hsep}\;
+          \Gamma , \tmty{x}{B} }$}
+      \SYM{(\plus_2)}
+      \UIC{$\seq[ \cpInr{x}{P} ]{
+          \removed*{\mathcal{G} \hsep}\;
+          \Gamma , \tmty{x}{A \plus B} }$}
+    \end{prooftree*}
+  \end{center}
+  \begin{center}
+    \begin{prooftree*}
+      \AXC{$\seq[ P ]{
+          \Gamma , \tmty{x}{A} }$}
+      \AXC{$\seq[ Q ]{
+          \Gamma, \tmty{x}{B} }$}
+      \SYM{(\with)}
+      \BIC{$\seq[ \cpCase{x}{P}{Q} ]{
+          \Gamma , \tmty{x}{A \with B} }$}
+    \end{prooftree*}
+  \end{center}
+  \begin{center}
+    \hcpInfNil
+    \hcpInfTop
+  \end{center}
+  \removed{Furthermore, each logical rule has the side condition that $\tm{x} \not\in \ty{\mathcal{G}}$.}
+\end{definition}
+}
 \end{document}
 %%% Local Variables:
 %%% TeX-master: "main"
