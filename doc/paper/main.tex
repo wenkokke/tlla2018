@@ -487,7 +487,7 @@ Typing judgements in \hcp associate processes with hyper-environments. \textsc{H
   \end{center}
 %We shall omit the side condition $\tm{x} \not\in \ty{\mathcal{G}}$ in applications of rule \textsc{H-Cut} whenever $\ty{\mathcal{G}}$ is empty.
 \end{definition}
-Note that the logical rules disallow hyperenvironments. If they did not, the following processes would be well-typed, even though they are stuck (unless we allow delayed actions as in \dhcp):
+Note that the logical rules disallow hyper-environments. If they did not, the following processes would be well-typed, even though they are stuck (unless we allow delayed actions as in \dhcp):
 \begin{center}
   \begin{prooftree*}
     \noLine\AXC{$\vphantom{\Gamma}$}\UIC{$\vphantom{\Gamma}$}
@@ -552,7 +552,7 @@ Note that the logical rules disallow hyperenvironments. If they did not, the fol
 
 The first process is self-locking, in that it holds both endpoints of a channel in the same process, and hence communication can never happen in a semantic without delayed and self-synchronising actions. Self-locking processes can be ruled out by requiring that the two endpoints of a channel are held in different processes \ie appear in distinct hypersequents.
 
-The second term is not self-locked, nor a deadlock where two processes are waiting on each other. However, it is definitely stuck. The problem lies with readiness: a process typed under a hyperenvironment $\ty{\Gamma_1}\hsep\dots\hsep\ty{\Gamma_n}$, it promises to act as, essentially, $n$ independent processes, each of which ready to act on a channel from $\ty{\Gamma_i}$. However, the process $\tm{\piBoundSend{x}{}{\piBoundSend{y}{}{\piHalt}}}$, a single process, can be typed under the hyperenvironment $\ty{\tmty{x}{\one} \hsep \tmty{y}{\one}}$, which consists of \emph{two} environments. We can abuse this failure of readiness by asking the process to communicate on $\tm{y}$, which it is incapable of doing immediately. This is not a property of the $(\one)$ rule allowing hyperenvironments. Similar examples can be constructed using the $(\tens)$ rule.
+The second term is not self-locked, nor a deadlock where two processes are waiting on each other. However, it is definitely stuck. The problem lies with readiness: a process typed under a hyperenvironment $\ty{\Gamma_1}\hsep\dots\hsep\ty{\Gamma_n}$, it promises to act as, essentially, $n$ independent processes, each of which ready to act on a channel from $\ty{\Gamma_i}$. However, the process $\tm{\piBoundSend{x}{}{\piBoundSend{y}{}{\piHalt}}}$, a single process, can be typed under the hyperenvironment $\ty{\tmty{x}{\one} \hsep \tmty{y}{\one}}$, which consists of \emph{two} environments. We can abuse this failure of readiness by asking the process to communicate on $\tm{y}$, which it is incapable of doing immediately. This is not a property of the $(\one)$ rule allowing hyper-environments. Similar examples can be constructed using the $(\tens)$ rule.
 
 \subsection{Metatheory}
 \hcp enjoys subject reduction, termination, and progress.
@@ -959,9 +959,9 @@ Since publishing this paper we discovered that \cref{thm:hcp-progress,thm:hcp-te
 There are two solutions to this problem: 
 \begin{enumerate*}[label={\alph*)}]
 	\item introduce delayed actions as in \cite{kokke2019};
-	\item remove hypersequents from all logical rules as in \cite{montesi2018}.
+	\item remove hyper-environments from all logical rules as in \cite{montesi2018}.
 \end{enumerate*}
-For this revision, we opted for the second solution as it only required minimal changes to \cref{def:hcp} (all other definitions and theorems in the paper are unchanged).
+For this revision, we opted for the second solution as it only requires minimal changes to \cref{def:hcp} (all other definitions and theorems in the paper are unchanged).
 Below we include the published version of the type system of \hcp highlighting \added{additions} and \removed{deletions} introduced by this revision.
 {\renewcommand\thelemma{\ref{def:hcp}}
 \begin{definition}[Typing judgements]
